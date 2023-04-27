@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.manage.UserMapper">
+    <!-- 获取 登录用户信息 -->
+    <select id="userQuery" resultType="com.pnsrcp.web.entity.manage.User">
+        select uid, username, password, fullName, phone, level, hospitalId, status
+        from pc_user
+        where username=#{username}
+        limit 1
+    </select>
+
+    <!-- 获取 用户信息 -->
+    <select id="usersQuery" resultType="com.pnsrcp.web.entity.manage.User">
+        select u.uid, u.username, u.password, u.fullName, u.phone, u.level, u.hospitalId, h.hospitalName, u.status
+        from pc_user u
+        left join pc_hospital h
+        on u.hospitalId=h.hid
+        <if test="hospitalId > 0">
+            where hospitalId=#{hospitalId}
+        </if>
+        <if test="page > -1 and limit > -1">
+            limit #{page},#{limit}
+        </if>
+    </select>
+
+    <!-- 获取 用户数量 -->
+    <select id="userCount" resultType="int">
+        select count(uid)
+        from pc_user
+        <if test="hospitalId > 0">
+            where hospitalId=#{hospitalId}
+        </if>
+    </select>
+
+    <!-- 插入 用户信息 -->
+    <insert id="userInsert" useGeneratedKeys="true" keyProperty="uid" keyColumn="uid">
+        insert into pc_user(username, password, fullName, phone, level, hospitalId, status)
+        value(#{user.username},#{user.password},#{user.fullName},#{user.phone},#{user.level},#{user.hospitalId},#{user.status})
+    </insert>
+
+    <!-- 更新 用户信息 -->
+    <update id="userUpdate">
+        update pc_user
+        set username=#{user.username},
+            <if test="user.password != null and user.password != ''">
+                password=#{user.password},
+            </if>
+            fullName=#{user.fullName},
+            phone=#{user.phone},
+            status=#{user.status}
+        where uid=#{user.uid}
+        limit 1
+    </update>
+
+    <!-- 更新 用户 密码 -->
+    <update id="userPwdUpdate">
+        update pc_user
+        set password=#{password}
+        where uid=#{userId}
+        limit 1
+    </update>
+</mapper>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>神经系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,神经系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库神经系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/nsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDNS layui-form" sec:authorize="hasRole('ROLE_BDNS')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/NS/US">超声</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/NS/MR">MRI</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/NS/CT">CT</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/NS/EEG">脑电图</a>
+                    <a href="#"><cite>辅助检查</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/NS/TD">治疗及诊断</a>
+                </span>
+                <div class="layui-row pc-db-BDNSAE" th:object="${auxiliaryExamination}">
+                    <div class="pc-db-head">
+                        <label>左侧（最重）</label>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>检查技术</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="leftInspectionTechnologyColorDoppler" value="1" title="彩超" th:checked="${auxiliaryExamination} ? (*{leftInspectionTechnologyColorDoppler eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftInspectionTechnologyMRI" value="1" title="MRI" th:checked="${auxiliaryExamination} ? (*{leftInspectionTechnologyMRI eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftInspectionTechnologyCT" value="1" title="CT" th:checked="${auxiliaryExamination} ? (*{leftInspectionTechnologyCT eq 1} ? true : _) : _">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-LIT">时间</label>
+                            <input id="PC-db-LIT" type="text" name="leftInspectionTime" th:value="${auxiliaryExamination} ? *{#calendars.format(leftInspectionTime, 'yyyy-MM-dd HH:mm:ss')} : _" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>结果</label>
+                            <input type="hidden" name="leftInspectionResult" th:value="${auxiliaryExamination} ? *{leftInspectionResult} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{leftInspectionResult eq '正常'} ? 'pc-db-active' : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftInspectionResult eq '异常'} ? 'pc-db-active' : _) : _" data-value="异常">
+                                    <button>异常</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>生发层出血</label>
+                            <input type="hidden" name="leftGerminalHemorrhage" th:value="${auxiliaryExamination} ? *{leftGerminalHemorrhage} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>脑室内出血</label>
+                            <input type="hidden" name="leftIntraventricularHemorrhage" th:value="${auxiliaryExamination} ? *{leftIntraventricularHemorrhage} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>脑实质病变</label>
+                            <input type="hidden" name="leftParenchymalBrainDisease" th:value="${auxiliaryExamination} ? *{leftParenchymalBrainDisease} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item lg">
+                            <label>脑室旁白质软化</label>
+                            <input type="hidden" name="leftPeriventricularWhiteMatterSoftening" th:value="${auxiliaryExamination} ? *{leftPeriventricularWhiteMatterSoftening} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftGerminalHemorrhage eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脑室扩增</label>
+                            <input type="checkbox" name="leftVentricularExpansion" lay-filter="LVE" lay-skin="switch" lay-text="有|无" value="1" th:checked="${auxiliaryExamination} ? (*{leftVentricularExpansion eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-LVES">脑室扩增大小</label>
+                            <input id="PC-db-LVES" type="number" data-name="leftVentricularExpansionSize" th:name="${auxiliaryExamination} ? (*{leftVentricularExpansion eq 1} ? 'leftVentricularExpansionSize' : _) : _" th:value="${auxiliaryExamination} ? (*{leftVentricularExpansion eq 1} ? *{leftVentricularExpansionSize} : _) : _" th:lay-verify="${auxiliaryExamination} ? (*{leftVentricularExpansion eq 1} ? 'requiredDB' : _) : _" th:disabled="${auxiliaryExamination} ? (*{leftVentricularExpansion eq 1} ? _ : true) : true">
+                            <span>mm</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-LOCD" class="pc-db-item lg">
+                            <label>其他中枢病变</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="leftOtherCentralDiseaseSubarachnoidHemorrhage" value="1" title="蛛网膜下腔出血" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseSubarachnoidHemorrhage eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseSubduralHemorrhage" value="1" title="硬膜下出血" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseSubduralHemorrhage eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseTentoriumHemorrhage" value="1" title="小脑幕出血" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseTentoriumHemorrhage eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseHydrocephalus" value="1" title="脑积水" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseHydrocephalus eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseArachnoidCyst" value="1" title="蛛网膜囊肿" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseArachnoidCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseCaudateSulcusCyst" value="1" title="尾状沟囊肿" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseCaudateSulcusCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseChoroidPlexusCyst" value="1" title="脉络丛囊肿" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseChoroidPlexusCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseSubependymalCyst" value="1" title="室管膜下囊肿" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseSubependymalCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="leftOtherCentralDiseaseOtherBrainParenchymalCysts" value="1" title="其它脑实质囊肿" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseOtherBrainParenchymalCysts eq 1} ? true : _) : _">
+                                <input type="checkbox" lay-filter="LOCDO" title="其它" th:checked="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseOther ne null and leftOtherCentralDiseaseOther ne ''} ? true : _) : _">
+                                <input id="PC-db-LOCDO" type="text" data-name="leftOtherCentralDiseaseOther" th:name="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseOther ne null and leftOtherCentralDiseaseOther ne ''} ? 'leftOtherCentralDiseaseOther' : _) : _" th:value="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseOther ne null and leftOtherCentralDiseaseOther ne ''} ? *{leftOtherCentralDiseaseOther} : _) : _" th:disabled="${auxiliaryExamination} ? (*{leftOtherCentralDiseaseOther ne null and leftOtherCentralDiseaseOther ne ''} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脑电图</label>
+                            <input type="checkbox" name="leftEeg" lay-filter="LEEG" lay-skin="switch" lay-text="有|无" value="1" th:checked="${auxiliaryExamination} ? (*{leftEeg eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-LEEGT">时间</label>
+                            <input id="PC-db-LEEGT" type="text" data-name="leftEegTime" th:name="${auxiliaryExamination} ? (*{leftEeg eq 1} ? 'leftEegTime' : _) : _" th:value="${auxiliaryExamination} ? (*{leftEeg eq 1} ? *{#calendars.format(leftEegTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${auxiliaryExamination} ? (*{leftEeg eq 1} ? 'requiredDB' : _) : _" th:disabled="${auxiliaryExamination} ? (*{leftEeg eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-LEEGR" class="pc-db-item">
+                            <label>结果</label>
+                            <input type="hidden" data-name="leftEegResult" th:name="${auxiliaryExamination} ? (*{leftEeg eq 1} ? 'leftEegResult' : _) : _" th:value="${auxiliaryExamination} ? (*{leftEeg eq 1} ? *{leftEegResult} : _) : _" th:lay-verify="${auxiliaryExamination} ? (*{leftEeg eq 1} ? 'requiredRadioGroup' : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${auxiliaryExamination} ? (*{leftEeg eq 1} ? '' : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${auxiliaryExamination} ? (*{leftEeg eq 1} ? (*{leftEegResult eq '正常'} ? 'pc-db-active' : _) : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftEeg eq 1} ? (*{leftEegResult eq '轻度异常'} ? 'pc-db-active' : _) : _) : _" data-value="轻度异常">
+                                    <button>轻度异常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftEeg eq 1} ? (*{leftEegResult eq '中度异常'} ? 'pc-db-active' : _) : _) : _" data-value="中度异常">
+                                    <button>中度异常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{leftEeg eq 1} ? (*{leftEegResult eq '重度异常'} ? 'pc-db-active' : _) : _) : _" data-value="重度异常">
+                                    <button>重度异常</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="layui-row pc-db-BDNSAE" th:object="${auxiliaryExamination}">
+                    <div class="pc-db-head">
+                        <label>右侧（最重）</label>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>检查技术</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="rightInspectionTechnologyColorDoppler" value="1" title="彩超" th:checked="${auxiliaryExamination} ? (*{rightInspectionTechnologyColorDoppler eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightInspectionTechnologyMRI" value="1" title="MRI" th:checked="${auxiliaryExamination} ? (*{rightInspectionTechnologyMRI eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightInspectionTechnologyCT" value="1" title="CT" th:checked="${auxiliaryExamination} ? (*{rightInspectionTechnologyCT eq 1} ? true : _) : _">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-RIT">时间</label>
+                            <input id="PC-db-RIT" type="text" name="rightInspectionTime" th:value="${auxiliaryExamination} ? *{#calendars.format(rightInspectionTime, 'yyyy-MM-dd HH:mm:ss')} : _" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>结果</label>
+                            <input type="hidden" name="rightInspectionResult" th:value="${auxiliaryExamination} ? *{rightInspectionResult} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{rightInspectionResult eq '正常'} ? 'pc-db-active' : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightInspectionResult eq '异常'} ? 'pc-db-active' : _) : _" data-value="异常">
+                                    <button>异常</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>生发层出血</label>
+                            <input type="hidden" name="rightGerminalHemorrhage" th:value="${auxiliaryExamination} ? *{rightGerminalHemorrhage} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{rightGerminalHemorrhage eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightGerminalHemorrhage eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightGerminalHemorrhage eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightGerminalHemorrhage eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>脑室内出血</label>
+                            <input type="hidden" name="rightIntraventricularHemorrhage" th:value="${auxiliaryExamination} ? *{rightIntraventricularHemorrhage} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{rightIntraventricularHemorrhage eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightIntraventricularHemorrhage eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightIntraventricularHemorrhage eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightIntraventricularHemorrhage eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>脑实质病变</label>
+                            <input type="hidden" name="rightParenchymalBrainDisease" th:value="${auxiliaryExamination} ? *{rightParenchymalBrainDisease} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{rightParenchymalBrainDisease eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightParenchymalBrainDisease eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightParenchymalBrainDisease eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightParenchymalBrainDisease eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item lg">
+                            <label>脑室旁白质软化</label>
+                            <input type="hidden" name="rightPeriventricularWhiteMatterSoftening" th:value="${auxiliaryExamination} ? *{rightPeriventricularWhiteMatterSoftening} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{rightPeriventricularWhiteMatterSoftening eq '确诊'} ? 'pc-db-active' : _) : _" data-value="确诊">
+                                    <button>确诊</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightPeriventricularWhiteMatterSoftening eq '疑似'} ? 'pc-db-active' : _) : _" data-value="疑似">
+                                    <button>疑似</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightPeriventricularWhiteMatterSoftening eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightPeriventricularWhiteMatterSoftening eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脑室扩增</label>
+                            <input type="checkbox" name="rightVentricularExpansion" lay-filter="RVE" lay-skin="switch" lay-text="有|无" value="1" th:checked="${auxiliaryExamination} ? (*{rightVentricularExpansion eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-RVES">脑室扩增大小</label>
+                            <input id="PC-db-RVES" type="number" data-name="rightVentricularExpansionSize" th:name="${auxiliaryExamination} ? (*{rightVentricularExpansion eq 1} ? 'rightVentricularExpansionSize' : _) : _" th:value="${auxiliaryExamination} ? (*{rightVentricularExpansion eq 1} ? *{rightVentricularExpansionSize} : _) : _" th:lay-verify="${auxiliaryExamination} ? (*{rightVentricularExpansion eq 1} ? 'requiredDB' : _) : _" th:disabled="${auxiliaryExamination} ? (*{rightVentricularExpansion eq 1} ? _ : true) : true">
+                            <span>mm</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-ROCD" class="pc-db-item lg">
+                            <label>其他中枢病变</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="rightOtherCentralDiseaseSubarachnoidHemorrhage" value="1" title="蛛网膜下腔出血" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseSubarachnoidHemorrhage eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseSubduralHemorrhage" value="1" title="硬膜下出血" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseSubduralHemorrhage eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseTentoriumHemorrhage" value="1" title="小脑幕出血" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseTentoriumHemorrhage eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseHydrocephalus" value="1" title="脑积水" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseHydrocephalus eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseArachnoidCyst" value="1" title="蛛网膜囊肿" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseArachnoidCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseCaudateSulcusCyst" value="1" title="尾状沟囊肿" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseCaudateSulcusCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseChoroidPlexusCyst" value="1" title="脉络丛囊肿" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseChoroidPlexusCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseSubependymalCyst" value="1" title="室管膜下囊肿" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseSubependymalCyst eq 1} ? true : _) : _">
+                                <input type="checkbox" name="rightOtherCentralDiseaseOtherBrainParenchymalCysts" value="1" title="其它脑实质囊肿" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseOtherBrainParenchymalCysts eq 1} ? true : _) : _">
+                                <input type="checkbox" lay-filter="ROCDO" title="其它" th:checked="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseOther ne null and rightOtherCentralDiseaseOther ne ''} ? true : _) : _">
+                                <input id="PC-db-ROCDO" type="text" data-name="rightOtherCentralDiseaseOther" th:name="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseOther ne null and rightOtherCentralDiseaseOther ne ''} ? 'rightOtherCentralDiseaseOther' : _) : _" th:value="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseOther ne null and rightOtherCentralDiseaseOther ne ''} ? *{rightOtherCentralDiseaseOther} : _) : _" th:disabled="${auxiliaryExamination} ? (*{rightOtherCentralDiseaseOther ne null and rightOtherCentralDiseaseOther ne ''} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脑电图</label>
+                            <input type="checkbox" name="rightEeg" lay-filter="REEG" lay-skin="switch" lay-text="有|无" value="1" th:checked="${auxiliaryExamination} ? (*{rightEeg eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-REEGT">时间</label>
+                            <input id="PC-db-REEGT" type="text" data-name="rightEegTime" th:name="${auxiliaryExamination} ? (*{rightEeg eq 1} ? 'rightEegTime' : _) : _" th:value="${auxiliaryExamination} ? (*{rightEeg eq 1} ? *{#calendars.format(rightEegTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${auxiliaryExamination} ? (*{rightEeg eq 1} ? 'requiredDB' : _) : _" th:disabled="${auxiliaryExamination} ? (*{rightEeg eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-REEGR" class="pc-db-item">
+                            <label>结果</label>
+                            <input type="hidden" data-name="rightEegResult" th:name="${auxiliaryExamination} ? (*{rightEeg eq 1} ? 'rightEegResult' : _) : _" th:value="${auxiliaryExamination} ? (*{rightEeg eq 1} ? *{rightEegResult} : _) : _" th:lay-verify="${auxiliaryExamination} ? (*{rightEeg eq 1} ? 'requiredRadioGroup' : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${auxiliaryExamination} ? (*{rightEeg eq 1} ? '' : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${auxiliaryExamination} ? (*{rightEeg eq 1} ? (*{rightEegResult eq '正常'} ? 'pc-db-active' : _) : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightEeg eq 1} ? (*{rightEegResult eq '轻度异常'} ? 'pc-db-active' : _) : _) : _" data-value="轻度异常">
+                                    <button>轻度异常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightEeg eq 1} ? (*{rightEegResult eq '中度异常'} ? 'pc-db-active' : _) : _) : _" data-value="中度异常">
+                                    <button>中度异常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{rightEeg eq 1} ? (*{rightEegResult eq '重度异常'} ? 'pc-db-active' : _) : _) : _" data-value="重度异常">
+                                    <button>重度异常</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="NSAE" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDNSWrite.min.js}"></script>
+</html>

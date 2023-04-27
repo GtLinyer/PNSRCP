@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.manage.HospitalMapper">
+    <!-- 获取 医院信息 -->
+    <select id="hospitalQry" resultType="com.pnsrcp.web.entity.manage.Hospital">
+        select h.hid,h.hospitalName,h.abbreviation,h.hlId,hl.hospitalLevel,h.province,h.city,h.county,h.caseNumber,h.status,h.chargePersonId,
+               u.uid,u.username,u.fullName,u.phone
+        from pc_hospital h
+        join pc_user u
+        on h.chargePersonId = u.uid
+        join pc_hospital_level hl
+        on h.hlId=hl.hlid
+        <if test="aid > 0">
+            join pc_hospital_area_relationship har
+            on h.hid = har.hid
+        </if>
+        <where>
+            <if test="hid > 0">
+                h.hid=#{hid}
+            </if>
+            <if test="aid > 0">
+                and har.aid=#{aid}
+            </if>
+        </where>
+        order by hid
+        <if test="page > -1 and limit > -1">
+            limit #{page},#{limit}
+        </if>
+    </select>
+
+    <!-- 获取 所有医院ID -->
+    <select id="hospitalIdQry" resultType="integer">
+        select hid from pc_hospital
+    </select>
+
+    <!-- 获取 医院数量 -->
+    <select id="hospitalCount" resultType="int">
+        select count(hid) from pc_hospital
+    </select>
+
+    <!-- 获取 医院 状态 -->
+    <select id="hospitalStatusQry" resultType="int">
+        select status from pc_hospital
+        where hid=#{hid}
+        limit 1
+    </select>
+
+    <!-- 插入 医院信息 -->
+    <insert id="hospitalInsert" useGeneratedKeys="true" keyProperty="hid" keyColumn="hid">
+        insert into pc_hospital(hospitalName, abbreviation, province, city, county, hlId, status)
+        value(#{hospital.hospitalName}, #{hospital.abbreviation}, #{hospital.province}, #{hospital.city}, #{hospital.county}, #{hospital.hlId},
+            #{hospital.status})
+    </insert>
+
+    <!-- 设置 医院负责人 -->
+    <update id="hospitalChargePersonUpdate">
+        update pc_hospital
+        set chargePersonId=#{chargePersonId}
+        where hid=#{hid}
+        limit 1
+    </update>
+
+    <!-- 更新 医院信息 -->
+    <update id="hospitalUpdate">
+        update pc_hospital
+        set hospitalName=#{hospital.hospitalName},
+            abbreviation=#{hospital.abbreviation},
+            province=#{hospital.province},
+            city=#{hospital.city},
+            county=#{hospital.county},
+            hlId=#{hospital.hlId},
+            status=#{hospital.status}
+        where hid=#{hospital.hid}
+        limit 1
+    </update>
+
+    <!-- 获取 医院等级 -->
+    <select id="hospitalLevelQuery" resultType="com.pnsrcp.web.entity.manage.HospitalLevel">
+        select hlid, hospitalLevel
+        from pc_hospital_level
+    </select>
+
+    <!-- 根据id 获取 医院名称 -->
+    <select id="hospitalNameQuery" resultType="string">
+        select hospitalName
+        from pc_hospital
+        where hid=#{hid}
+        limit 1
+    </select>
+
+    <!-- 以省分组的 医院信息的 映射关系 -->
+    <resultMap id="areaHospitalMap" type="com.pnsrcp.web.entity.manage.AreaHospital">
+        <id property="province" column="province"/>
+        <collection property="hospitalList" ofType="com.pnsrcp.web.entity.manage.Hospital" javaType="ArrayList">
+            <id property="hid" column="hid"/>
+            <result property="hospitalName" column="hospitalName"/>
+        </collection>
+    </resultMap>
+
+    <!-- 获取 以省分组的 医院信息 -->
+    <select id="areaHospitalQuery" resultMap="areaHospitalMap">
+        select hid, hospitalName, province
+        from pc_hospital
+        <where>
+            <foreach item="hid" index="index" collection="hidList" separator="or">
+                hid = ${hid}
+            </foreach>
+        </where>
+        order by province
+    </select>
+
+    <!-- 获取 此区域下 所属医院ID -->
+    <select id="thisAreaHospitalQuery" resultType="integer">
+        select hid
+        from pc_hospital_area_relationship
+        where aid=#{aid}
+        order by hid desc
+    </select>
+
+    <!-- 删除 此区域下 所有医院 -->
+    <delete id="thisAreaHospitalDelete">
+        delete from pc_hospital_area_relationship
+        where aid=#{aid}
+    </delete>
+
+    <!-- 设置 医院所属区域 -->
+    <insert id="hospitalAreaUpdate">
+        insert into pc_hospital_area_relationship (aid, hid)
+            value (#{aid}, #{hid})
+    </insert>
+
+    <!-- 更新 医院 录入病例数 -->
+    <update id="hCaseNumUpdate">
+        update pc_hospital
+        set caseNumber=(
+            select count(*)
+            from pc_bd_mother_information pbmi
+            left join pc_bd_baby_situation pbbs
+            on pbbs.mid = pbmi.mid
+            where pbmi.hospitalId=#{hid}
+        )
+        where hid=#{hid}
+    </update>
+
+    <!-- 获取 医院报表信息 -->
+    <select id="reportExportQry" resultType="com.pnsrcp.web.entity.patientCase.ReportExport">
+        select h.hid, h.abbreviation, h.hospitalName, allCase.caseNumber, writing.writing, completed.completed, reviewPass.reviewPass, reviewReject.reviewReject
+        from pc_hospital h, (
+            select count(pbmi.mid) caseNumber
+            from pc_bd_mother_information pbmi
+            left join pc_bd_baby_situation pbbs
+            on pbbs.mid = pbmi.mid
+            left join pc_bd_discharge_situation pbds
+            on pbbs.cid = pbds.cid
+            where pbmi.hospitalId=#{hid}
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+        ) allCase, (
+            select count(pbmi.mid) writing
+            from pc_bd_mother_information pbmi
+            left join pc_bd_baby_situation pbbs
+            on pbbs.mid = pbmi.mid
+            left join pc_bd_discharge_situation pbds
+            on pbbs.cid = pbds.cid
+            where pbmi.hospitalId=#{hid}
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+            and (status=0
+            or status is null)
+        ) writing, (
+            select count(pbmi.mid) completed
+            from pc_bd_mother_information pbmi
+            left join pc_bd_baby_situation pbbs
+            on pbbs.mid = pbmi.mid
+            left join pc_bd_discharge_situation pbds
+            on pbbs.cid = pbds.cid
+            where pbmi.hospitalId=#{hid}
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+            and status=1
+        ) completed, (
+            select count(pbmi.mid) reviewPass
+            from pc_bd_mother_information pbmi
+            left join pc_bd_baby_situation pbbs
+            on pbbs.mid = pbmi.mid
+            left join pc_bd_discharge_situation pbds
+            on pbbs.cid = pbds.cid
+            where pbmi.hospitalId=#{hid}
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+            and status=3
+        ) reviewPass, (
+            select count(pbmi.mid) reviewReject
+            from pc_bd_mother_information pbmi
+            left join pc_bd_baby_situation pbbs
+            on pbbs.mid = pbmi.mid
+            left join pc_bd_discharge_situation pbds
+            on pbbs.cid = pbds.cid
+            where pbmi.hospitalId=#{hid}
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+            and status=2
+        ) reviewReject
+        where h.hid=#{hid}
+    </select>
+</mapper>

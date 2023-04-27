@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>病例审核 - 研究数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,研究数据库,病例审核"/>
+    <meta name="description" content="围产新生儿科研合作平台研究数据库病例审核"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 基础数据库 导航 -->
+                    <li th:replace="include/navMenu::basicDatabase"></li>
+
+                    <!-- 医患交流库 导航 -->
+                    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+                    <!-- 母婴同室库 导航 -->
+                    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+                    <!-- 父母心理库 导航 -->
+                    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+                    <!-- 研究数据库 导航 -->
+                    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_RD')">
+                        <a class="pc-item" href="javascript:void(0);">
+                            <i class="pc-icon iconfont icon-yanjiuzhulu"></i>
+                            <cite>研究数据库</cite>
+                        </a>
+
+                        <dl class="layui-nav-child">
+                            <dd sec:authorize="hasRole('ROLE_RDHQI')">
+                                <a href="/perinatalPlatform/researchDatabase/write/HQI">
+                                    <i class="pc-icon iconfont icon-diwenbaojing"></i>
+                                    <cite>低体温QI</cite>
+                                </a>
+                            </dd>
+                            <dd class="layui-this" sec:authorize="hasRole('ROLE_RD')">
+                                <a href="#">
+                                    <i class="pc-icon iconfont icon-shenhe"></i>
+                                    <cite>病例审核</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+                    <!-- 超声影像库 导航 -->
+                    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+                    <!-- 随访数据库 导航 -->
+                    <li th:replace="include/navMenu::followDatabase"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-RD layui-form" sec:authorize="hasRole('ROLE_RD')">
+                <div class="pc-db-h1-wrap">
+                    <h1>研究数据库病例审核</h1>
+                </div>
+                <div class="pc-db-review">
+                    <div class="layui-row">
+                        <div class="layui-col-sm4">
+                            <span>当前病例状态：</span>
+                            <span th:class="${caseStatus.status eq 0} ? 'pc-db-status-color-doing' : (${caseStatus.status eq 1} ? 'pc-db-status-color-yes' : (${caseStatus.status eq 2} ? 'pc-db-status-color-no' : 'pc-db-status-color-ok'))" th:text="${caseStatus.statusString}"></span>
+                        </div>
+                        <div class="layui-col-sm8">
+                            <span>合计审核次数：</span>
+                            <span th:text="${reviewCount}"></span>
+                        </div>
+
+                        <div class="layui-col-sm10">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>病例状态</th>
+                                    <th>审核意见</th>
+                                    <th>审核人</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="review : ${reviewList}">
+                                    <td>
+                                        <span th:text="${#calendars.format(review.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:class="${(review.status eq 1) or (review.status eq 3)} ? 'pc-db-status-color-ok' : 'pc-db-status-color-no'" th:text="${review.statusString}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${review.problem}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${review.reviewerName}"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pc-db-add">
+                                        <button onclick="addReview();" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+
+<!-- 增加 审核 -->
+<div id="PC-db-addReview" class="pc-layer-panel">
+    <form class="layui-form" lay-filter="addReview" action="javascript:void(0);">
+        <div class="pc-db-item">
+            <label>病例状态</label>
+            <input name="status" type="hidden" title="病例状态" lay-verify="requiredRadioGroup">
+            <ul class="pc-db-radioBtn-group pc-db-enter">
+                <li data-value="2">
+                    <button>审核不通过</button>
+                </li>
+                <li data-value="3">
+                    <button>审核通过</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="pc-db-item">
+            <label for="PC-db-problem">审核意见</label>
+            <div class="pc-db-textarea">
+                <textarea id="PC-db-problem" name="problem"></textarea>
+            </div>
+        </div>
+
+        <div class="pc-db-item">
+            <label for="PC-db-reviewerName">审核人</label>
+            <input id="PC-db-reviewerName" type="text" name="reviewerName" lay-verify="requiredDB">
+        </div>
+
+        <div class="layui-form-item">
+            <button class="pc-btn pc-btn-save" lay-filter="saveReview" lay-submit>保存</button>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/RDWrite.min.js}"></script>
+</html>

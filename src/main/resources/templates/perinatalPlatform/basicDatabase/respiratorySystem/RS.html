@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>呼吸系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,呼吸系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库呼吸系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#FAC2C2"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/rsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDRTS layui-form" th:object="${respiratorySupport}" sec:authorize="hasRole('ROLE_BDRST')">
+                <span class="layui-breadcrumb">
+                    <a href="#"><cite>呼吸支持</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/HF">HFNC失败</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/NVF">无创通气失败</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/WS">撤机情况</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/BPD">BPD</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/RDS">RDS</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/AP">呼吸暂停</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/ODT">其他诊断与治疗</a>
+                </span>
+                <div class="layui-row pc-db-BDRTSRSH" th:data-birthday="${birthday ne null} ? ${#calendars.format(birthday, 'yyyy-MM-dd HH:mm:ss')} : _" th:data-gaWeek="${gaWeek ne null} ? ${gaWeek} : _" th:data-gaDay="${gaDay ne null} ? ${gaDay} : _">
+                    <div class="layui-col-sm2">
+                        <div class="pc-db-item">
+                            <label>生后28天</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-AB28DD">日期</label>
+                            <input id="PC-db-AB28DD" type="text" name="afterBirth28DaysDate" th:value="${respiratorySupport} ? *{#calendars.format(afterBirth28DaysDate, 'yyyy-MM-dd')} : _" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm7">
+                        <div class="pc-db-item">
+                            <label for="PC-db-AB28DCGAW">矫正胎龄</label>
+                            <div class="pc-db-spanItem">
+                                <input id="PC-db-AB28DCGAW" type="number" name="ab28dCorrectGestationalAgeWeek" th:value="${respiratorySupport} ? *{ab28dCorrectGestationalAgeWeek} : _" lay-verify="requiredDB" readonly>
+                                <span>周</span>
+                                <input id="PC-db-AB28DCGAD" type="number" name="ab28dCorrectGestationalAgeDay" th:value="${respiratorySupport} ? *{ab28dCorrectGestationalAgeDay} : _" lay-verify="requiredDB" readonly>
+                                <span>天</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>呼吸支持模式</label>
+                            <input type="hidden" name="ab28dRespiratorySupportMode" th:value="${respiratorySupport} ? *{ab28dRespiratorySupportMode} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq '有创高频'} ? 'pc-db-active' : _) : _" data-value="有创高频">
+                                    <button>有创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq '有创常频'} ? 'pc-db-active' : _) : _" data-value="有创常频">
+                                    <button>有创常频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq '无创高频'} ? 'pc-db-active' : _) : _" data-value="无创高频">
+                                    <button>无创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq 'NIPPV'} ? 'pc-db-active' : _) : _" data-value="NIPPV">
+                                    <button>NIPPV</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq 'BIPAP'} ? 'pc-db-active' : _) : _" data-value="BIPAP">
+                                    <button>BIPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq 'NCPAP'} ? 'pc-db-active' : _) : _" data-value="NCPAP">
+                                    <button>NCPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq 'HFNC'} ? 'pc-db-active' : _) : _" data-value="HFNC">
+                                    <button>HFNC</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq '鼻导管'} ? 'pc-db-active' : _) : _" data-value="鼻导管">
+                                    <button>鼻导管</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{ab28dRespiratorySupportMode eq '头罩'} ? 'pc-db-active' : _) : _" data-value="头罩">
+                                    <button>头罩</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-ab28dFiO2">FiO<sub>2</sub></label>
+                            <input id="PC-db-ab28dFiO2" type="number" data-name="ab28dFiO2" th:name="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? 'ab28dFiO2' : _) : _" th:value="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? *{ab28dFiO2} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-ab28dFlow">流量</label>
+                            <input id="PC-db-ab28dFlow" type="number" data-name="ab28dFlow" th:name="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? 'ab28dFlow' : _) : _" th:value="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? *{ab28dFlow} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode ne '无') and (ab28dRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>L/min</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-ab28dMap">MAP</label>
+                            <input id="PC-db-ab28dMap" type="number" data-name="ab28dMap" th:name="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode eq '有创高频') or (ab28dRespiratorySupportMode eq '有创常频')} ? 'ab28dMap' : _) : _" th:value="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode eq '有创高频') or (ab28dRespiratorySupportMode eq '有创常频')} ? *{ab28dMap} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode eq '有创高频') or (ab28dRespiratorySupportMode eq '有创常频')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(ab28dRespiratorySupportMode eq '有创高频') or (ab28dRespiratorySupportMode eq '有创常频')} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="layui-col-sm2">
+                        <div class="pc-db-item">
+                            <label>纠正胎龄36周</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-CGA36WD">日期</label>
+                            <input id="PC-db-CGA36WD" type="text" name="correctGestationalAge36WeekDate" th:value="${respiratorySupport} ? *{#calendars.format(correctGestationalAge36WeekDate, 'yyyy-MM-dd')} : _" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>呼吸支持模式</label>
+                            <input type="hidden" name="cga36wRespiratorySupportMode" th:value="${respiratorySupport} ? *{cga36wRespiratorySupportMode} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq '有创高频'} ? 'pc-db-active' : _) : _" data-value="有创高频">
+                                    <button>有创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq '有创常频'} ? 'pc-db-active' : _) : _" data-value="有创常频">
+                                    <button>有创常频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq '无创高频'} ? 'pc-db-active' : _) : _" data-value="无创高频">
+                                    <button>无创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq 'NIPPV'} ? 'pc-db-active' : _) : _" data-value="NIPPV">
+                                    <button>NIPPV</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq 'BIPAP'} ? 'pc-db-active' : _) : _" data-value="BIPAP">
+                                    <button>BIPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq 'NCPAP'} ? 'pc-db-active' : _) : _" data-value="NCPAP">
+                                    <button>NCPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq 'HFNC'} ? 'pc-db-active' : _) : _" data-value="HFNC">
+                                    <button>HFNC</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq '鼻导管'} ? 'pc-db-active' : _) : _" data-value="鼻导管">
+                                    <button>鼻导管</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga36wRespiratorySupportMode eq '头罩'} ? 'pc-db-active' : _) : _" data-value="头罩">
+                                    <button>头罩</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-cga36wFiO2">FiO<sub>2</sub></label>
+                            <input id="PC-db-cga36wFiO2" type="number" data-name="cga36wFiO2" th:name="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? 'cga36wFiO2' : _) : _" th:value="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? *{cga36wFiO2} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-cga36wFlow">流量</label>
+                            <input id="PC-db-cga36wFlow" type="number" data-name="cga36wFlow" th:name="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? 'cga36wFlow' : _) : _" th:value="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? *{cga36wFlow} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode ne '无') and (cga36wRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>L/min</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-cga36wMap">MAP</label>
+                            <input id="PC-db-cga36wMap" type="number" data-name="cga36wMap" th:name="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode eq '有创高频') or (cga36wRespiratorySupportMode eq '有创常频')} ? 'cga36wMap' : _) : _" th:value="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode eq '有创高频') or (cga36wRespiratorySupportMode eq '有创常频')} ? *{cga36wMap} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode eq '有创高频') or (cga36wRespiratorySupportMode eq '有创常频')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(cga36wRespiratorySupportMode eq '有创高频') or (cga36wRespiratorySupportMode eq '有创常频')} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="layui-col-sm2">
+                        <div class="pc-db-item">
+                            <label>纠正胎龄40周</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-CGA40WD">日期</label>
+                            <input id="PC-db-CGA40WD" type="text" name="correctGestationalAge40WeekDate" th:value="${respiratorySupport} ? *{#calendars.format(correctGestationalAge40WeekDate, 'yyyy-MM-dd')} : _" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>呼吸支持模式</label>
+                            <input type="hidden" name="cga40wRespiratorySupportMode" th:value="${respiratorySupport} ? *{cga40wRespiratorySupportMode} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq '有创高频'} ? 'pc-db-active' : _) : _" data-value="有创高频">
+                                    <button>有创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq '有创常频'} ? 'pc-db-active' : _) : _" data-value="有创常频">
+                                    <button>有创常频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq '无创高频'} ? 'pc-db-active' : _) : _" data-value="无创高频">
+                                    <button>无创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq 'NIPPV'} ? 'pc-db-active' : _) : _" data-value="NIPPV">
+                                    <button>NIPPV</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq 'BIPAP'} ? 'pc-db-active' : _) : _" data-value="BIPAP">
+                                    <button>BIPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq 'NCPAP'} ? 'pc-db-active' : _) : _" data-value="NCPAP">
+                                    <button>NCPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq 'HFNC'} ? 'pc-db-active' : _) : _" data-value="HFNC">
+                                    <button>HFNC</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq '鼻导管'} ? 'pc-db-active' : _) : _" data-value="鼻导管">
+                                    <button>鼻导管</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{cga40wRespiratorySupportMode eq '头罩'} ? 'pc-db-active' : _) : _" data-value="头罩">
+                                    <button>头罩</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-cga40wFiO2">FiO<sub>2</sub></label>
+                            <input id="PC-db-cga40wFiO2" type="number" data-name="cga40wFiO2" th:name="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? 'cga40wFiO2' : _) : _" th:value="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? *{cga40wFiO2} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-cga40wFlow">流量</label>
+                            <input id="PC-db-cga40wFlow" type="number" data-name="cga40wFlow" th:name="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? 'cga40wFlow' : _) : _" th:value="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? *{cga40wFlow} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode ne '无') and (cga40wRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>L/min</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-cga40wMap">MAP</label>
+                            <input id="PC-db-cga40wMap" type="number" data-name="cga40wMap" th:name="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode eq '有创高频') or (cga40wRespiratorySupportMode eq '有创常频')} ? 'cga40wMap' : _) : _" th:value="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode eq '有创高频') or (cga40wRespiratorySupportMode eq '有创常频')} ? *{cga40wMap} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode eq '有创高频') or (cga40wRespiratorySupportMode eq '有创常频')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(cga40wRespiratorySupportMode eq '有创高频') or (cga40wRespiratorySupportMode eq '有创常频')} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="layui-col-sm2">
+                        <div class="pc-db-item">
+                            <label>出院时</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-dischargeDate">日期</label>
+                            <input id="PC-db-dischargeDate" type="text" name="dischargeDate" th:value="${respiratorySupport} ? *{#calendars.format(dischargeDate, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm7">
+                        <div class="pc-db-item">
+                            <label for="PC-db-DCGAW">矫正胎龄</label>
+                            <div class="pc-db-spanItem">
+                                <input id="PC-db-DCGAW" type="number" name="dischargeCorrectGestationalAgeWeek" th:value="${respiratorySupport} ? *{dischargeCorrectGestationalAgeWeek} : _" readonly>
+                                <span>周</span>
+                                <input id="PC-db-DCGAD" type="number" name="dischargeCorrectGestationalAgeDay" th:value="${respiratorySupport} ? *{dischargeCorrectGestationalAgeDay} : _" readonly>
+                                <span>天</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div id="PC-db-DRSM" class="pc-db-item">
+                            <label>呼吸支持模式</label>
+                            <input type="hidden" name="dischargeRespiratorySupportMode" th:value="${respiratorySupport} ? *{dischargeRespiratorySupportMode} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq '有创高频'} ? 'pc-db-active' : _) : _" data-value="有创高频">
+                                    <button>有创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq '有创常频'} ? 'pc-db-active' : _) : _" data-value="有创常频">
+                                    <button>有创常频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq '无创高频'} ? 'pc-db-active' : _) : _" data-value="无创高频">
+                                    <button>无创高频</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq 'NIPPV'} ? 'pc-db-active' : _) : _" data-value="NIPPV">
+                                    <button>NIPPV</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq 'BIPAP'} ? 'pc-db-active' : _) : _" data-value="BIPAP">
+                                    <button>BIPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq 'NCPAP'} ? 'pc-db-active' : _) : _" data-value="NCPAP">
+                                    <button>NCPAP</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq 'HFNC'} ? 'pc-db-active' : _) : _" data-value="HFNC">
+                                    <button>HFNC</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq '鼻导管'} ? 'pc-db-active' : _) : _" data-value="鼻导管">
+                                    <button>鼻导管</button>
+                                </li>
+                                <li th:class="${respiratorySupport} ? (*{dischargeRespiratorySupportMode eq '头罩'} ? 'pc-db-active' : _) : _" data-value="头罩">
+                                    <button>头罩</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-dischargeFiO2">FiO<sub>2</sub></label>
+                            <input id="PC-db-dischargeFiO2" type="number" data-name="dischargeFiO2" th:name="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? 'dischargeFiO2' : _) : _" th:value="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? *{dischargeFiO2} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-dischargeFlow">流量</label>
+                            <input id="PC-db-dischargeFlow" type="number" data-name="dischargeFlow" th:name="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? 'dischargeFlow' : _) : _" th:value="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? *{dischargeFlow} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode ne '无') and (dischargeRespiratorySupportMode ne '')} ? _ : true) : true">
+                            <span>L/min</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-dischargeMap">MAP</label>
+                            <input id="PC-db-dischargeMap" type="number" data-name="dischargeMap" th:name="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode eq '有创常频') or (dischargeRespiratorySupportMode eq '有创高频')} ? 'dischargeMap' : _) : _" th:value="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode eq '有创常频') or (dischargeRespiratorySupportMode eq '有创高频')} ? *{dischargeMap} : _) : _" th:lay-verify="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode eq '有创常频') or (dischargeRespiratorySupportMode eq '有创高频')} ? 'requiredDB' : _) : _" th:disabled="${respiratorySupport} ? (*{(dischargeRespiratorySupportMode eq '有创常频') or (dischargeRespiratorySupportMode eq '有创高频')} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRTSRSL">
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-RSN">呼吸支持合计</label>
+                            <input id="PC-db-RSN" type="number" name="respiratorySupportNum" th:value="${respiratorySupport} ? *{respiratorySupportNum} : _" lay-verify="requiredDB" value="0" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label for="PC-db-RSD">呼吸支持合计</label>
+                            <div class="pc-db-spanItem">
+                                <input id="PC-db-RSD" type="number" name="respiratorySupportDays" th:value="${respiratorySupport} ? *{respiratorySupportDays} : _" lay-verify="requiredDB" value="0" readonly>
+                                <span>天</span>
+                                <input id="PC-db-RSH" type="number" name="respiratorySupportHours" th:value="${respiratorySupport} ? *{respiratorySupportHours} : _" lay-verify="requiredDB" value="0" readonly>
+                                <span>h</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <button id="PC-db-openRespManage" class="pc-btn">呼吸管理表</button>
+                            <button id="PC-db-openRespManage2" class="pc-btn">呼吸管理图</button>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg10 layui-col-sm12">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>呼吸支持模式</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>总计（h）</th>
+                                    <th>天</th>
+                                    <th>小时</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${rsModeTimeList} ? ${rsModeTimeList.size()} : _">
+                                <tr th:each="rsModeTime, status : ${rsModeTimeList}" th:class="${rsModeTime.respiratorySupportModeAbbr}">
+                                    <td class="pc-db-table-select">
+                                        <select th:name="'respiratorySupportMode' + ${status.index + 1}" lay-filter="DRSM" lay-reqText="请选择呼吸支持模式！" lay-verify="required">
+                                            <option value="">请选择呼吸支持模式</option>
+                                            <option value="有创高频" th:selected="${rsModeTime.respiratorySupportMode eq '有创高频'}">有创高频</option>
+                                            <option value="有创常频" th:selected="${rsModeTime.respiratorySupportMode eq '有创常频'}">有创常频</option>
+                                            <option value="无创高频" th:selected="${rsModeTime.respiratorySupportMode eq '无创高频'}">无创高频</option>
+                                            <option value="NIPPV" th:selected="${rsModeTime.respiratorySupportMode eq 'NIPPV'}">NIPPV</option>
+                                            <option value="BIPAP" th:selected="${rsModeTime.respiratorySupportMode eq 'BIPAP'}">BIPAP</option>
+                                            <option value="NCPAP" th:selected="${rsModeTime.respiratorySupportMode eq 'NCPAP'}">NCPAP</option>
+                                            <option value="HFNC" th:selected="${rsModeTime.respiratorySupportMode eq 'HFNC'}">HFNC</option>
+                                            <option value="鼻导管" th:selected="${rsModeTime.respiratorySupportMode eq '鼻导管'}">鼻导管</option>
+                                            <option value="有创NAVA" th:selected="${rsModeTime.respiratorySupportMode eq '有创NAVA'}">有创NAVA</option>
+                                            <option value="无创NAVA" th:selected="${rsModeTime.respiratorySupportMode eq '无创NAVA'}">无创NAVA</option>
+                                            <option value="箱式吸氧" th:selected="${rsModeTime.respiratorySupportMode eq '箱式吸氧'}">箱式吸氧</option>
+                                        </select>
+                                    </td>
+                                    <td class="startDate">
+                                        <input th:id="'PC-db-startRsDate' + ${status.index + 1}" type="text" th:name="'startRsDate' + ${status.index + 1}" th:value="${#calendars.format(rsModeTime.startRsDate, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择开始日期" lay-reqText="请选择开始日期！" readonly>
+                                    </td>
+                                    <td class='endDate'>
+                                        <input th:id="'PC-db-endRsDate' + ${status.index + 1}" type="text" th:name="'endRsDate' + ${status.index + 1}" th:value="${#calendars.format(rsModeTime.endRsDate, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择结束日期" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-totalHours' + ${status.index + 1}" type="number" th:name="'totalHours' + ${status.index + 1}" th:value="${rsModeTime.totalHours}" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-totalDays' + ${status.index + 1}" type="number" th:name="'totalDays' + ${status.index + 1}" th:value="${rsModeTime.totalDays}" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-totalDaysMoreHours' + ${status.index + 1}" type="number" th:name="'totalDaysMoreHours' + ${status.index + 1}" th:value="${rsModeTime.totalDaysMoreHours}" readonly>
+                                    </td>
+                                    <td>
+                                        <button th:onclick="'deleteRS(this,' + ${status.index + 1} + ');'" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addRS" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRTSRSL1">
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-OCCN">给氧浓度变动</label>
+                            <input id="PC-db-OCCN" type="number" name="oxygenConcentrationChangeNum" th:value="${respiratorySupport} ? *{oxygenConcentrationChangeNum} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label for="PC-db-TOSTD">给氧时间合计</label>
+                            <div class="pc-db-spanItem">
+                                <input id="PC-db-TOSTD" type="number" name="totalOxygenSupplyTimeDays" th:value="${respiratorySupport} ? *{totalOxygenSupplyTimeDays} : '0'" lay-verify="requiredDB" readonly>
+                                <span>天</span>
+                                <input id="PC-db-TOSTH" type="number" name="totalOxygenSupplyTimeHours" th:value="${respiratorySupport} ? *{totalOxygenSupplyTimeHours} : '0'" lay-verify="requiredDB" readonly>
+                                <span>h</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <button id="PC-db-oxygenConcentration" class="pc-btn">给氧浓度图</button>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg10 layui-col-sm12">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>给氧浓度（%）</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>总计（h）</th>
+                                    <th>天</th>
+                                    <th>小时</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${oxygenConcentrationList} ? ${oxygenConcentrationList.size()} : _">
+                                <tr th:each="oxygenConcentratio, status : ${oxygenConcentrationList}" th:object="${oxygenConcentratio}">
+                                    <td>
+                                        <input type="number" th:name="'oxygenConcentration' + ${status.index + 1}" th:value="*{oxygenConcentration}" lay-verify="required" placeholder="请填写给氧浓度" lay-reqText="请填写给氧浓度！">
+                                    </td>
+                                    <td class="startDate">
+                                        <input th:id="'PC-db-startOcDate' + ${status.index + 1}" type="text" th:name="'startOcDate' + ${status.index + 1}" th:value="*{#calendars.format(startOcDate, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择开始日期" lay-reqText="请选择开始日期！" readonly>
+                                    </td>
+                                    <td class="endDate">
+                                        <input th:id="'PC-db-endOcDate' + ${status.index + 1}" type="text" th:name="'endOcDate' + ${status.index + 1}" th:value="*{#calendars.format(endOcDate, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择结束日期" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-totalOcHours' + ${status.index + 1}" type="number" th:name="'totalOcHours' + ${status.index + 1}" th:value="*{totalOcHours}" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-totalOcDays' + ${status.index + 1}" type="number" th:name="'totalOcDays' + ${status.index + 1}" th:value="*{totalOcDays}" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-TOCDMH' + ${status.index + 1}" type="number" th:name="'totalOcDaysMoreHours' + ${status.index + 1}" th:value="*{totalOcDaysMoreHours}" readonly>
+                                    </td>
+                                    <td>
+                                        <button th:onclick="'deleteOC(this,' + ${status.index + 1} + ');'" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addOC" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="RTSRS" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+
+<!-- 呼吸管理 -->
+<div id="PC-db-RespManage" class="pc-layer-panel">
+    <div class="pc-db-layer-table"></div>
+</div>
+<!-- 呼吸管理 -->
+<div id="PC-db-RespManage2" class="pc-layer-panel">
+    <div class="pc-db-pic">
+        <ul></ul>
+    </div>
+</div>
+<!-- 给氧浓度 -->
+<div id="PC-db-OCP" class="pc-layer-panel">
+    <div class="pc-layer-chart">
+        <canvas id="PC-layer-chart"></canvas>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDRTSRSWrite.min.js}"></script>
+</html>

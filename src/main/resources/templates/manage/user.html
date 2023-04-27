@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>用户管理 - 围产新生儿科研合作平台</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,用户,管理"/>
+    <meta name="description" content="围产新生儿科研合作平台用户管理"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/manage.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/head::adminHead"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <i class="iconfont icon-home"></i>
+                            <cite>首页</cite>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree">
+                    <!-- 系统管理 导航 -->
+                    <li class="layui-nav-item">
+                        <a href="/manage/hospital">
+                            <i class="pc-icon iconfont icon-yiyuanguanli1"></i>
+                            <cite>医院管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item layui-this">
+                        <a href="#">
+                            <i class="pc-icon iconfont icon-users"></i>
+                            <cite>用户管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="/manage/area">
+                            <i class="pc-icon iconfont icon-quyuguanli"></i>
+                            <cite>区域管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="/manage/wxmp">
+                            <i class="pc-icon iconfont icon-xiaochengxu"></i>
+                            <cite>小程序管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="/manage/feedback">
+                            <i class="pc-icon iconfont icon-fankui"></i>
+                            <cite>反馈处理</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework">
+                <div class="pc-admin-title-frame">
+                    <span class="pc-admin-title"><i class="iconfont icon-yonghuguanli"></i> 用户管理</span>
+                    <h1 th:if="${hospitalName} != null" class="pc-admin-nameTitle" th:text="${hospitalName}"></h1>
+                    <span th:if="${userCount} != null" class="pc-admin-numberTip layui-hide-xs">用户数量：<span id="PC-admin-userCount" class="layui-badge layui-bg-blue" th:text="${userCount}"></span></span>
+                    <a th:if="${hospitalId}" class="pc-link" href="javascript:addUser();"><i class="iconfont icon-zengjia"></i> 新增用户</a>
+                </div>
+                <div class="pc-admin-table-warp">
+                    <table id="PC-manage-table-user" th:data-hid="${hospitalId} ? ${hospitalId} : _" class="layui-table" lay-filter="PC-manage-table-user"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+
+<!-- 查看编辑/新增 用户信息 -->
+<div id="PC-admin-edit" class="pc-layer-panel">
+    <form class="layui-form" lay-filter="editUser" action="javascript:void(0);">
+        <input id="PC-admin-uid" type="hidden">
+        <input id="PC-admin-hid" type="hidden" name="hospitalId" th:value="${hospitalId} ? ${hospitalId} : _">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-username">登录账号</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-username" name="username" class="layui-input" type="text" title="登录账号" lay-verify="required" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-pwd">登录密码</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-pwd" name="password" class="layui-input" type="password" title="登录密码" lay-verify="required" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-rePwd">确认密码</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-rePwd" name="rePwd" class="layui-input" type="password" title="确认密码" lay-verify="required" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <select name="status" lay-verify="required">
+                    <option value="1">正常使用</option>
+                    <option value="0">停用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-fullName">姓名</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-fullName" name="fullName" class="layui-input" type="text" title="姓名" lay-verify="required" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-phone">联系方式</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-phone" name="phone" class="layui-input" type="number" title="联系方式">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="pc-btn pc-btn-save" lay-filter="editUser" lay-submit>保存</button>
+        </div>
+    </form>
+</div>
+
+<!-- 操作工具列 -->
+<script type="text/html" id="PC-manage-toolbar">
+    <div class="pc-admin-table-operate">
+        <button class="layui-btn layui-btn-radius layui-btn-xs" lay-event="edit">
+            <i class="iconfont icon-bianji"></i>
+            查看编辑
+        </button>
+    </div>
+</script>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/manage.min.js}"></script>
+</html>

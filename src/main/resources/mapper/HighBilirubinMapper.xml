@@ -1,0 +1,882 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.HighBilirubinMapper">
+    <!-- 查询 高胆数据库 病例基本信息 数据 -->
+    <select id="caseQry" resultType="com.pnsrcp.web.entity.patientCase.HBCaseMsg">
+        select phpi.mid, phhbi.cid, phpi.pcHbMotherNum, phhbi.pcHbChildNum, phhbi.childFullName, phhbi.gender,
+            phhbi.gestationalAgeWeek, phhbi.gestationalAgeDay, phhbi.birthWeight, phhbi.admissionDate, phhbi.birthday,
+            phhbi.childHospitalNumber, phhds.dischargeTime, phhbi.status
+        from pc_hb_perinatal_information phpi
+        left join pc_hb_hbt_basic_information phhbi
+        on phpi.mid = phhbi.mid
+        left join pc_hb_hbt_discharge_situation phhds
+        on phhbi.cid = phhds.cid
+        <where>
+            <if test="startDate != null and endDate != null">
+                phpi.createTime between #{startDate} and #{endDate}
+            </if>
+            <if test="caseStatus > -1">
+                and phhbi.status=#{caseStatus}
+            </if>
+            <if test="inHospital == 0">
+                and (phhds.dischargeTime is null
+                or phhds.dischargeTime='')
+            </if>
+            <if test="inHospital == 1">
+                and phhds.dischargeTime is not null
+                and phhds.dischargeTime!=''
+            </if>
+            <if test="hospitalId > 0">
+                and phpi.hospitalId=#{hospitalId}
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    phpi.hospitalId = #{hid}
+                </foreach>
+            </if>
+            <if test="searchKey != null and searchKey != ''">
+                <bind name="searchExp" value="'%' + searchKey + '%'"/>
+                and (phhbi.childFullName like #{searchExp}
+                or phhbi.pcHbChildNum like #{searchExp}
+                or phhbi.childHospitalNumber like #{searchExp}
+                or phpi.pcHbMotherNum like #{searchExp})
+            </if>
+        </where>
+        order by phpi.createTime desc, phhbi.createTime desc
+        <if test="page > -1 and limit > -1">
+            limit #{page},#{limit}
+        </if>
+    </select>
+
+    <!-- 查询 高胆数据库 病例基本信息 数量 -->
+    <select id="caseCount" resultType="int">
+        select count(*)
+        from pc_hb_perinatal_information phpi
+        left join pc_hb_hbt_basic_information phhbi
+        on phpi.mid = phhbi.mid
+        left join pc_hb_hbt_discharge_situation phhds
+        on phhbi.cid = phhds.cid
+        <where>
+            <if test="startDate != null and endDate != null">
+                and phhbi.admissionDate between #{startDate} and #{endDate}
+            </if>
+            <if test="caseStatus > -1">
+                and phhbi.status=#{caseStatus}
+            </if>
+            <if test="inHospital == 0">
+                and (phhds.dischargeTime is null
+                or phhds.dischargeTime='')
+            </if>
+            <if test="inHospital == 1">
+                and phhds.dischargeTime is not null
+                and phhds.dischargeTime!=''
+            </if>
+            <if test="hospitalId > 0">
+                and phpi.hospitalId=#{hospitalId}
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    phpi.hospitalId = #{hid}
+                </foreach>
+            </if>
+            <if test="searchKey != null and searchKey != ''">
+                <bind name="searchExp" value="'%' + searchKey + '%'"/>
+                and (phhbi.childFullName like #{searchExp}
+                or phhbi.pcHbChildNum like #{searchExp}
+                or phhbi.childHospitalNumber like #{searchExp}
+                or phpi.pcHbMotherNum like #{searchExp})
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取 数据量 -->
+    <select id="dataAmountQry" resultType="com.pnsrcp.web.entity.DataAmount">
+        select date_format(phhbi.createTime, '%Y-%m') month, count(phhbi.cid) sum
+        from pc_hb_perinatal_information phpi
+        left join pc_hb_hbt_basic_information phhbi
+        on phpi.mid = phhbi.mid
+        <where>
+            <if test="hospitalId > 0">
+                and phpi.hospitalId = #{hospitalId}
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    phpi.hospitalId = #{hid}
+                </foreach>
+            </if>
+        </where>
+        group by month
+        order by month desc
+    </select>
+
+    <!-- 查询 高胆数据库 抬头 基本信息 -->
+    <select id="hbBaseInformationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.HBBaseInformation">
+        select phpi.pcHbMotherNum, phpi.motherHospitalNumber, phhbi.pcHbChildNum, phhbi.childHospitalNumber, phhbi.childFullName
+        from pc_hb_perinatal_information phpi
+        left join pc_hb_hbt_basic_information phhbi
+        on phpi.mid = phhbi.mid
+        where phpi.mid=#{motherId}
+        <if test="childId > 0">
+            and phhbi.cid=#{childId}
+        </if>
+        limit 1
+    </select>
+
+    <!-- 查询 高胆数据库 病例 高胆编号 本院最大数值 -->
+    <select id="maxNumQry" resultType="int">
+        select max(right(pcHbMotherNum, 4))
+        from pc_hb_perinatal_information
+        where hospitalId=#{hid}
+        and substring(pcHbMotherNum, 5, 4)=convert(year(now()),char)
+    </select>
+
+    <!-- 查询 高胆数据库 母亲病例下的患儿病例 数量 -->
+    <select id="hbCaseChildNumQry" resultType="int">
+        select count(cid)
+        from pc_hb_hbt_basic_information
+        where mid=#{motherId}
+    </select>
+
+    <!-- 删除 高胆数据库 患儿病例 信息 -->
+    <delete id="hbCaseChildDelete">
+        delete from pc_hb_hbt_basic_information
+        where cid=#{childId}
+        limit 1
+    </delete>
+
+    <!-- 删除 高胆数据库 病例 信息 -->
+    <delete id="hbCaseDelete">
+        delete from pc_hb_perinatal_information
+        where mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 母亲信息 是否存在 -->
+    <select id="hbPiMiTestQry" resultType="int">
+        select count(mid)
+        from pc_hb_perinatal_information
+        where motherFullName=#{motherFullName}
+        and motherPhone=#{motherPhone}
+        and motherHospitalNumber=#{motherHospitalNumber}
+    </select>
+
+    <!-- 查询 高胆数据库 围产信息 数据 -->
+    <select id="hbPerinatalInformationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBPerinatalInformation">
+        select mid, pcHbMotherNum, motherFullName, motherPhone, motherHospitalNumber, motherAge, motherNation, motherAboBloodType,
+            motherRhBloodType, motherEducationalLevel, fatherAge, fatherNation, fatherAboBloodType, fatherRhBloodType,
+            fatherEducationalLevel, pregnancyNumber, birthNumber, abortionNumber, deliveryMode, motherHypertension, pregnancyDiabetes,
+            pregnancyIntrahepaticCholestasis, pregnancyHypothyroidism, childrenNumber, previousChildrenPhototherapy, previousChildrenExchangeBlood
+        from pc_hb_perinatal_information
+        where mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入 高胆数据库 围产信息 数据 -->
+    <insert id="hbPerinatalInformationInsert" useGeneratedKeys="true" keyProperty="hbPerinatalInformation.mid" keyColumn="mid">
+        insert into pc_hb_perinatal_information (pcHbMotherNum, motherFullName, motherPhone, motherHospitalNumber, motherAge,
+            motherNation, motherAboBloodType, motherRhBloodType, motherEducationalLevel, fatherAge, fatherNation, fatherAboBloodType,
+            fatherRhBloodType, fatherEducationalLevel, pregnancyNumber, birthNumber, abortionNumber, deliveryMode, motherHypertension,
+            pregnancyDiabetes, pregnancyIntrahepaticCholestasis, pregnancyHypothyroidism, childrenNumber, previousChildrenPhototherapy,
+            previousChildrenExchangeBlood, writerId, hospitalId)
+        value (#{hbPerinatalInformation.pcHbMotherNum}, #{hbPerinatalInformation.motherFullName}, #{hbPerinatalInformation.motherPhone},
+            #{hbPerinatalInformation.motherHospitalNumber}, #{hbPerinatalInformation.motherAge}, #{hbPerinatalInformation.motherNation},
+            #{hbPerinatalInformation.motherAboBloodType}, #{hbPerinatalInformation.motherRhBloodType}, #{hbPerinatalInformation.motherEducationalLevel},
+            #{hbPerinatalInformation.fatherAge}, #{hbPerinatalInformation.fatherNation}, #{hbPerinatalInformation.fatherAboBloodType},
+            #{hbPerinatalInformation.fatherRhBloodType}, #{hbPerinatalInformation.fatherEducationalLevel}, #{hbPerinatalInformation.pregnancyNumber},
+            #{hbPerinatalInformation.birthNumber}, #{hbPerinatalInformation.abortionNumber}, #{hbPerinatalInformation.deliveryMode},
+            #{hbPerinatalInformation.motherHypertension}, #{hbPerinatalInformation.pregnancyDiabetes}, #{hbPerinatalInformation.pregnancyIntrahepaticCholestasis},
+            #{hbPerinatalInformation.pregnancyHypothyroidism}, #{hbPerinatalInformation.childrenNumber}, #{hbPerinatalInformation.previousChildrenPhototherapy},
+            #{hbPerinatalInformation.previousChildrenExchangeBlood}, #{writerId}<if test="hospitalId>0">, #{hospitalId}</if>)
+    </insert>
+
+    <!-- 更新 高胆数据库 围产信息 数据 -->
+    <update id="hbPerinatalInformationUpdate">
+        update pc_hb_perinatal_information
+        set pcHbMotherNum=#{hbPerinatalInformation.pcHbMotherNum},
+            motherFullName=#{hbPerinatalInformation.motherFullName},
+            motherPhone=#{hbPerinatalInformation.motherPhone},
+            motherHospitalNumber=#{hbPerinatalInformation.motherHospitalNumber},
+            motherAge=#{hbPerinatalInformation.motherAge},
+            motherNation=#{hbPerinatalInformation.motherNation},
+            motherAboBloodType=#{hbPerinatalInformation.motherAboBloodType},
+            motherRhBloodType=#{hbPerinatalInformation.motherRhBloodType},
+            motherEducationalLevel=#{hbPerinatalInformation.motherEducationalLevel},
+            fatherAge=#{hbPerinatalInformation.fatherAge},
+            fatherNation=#{hbPerinatalInformation.fatherNation},
+            fatherAboBloodType=#{hbPerinatalInformation.fatherAboBloodType},
+            fatherRhBloodType=#{hbPerinatalInformation.fatherRhBloodType},
+            fatherEducationalLevel=#{hbPerinatalInformation.fatherEducationalLevel},
+            pregnancyNumber=#{hbPerinatalInformation.pregnancyNumber},
+            birthNumber=#{hbPerinatalInformation.birthNumber},
+            abortionNumber=#{hbPerinatalInformation.abortionNumber},
+            deliveryMode=#{hbPerinatalInformation.deliveryMode},
+            motherHypertension=#{hbPerinatalInformation.motherHypertension},
+            pregnancyDiabetes=#{hbPerinatalInformation.pregnancyDiabetes},
+            pregnancyIntrahepaticCholestasis=#{hbPerinatalInformation.pregnancyIntrahepaticCholestasis},
+            pregnancyHypothyroidism=#{hbPerinatalInformation.pregnancyHypothyroidism},
+            childrenNumber=#{hbPerinatalInformation.childrenNumber},
+            previousChildrenPhototherapy=#{hbPerinatalInformation.previousChildrenPhototherapy},
+            previousChildrenExchangeBlood=#{hbPerinatalInformation.previousChildrenExchangeBlood}
+        where mid=#{hbPerinatalInformation.mid}
+    </update>
+
+    <!-- 插入/更新 高胆数据库 高胆治疗 基本信息 数据 -->
+    <insert id="hbHbtBasicInformationInsertUpdate"
+            parameterType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtBasicInformation"
+            useGeneratedKeys="true" keyProperty="hbHbtBasicInformation.cid" keyColumn="cid">
+        insert into pc_hb_hbt_basic_information (cid, mid, multicellularNumber, childFullName, childHospitalNumber, pcHbChildNum,
+            gender, gestationalAgeWeek, gestationalAgeDay, birthday, birthWeight, birthHeadCircumference, birthLength, birthApgarScore1Min,
+            birthApgarScore5Min, birthApgarScore10Min, admissionDate, admissionDayAge, admissionWeight, admissionBodyTemperature)
+        value (#{hbHbtBasicInformation.cid}, #{hbHbtBasicInformation.mid}, #{hbHbtBasicInformation.multicellularNumber},
+            #{hbHbtBasicInformation.childFullName}, #{hbHbtBasicInformation.childHospitalNumber}, #{hbHbtBasicInformation.pcHbChildNum},
+            #{hbHbtBasicInformation.gender}, #{hbHbtBasicInformation.gestationalAgeWeek}, #{hbHbtBasicInformation.gestationalAgeDay},
+            #{hbHbtBasicInformation.birthday}, #{hbHbtBasicInformation.birthWeight}, #{hbHbtBasicInformation.birthHeadCircumference},
+            #{hbHbtBasicInformation.birthLength}, #{hbHbtBasicInformation.birthApgarScore1Min}, #{hbHbtBasicInformation.birthApgarScore5Min},
+            #{hbHbtBasicInformation.birthApgarScore10Min}, #{hbHbtBasicInformation.admissionDate}, #{hbHbtBasicInformation.admissionDayAge},
+            #{hbHbtBasicInformation.admissionWeight}, #{hbHbtBasicInformation.admissionBodyTemperature})
+        on duplicate key update
+            multicellularNumber=#{hbHbtBasicInformation.multicellularNumber},
+            childFullName=#{hbHbtBasicInformation.childFullName},
+            childHospitalNumber=#{hbHbtBasicInformation.childHospitalNumber},
+            pcHbChildNum=#{hbHbtBasicInformation.pcHbChildNum},
+            gender=#{hbHbtBasicInformation.gender},
+            gestationalAgeWeek=#{hbHbtBasicInformation.gestationalAgeWeek},
+            gestationalAgeDay=#{hbHbtBasicInformation.gestationalAgeDay},
+            birthday=#{hbHbtBasicInformation.birthday},
+            birthWeight=#{hbHbtBasicInformation.birthWeight},
+            birthHeadCircumference=#{hbHbtBasicInformation.birthHeadCircumference},
+            birthLength=#{hbHbtBasicInformation.birthLength},
+            birthApgarScore1Min=#{hbHbtBasicInformation.birthApgarScore1Min},
+            birthApgarScore5Min=#{hbHbtBasicInformation.birthApgarScore5Min},
+            birthApgarScore10Min=#{hbHbtBasicInformation.birthApgarScore10Min},
+            admissionDate=#{hbHbtBasicInformation.admissionDate},
+            admissionDayAge=#{hbHbtBasicInformation.admissionDayAge},
+            admissionWeight=#{hbHbtBasicInformation.admissionWeight},
+            admissionBodyTemperature=#{hbHbtBasicInformation.admissionBodyTemperature}
+    </insert>
+
+    <!-- 查询 高胆数据库 高胆治疗 基本信息 数据 -->
+    <select id="hbHbtBasicInformationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtBasicInformation">
+        select cid, mid, multicellularNumber, childFullName, childHospitalNumber, pcHbChildNum, gender, gestationalAgeWeek,
+            gestationalAgeDay, birthday, birthWeight, birthHeadCircumference, birthLength, birthApgarScore1Min, birthApgarScore5Min,
+            birthApgarScore10Min, admissionDate, admissionDayAge, admissionWeight, admissionBodyTemperature
+        from pc_hb_hbt_basic_information
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入 高胆数据库 高胆治疗 基本信息 新的患儿 -->
+    <insert id="hbHbtBiChildInsert">
+        insert into pc_hb_hbt_basic_information (mid, multicellularNumber, pcHbChildNum)
+        value (#{motherId}, #{multicellularNumber}, #{pcHbChildNum})
+    </insert>
+
+    <!-- 更新 高胆数据库 高胆治疗 基本信息 新生儿胎数 -->
+    <update id="hbHbtBiFetusesNumUpdate">
+        update pc_hb_hbt_basic_information
+        set multicellularNumber=#{fetusesNum}
+        where mid=#{motherId}
+    </update>
+
+    <!-- 查询 高胆数据库 高胆治疗 基本信息 母亲孩子的ID -->
+    <select id="motherChildIdQry" resultType="integer">
+        select cid
+        from pc_hb_hbt_basic_information
+        where mid=#{motherId}
+    </select>
+
+    <!-- 更新 高胆数据库 高胆治疗 基本信息 母亲孩子的围产新生儿科研合作平台编号 -->
+    <update id="hbHbtBiPcHbChildNumUpdate">
+        update pc_hb_hbt_basic_information
+        set pcHbChildNum=#{pcHbChildNum}
+        where cid=#{childId}
+        and mid=#{motherId}
+    </update>
+
+    <!-- 插入/更新 高胆数据库 高胆治疗 高胆病因 数据 -->
+    <insert id="hbHbtHighBilirubinCausesInsertUpdate">
+        insert into pc_hb_hbt_high_bilirubin_causes (cid, mid, cmvVirusInfection, congenitalSyphilis, diagnosedSepsis,
+            otherCausesBacterialInfections, clinicalSepsis, otherTorchInfections, headHematoma, intracranialHemorrhage,
+            abdominalOrganHemorrhage, aboHemolysis, rhHemolysis, g6pdDefect, otherCausesHemolysis, skinEcchymosis, breastMilkJaundice,
+            tooLittleIntakeIncreasedEnterohepaticCirculation, metabolicAcidosis, hypothyroidism, tpnRelatedCholestasis,
+            isGeneticFactors, geneticFactors, geneticFactorsOther)
+        value (#{hbHbtBasicInformation.cid}, #{hbHbtBasicInformation.mid}, #{hbHbtBasicInformation.cmvVirusInfection},
+            #{hbHbtBasicInformation.congenitalSyphilis}, #{hbHbtBasicInformation.diagnosedSepsis},
+            #{hbHbtBasicInformation.otherCausesBacterialInfections}, #{hbHbtBasicInformation.clinicalSepsis},
+            #{hbHbtBasicInformation.otherTorchInfections}, #{hbHbtBasicInformation.headHematoma}, #{hbHbtBasicInformation.intracranialHemorrhage},
+            #{hbHbtBasicInformation.abdominalOrganHemorrhage}, #{hbHbtBasicInformation.aboHemolysis}, #{hbHbtBasicInformation.rhHemolysis},
+            #{hbHbtBasicInformation.g6pdDefect}, #{hbHbtBasicInformation.otherCausesHemolysis}, #{hbHbtBasicInformation.skinEcchymosis},
+            #{hbHbtBasicInformation.breastMilkJaundice}, #{hbHbtBasicInformation.tooLittleIntakeIncreasedEnterohepaticCirculation},
+            #{hbHbtBasicInformation.metabolicAcidosis}, #{hbHbtBasicInformation.hypothyroidism}, #{hbHbtBasicInformation.tpnRelatedCholestasis},
+            #{hbHbtBasicInformation.isGeneticFactors}, #{hbHbtBasicInformation.geneticFactors}, #{hbHbtBasicInformation.geneticFactorsOther})
+        on duplicate key update
+            cmvVirusInfection=#{hbHbtBasicInformation.cmvVirusInfection},
+            congenitalSyphilis=#{hbHbtBasicInformation.congenitalSyphilis},
+            diagnosedSepsis=#{hbHbtBasicInformation.diagnosedSepsis},
+            otherCausesBacterialInfections=#{hbHbtBasicInformation.otherCausesBacterialInfections},
+            clinicalSepsis=#{hbHbtBasicInformation.clinicalSepsis},
+            otherTorchInfections=#{hbHbtBasicInformation.otherTorchInfections},
+            headHematoma=#{hbHbtBasicInformation.headHematoma},
+            intracranialHemorrhage=#{hbHbtBasicInformation.intracranialHemorrhage},
+            abdominalOrganHemorrhage=#{hbHbtBasicInformation.abdominalOrganHemorrhage},
+            aboHemolysis=#{hbHbtBasicInformation.aboHemolysis},
+            rhHemolysis=#{hbHbtBasicInformation.rhHemolysis},
+            g6pdDefect=#{hbHbtBasicInformation.g6pdDefect},
+            otherCausesHemolysis=#{hbHbtBasicInformation.otherCausesHemolysis},
+            skinEcchymosis=#{hbHbtBasicInformation.skinEcchymosis},
+            breastMilkJaundice=#{hbHbtBasicInformation.breastMilkJaundice},
+            tooLittleIntakeIncreasedEnterohepaticCirculation=#{hbHbtBasicInformation.tooLittleIntakeIncreasedEnterohepaticCirculation},
+            metabolicAcidosis=#{hbHbtBasicInformation.metabolicAcidosis},
+            hypothyroidism=#{hbHbtBasicInformation.hypothyroidism},
+            tpnRelatedCholestasis=#{hbHbtBasicInformation.tpnRelatedCholestasis},
+            isGeneticFactors=#{hbHbtBasicInformation.isGeneticFactors},
+            geneticFactors=#{hbHbtBasicInformation.geneticFactors},
+            geneticFactorsOther=#{hbHbtBasicInformation.geneticFactorsOther}
+    </insert>
+
+    <!-- 查询 高胆数据库 高胆治疗 高胆病因 -->
+    <select id="hbHbtHighBilirubinCausesQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtHighBilirubinCauses">
+        select cid, mid, cmvVirusInfection, congenitalSyphilis, diagnosedSepsis, otherCausesBacterialInfections, clinicalSepsis,
+            otherTorchInfections, headHematoma, intracranialHemorrhage, abdominalOrganHemorrhage, aboHemolysis, rhHemolysis,
+            g6pdDefect, otherCausesHemolysis, skinEcchymosis, breastMilkJaundice, tooLittleIntakeIncreasedEnterohepaticCirculation,
+            metabolicAcidosis, hypothyroidism, tpnRelatedCholestasis, isGeneticFactors, geneticFactors, geneticFactorsOther
+        from pc_hb_hbt_high_bilirubin_causes
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入/更新 高胆数据库 高胆治疗 检查指标 数据 -->
+    <insert id="hbHbtCheckMetricsInsertUpdate">
+        insert into pc_hb_hbt_check_metrics (cid, mid, admissionTransdermalBilirubinValue, phototherapyNumber,
+            phototherapyTotalDuration, peakTime, peakBloodTotalBilirubin, exchangeBloodNumber, exchangeBloodTotalAmount)
+        value (#{hbHbtCheckMetrics.cid}, #{hbHbtCheckMetrics.mid}, #{hbHbtCheckMetrics.admissionTransdermalBilirubinValue},
+            #{hbHbtCheckMetrics.phototherapyNumber}, #{hbHbtCheckMetrics.phototherapyTotalDuration}, #{hbHbtCheckMetrics.peakTime},
+            #{hbHbtCheckMetrics.peakBloodTotalBilirubin}, #{hbHbtCheckMetrics.exchangeBloodNumber}, #{hbHbtCheckMetrics.exchangeBloodTotalAmount})
+        on duplicate key update
+            admissionTransdermalBilirubinValue=#{hbHbtCheckMetrics.admissionTransdermalBilirubinValue},
+            phototherapyNumber=#{hbHbtCheckMetrics.phototherapyNumber},
+            phototherapyTotalDuration=#{hbHbtCheckMetrics.phototherapyTotalDuration},
+            peakTime=#{hbHbtCheckMetrics.peakTime},
+            peakBloodTotalBilirubin=#{hbHbtCheckMetrics.peakBloodTotalBilirubin},
+            exchangeBloodNumber=#{hbHbtCheckMetrics.exchangeBloodNumber},
+            exchangeBloodTotalAmount=#{hbHbtCheckMetrics.exchangeBloodTotalAmount}
+    </insert>
+
+    <!-- 插入 高胆数据库 高胆治疗 检查指标 光疗 数据 -->
+    <insert id="hbHbtCmPhototherapyInsert">
+        insert into pc_hb_hbt_cm_phototherapy (cid, mid, pCheckTime, phototherapyDuration, pTransdermalBilirubinValue,
+            pBloodTotalBilirubin, pDirectBilirubinValue, pAlt, pAst, pAlbumin, pHgb, pHct)
+        value (#{hbHbtCmPhototherapy.cid}, #{hbHbtCmPhototherapy.mid}, #{hbHbtCmPhototherapy.pCheckTime},
+            #{hbHbtCmPhototherapy.phototherapyDuration},
+            #{hbHbtCmPhototherapy.pTransdermalBilirubinValue}, #{hbHbtCmPhototherapy.pBloodTotalBilirubin},
+            #{hbHbtCmPhototherapy.pDirectBilirubinValue},
+            #{hbHbtCmPhototherapy.pAlt}, #{hbHbtCmPhototherapy.pAst}, #{hbHbtCmPhototherapy.pAlbumin},
+            #{hbHbtCmPhototherapy.pHgb}, #{hbHbtCmPhototherapy.pHct})
+    </insert>
+
+    <!-- 删除 高胆数据库 高胆治疗 检查指标 光疗 数据 -->
+    <delete id="hbHbtCmPhototherapyDelete">
+        delete from pc_hb_hbt_cm_phototherapy
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 插入 高胆数据库 高胆治疗 检查指标 换血 数据 -->
+    <insert id="hbHbtCmExchangeBloodInsert">
+        insert into pc_hb_hbt_cm_exchange_blood (cid, mid, ebCheckTime, exchangeBloodVolume, eTransdermalBilirubinValue,
+        eBloodTotalBilirubin, eDirectBilirubinValue, eAlt, eAst, eAlbumin, eHgb, eHct)
+        value (#{hbHbtCmExchangeBlood.cid}, #{hbHbtCmExchangeBlood.mid}, #{hbHbtCmExchangeBlood.ebCheckTime},
+            #{hbHbtCmExchangeBlood.exchangeBloodVolume},
+            #{hbHbtCmExchangeBlood.eTransdermalBilirubinValue}, #{hbHbtCmExchangeBlood.eBloodTotalBilirubin},
+            #{hbHbtCmExchangeBlood.eDirectBilirubinValue},
+            #{hbHbtCmExchangeBlood.eAlt}, #{hbHbtCmExchangeBlood.eAst}, #{hbHbtCmExchangeBlood.eAlbumin},
+            #{hbHbtCmExchangeBlood.eHgb}, #{hbHbtCmExchangeBlood.eHct})
+    </insert>
+
+    <!-- 删除 高胆数据库 高胆治疗 检查指标 换血 数据 -->
+    <delete id="hbHbtCmExchangeBloodDelete">
+        delete from pc_hb_hbt_cm_exchange_blood
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 高胆治疗 检查指标 -->
+    <select id="hbHbtCheckMetricsQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtCheckMetrics">
+        select cid, mid, admissionTransdermalBilirubinValue, phototherapyNumber, phototherapyTotalDuration, peakTime,
+            peakBloodTotalBilirubin, exchangeBloodNumber, exchangeBloodTotalAmount
+        from pc_hb_hbt_check_metrics
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 高胆数据库 高胆治疗 检查指标 检查 -->
+    <select id="hbHbtCmPhototherapyQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtCmPhototherapy">
+        select id, cid, mid, pCheckTime, phototherapyDuration, pTransdermalBilirubinValue, pBloodTotalBilirubin,
+            pDirectBilirubinValue, pAlt, pAst, pAlbumin, pHgb, pHct, createTime
+        from pc_hb_hbt_cm_phototherapy
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 高胆数据库 高胆治疗 检查指标 换血 -->
+    <select id="hbHbtCmExchangeBloodQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtCmExchangeBlood">
+        select id, cid, mid, ebCheckTime, exchangeBloodVolume, eTransdermalBilirubinValue, eBloodTotalBilirubin,
+            eDirectBilirubinValue, eAlt, eAst, eAlbumin, eHgb, eHct
+        from pc_hb_hbt_cm_exchange_blood
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 高胆数据库 高胆治疗 治疗情况 数据 -->
+    <insert id="hbHbtTreatmentSituationInsertUpdate">
+        insert into pc_hb_hbt_treatment_situation (cid, mid, antibiotic, ivig, albumin, phenobarbital, glucocorticoids, probiotics,
+            oralChineseMedicineTreatment, androdeoxycholicAcid, rehydration, rehydrationDuration, hasOtherDrugs, otherDrugs)
+        value (#{hbHbtTreatmentSituation.cid}, #{hbHbtTreatmentSituation.mid}, #{hbHbtTreatmentSituation.antibiotic},
+            #{hbHbtTreatmentSituation.ivig}, #{hbHbtTreatmentSituation.albumin}, #{hbHbtTreatmentSituation.phenobarbital},
+            #{hbHbtTreatmentSituation.glucocorticoids}, #{hbHbtTreatmentSituation.probiotics},
+            #{hbHbtTreatmentSituation.oralChineseMedicineTreatment}, #{hbHbtTreatmentSituation.androdeoxycholicAcid},
+            #{hbHbtTreatmentSituation.rehydration}, #{hbHbtTreatmentSituation.rehydrationDuration},
+            #{hbHbtTreatmentSituation.hasOtherDrugs}, #{hbHbtTreatmentSituation.otherDrugs})
+        on duplicate key update
+            antibiotic=#{hbHbtTreatmentSituation.antibiotic},
+            ivig=#{hbHbtTreatmentSituation.ivig},
+            albumin=#{hbHbtTreatmentSituation.albumin},
+            phenobarbital=#{hbHbtTreatmentSituation.phenobarbital},
+            glucocorticoids=#{hbHbtTreatmentSituation.glucocorticoids},
+            probiotics=#{hbHbtTreatmentSituation.probiotics},
+            oralChineseMedicineTreatment=#{hbHbtTreatmentSituation.oralChineseMedicineTreatment},
+            androdeoxycholicAcid=#{hbHbtTreatmentSituation.androdeoxycholicAcid},
+            rehydration=#{hbHbtTreatmentSituation.rehydration},
+            rehydrationDuration=#{hbHbtTreatmentSituation.rehydrationDuration},
+            hasOtherDrugs=#{hbHbtTreatmentSituation.hasOtherDrugs},
+            otherDrugs=#{hbHbtTreatmentSituation.otherDrugs}
+    </insert>
+
+    <!-- 查询 高胆数据库 高胆治疗 治疗情况 -->
+    <select id="hbHbtTreatmentSituationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtTreatmentSituation">
+        select cid, mid, antibiotic, ivig, albumin, phenobarbital, glucocorticoids, probiotics, oralChineseMedicineTreatment,
+            androdeoxycholicAcid, rehydration, rehydrationDuration, hasOtherDrugs, otherDrugs
+        from pc_hb_hbt_treatment_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 高胆数据库 患儿 入院日期 -->
+    <select id="birthMsgQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBBirthMsg">
+        select birthday, admissionDate
+        from pc_hb_hbt_basic_information
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 高胆数据库 高胆治疗 脑病评分 数据 -->
+    <insert id="hbHbtEncephalopathyScoreInsert">
+        insert into pc_hb_hbt_encephalopathy_score (cid, mid, day, thisDate, mindState0, mindState1, mindState2, mindState3,
+            muscleTension0, muscleTension1, muscleTension2, muscleTension3, cryForm0, cryForm1, cryForm2, cryForm3, allSum)
+        value (#{hbHbtEncephalopathyScore.cid}, #{hbHbtEncephalopathyScore.mid}, #{hbHbtEncephalopathyScore.day},
+            #{hbHbtEncephalopathyScore.thisDate}, #{hbHbtEncephalopathyScore.mindState0}, #{hbHbtEncephalopathyScore.mindState1},
+            #{hbHbtEncephalopathyScore.mindState2}, #{hbHbtEncephalopathyScore.mindState3}, #{hbHbtEncephalopathyScore.muscleTension0},
+            #{hbHbtEncephalopathyScore.muscleTension1}, #{hbHbtEncephalopathyScore.muscleTension2}, #{hbHbtEncephalopathyScore.muscleTension3},
+            #{hbHbtEncephalopathyScore.cryForm0}, #{hbHbtEncephalopathyScore.cryForm1}, #{hbHbtEncephalopathyScore.cryForm2},
+            #{hbHbtEncephalopathyScore.cryForm3}, #{hbHbtEncephalopathyScore.allSum})
+    </insert>
+
+    <!-- 删除 高胆数据库 高胆治疗 脑病评分 数据 -->
+    <delete id="hbHbtEncephalopathyScoreDelete">
+        delete from pc_hb_hbt_encephalopathy_score
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 高胆治疗 脑病评分 -->
+    <select id="hbHbtEncephalopathyScoreQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtEncephalopathyScore">
+        select id, cid, mid, day, thisDate, mindState0, mindState1, mindState2, mindState3, muscleTension0, muscleTension1,
+            muscleTension2, muscleTension3, cryForm0, cryForm1, cryForm2, cryForm3, allSum
+        from pc_hb_hbt_encephalopathy_score
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 高胆数据库 高胆治疗 高胆原因 数据 -->
+    <insert id="hbHbtHighBilirubinReasonsInsertUpdate">
+        insert into pc_hb_hbt_high_bilirubin_reasons (cid, mid, mbsrDischargeTime, mbsrDischargeTimeAfterBirth, jaundiceEducationDuringPregnancy,
+            mbsrReceiveEducationBeforeDischarge, parentsAwareHyperbilirubinemiaDangers, mcAssessmentJaundiceRiskRemindFollowUpBeforeDischarge,
+            whetherMcRemindFollowUpAfterMbsrDischarge, whetherFollowUpRequired, followUpAdmission, afterDischargeToPreClinicBilirubinFollowUpNumber)
+        value (#{hbHbtHighBilirubinReasons.cid}, #{hbHbtHighBilirubinReasons.mid}, #{hbHbtHighBilirubinReasons.mbsrDischargeTime},
+            #{hbHbtHighBilirubinReasons.mbsrDischargeTimeAfterBirth}, #{hbHbtHighBilirubinReasons.jaundiceEducationDuringPregnancy},
+            #{hbHbtHighBilirubinReasons.mbsrReceiveEducationBeforeDischarge}, #{hbHbtHighBilirubinReasons.parentsAwareHyperbilirubinemiaDangers},
+            #{hbHbtHighBilirubinReasons.mcAssessmentJaundiceRiskRemindFollowUpBeforeDischarge},
+            #{hbHbtHighBilirubinReasons.whetherMcRemindFollowUpAfterMbsrDischarge}, #{hbHbtHighBilirubinReasons.whetherFollowUpRequired},
+            #{hbHbtHighBilirubinReasons.followUpAdmission}, #{hbHbtHighBilirubinReasons.afterDischargeToPreClinicBilirubinFollowUpNumber})
+        on duplicate key update
+            mbsrDischargeTime=#{hbHbtHighBilirubinReasons.mbsrDischargeTime},
+            mbsrDischargeTimeAfterBirth=#{hbHbtHighBilirubinReasons.mbsrDischargeTimeAfterBirth},
+            jaundiceEducationDuringPregnancy=#{hbHbtHighBilirubinReasons.jaundiceEducationDuringPregnancy},
+            mbsrReceiveEducationBeforeDischarge=#{hbHbtHighBilirubinReasons.mbsrReceiveEducationBeforeDischarge},
+            parentsAwareHyperbilirubinemiaDangers=#{hbHbtHighBilirubinReasons.parentsAwareHyperbilirubinemiaDangers},
+            mcAssessmentJaundiceRiskRemindFollowUpBeforeDischarge=#{hbHbtHighBilirubinReasons.mcAssessmentJaundiceRiskRemindFollowUpBeforeDischarge},
+            whetherMcRemindFollowUpAfterMbsrDischarge=#{hbHbtHighBilirubinReasons.whetherMcRemindFollowUpAfterMbsrDischarge},
+            whetherFollowUpRequired=#{hbHbtHighBilirubinReasons.whetherFollowUpRequired},
+            followUpAdmission=#{hbHbtHighBilirubinReasons.followUpAdmission},
+            afterDischargeToPreClinicBilirubinFollowUpNumber=#{hbHbtHighBilirubinReasons.afterDischargeToPreClinicBilirubinFollowUpNumber}
+    </insert>
+
+    <!-- 查询 高胆数据库 高胆治疗 高胆原因 -->
+    <select id="hbHbtHighBilirubinReasonsQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtHighBilirubinReasons">
+        select cid, mid, mbsrDischargeTime, mbsrDischargeTimeAfterBirth, jaundiceEducationDuringPregnancy, mbsrReceiveEducationBeforeDischarge, parentsAwareHyperbilirubinemiaDangers,
+            mcAssessmentJaundiceRiskRemindFollowUpBeforeDischarge, whetherMcRemindFollowUpAfterMbsrDischarge, whetherFollowUpRequired,
+            followUpAdmission, afterDischargeToPreClinicBilirubinFollowUpNumber
+        from pc_hb_hbt_high_bilirubin_reasons
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入/更新 高胆数据库 高胆治疗 辅助检查 数据 -->
+    <insert id="hbHbtAuxiliaryExaminationInsertUpdate">
+        insert into pc_hb_hbt_auxiliary_examination (cid, mid, baepRightEar, baepLeftEar, baepResult, baepFollowUpAdvice,
+            mriResult, mriResultOther, mriFollowUpAdvice, aiEegResult, aiEegFollowUpAdvice, gmsWrithingMotionStage,
+            gmsRestlessMovementStage, gmsFollowUpAdvice)
+        value (#{hbHbtAuxiliaryExamination.cid}, #{hbHbtAuxiliaryExamination.mid}, #{hbHbtAuxiliaryExamination.baepRightEar},
+            #{hbHbtAuxiliaryExamination.baepLeftEar}, #{hbHbtAuxiliaryExamination.baepResult}, #{hbHbtAuxiliaryExamination.baepFollowUpAdvice},
+            #{hbHbtAuxiliaryExamination.mriResult}, #{hbHbtAuxiliaryExamination.mriResultOther}, #{hbHbtAuxiliaryExamination.mriFollowUpAdvice},
+            #{hbHbtAuxiliaryExamination.aiEegResult}, #{hbHbtAuxiliaryExamination.aiEegFollowUpAdvice}, #{hbHbtAuxiliaryExamination.gmsWrithingMotionStage},
+            #{hbHbtAuxiliaryExamination.gmsRestlessMovementStage}, #{hbHbtAuxiliaryExamination.gmsFollowUpAdvice})
+        on duplicate key update
+            baepRightEar=#{hbHbtAuxiliaryExamination.baepRightEar},
+            baepLeftEar=#{hbHbtAuxiliaryExamination.baepLeftEar},
+            baepResult=#{hbHbtAuxiliaryExamination.baepResult},
+            baepFollowUpAdvice=#{hbHbtAuxiliaryExamination.baepFollowUpAdvice},
+            mriResult=#{hbHbtAuxiliaryExamination.mriResult},
+            mriResultOther=#{hbHbtAuxiliaryExamination.mriResultOther},
+            mriFollowUpAdvice=#{hbHbtAuxiliaryExamination.mriFollowUpAdvice},
+            aiEegResult=#{hbHbtAuxiliaryExamination.aiEegResult},
+            aiEegFollowUpAdvice=#{hbHbtAuxiliaryExamination.aiEegFollowUpAdvice},
+            gmsWrithingMotionStage=#{hbHbtAuxiliaryExamination.gmsWrithingMotionStage},
+            gmsRestlessMovementStage=#{hbHbtAuxiliaryExamination.gmsRestlessMovementStage},
+            gmsFollowUpAdvice=#{hbHbtAuxiliaryExamination.gmsFollowUpAdvice}
+    </insert>
+
+    <!-- 查询 高胆数据库 高胆治疗 辅助检查 -->
+    <select id="hbHbtAuxiliaryExaminationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtAuxiliaryExamination">
+        select cid, mid, baepRightEar, baepLeftEar, baepResult, baepFollowUpAdvice, mriResult, mriResultOther, mriFollowUpAdvice,
+            aiEegResult, aiEegFollowUpAdvice, gmsWrithingMotionStage, gmsRestlessMovementStage, gmsFollowUpAdvice
+        from pc_hb_hbt_auxiliary_examination
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入/更新 高胆数据库 高胆治疗 出院情况 数据 -->
+    <insert id="hbHbtDischargeSituationInsertUpdate">
+        insert into pc_hb_hbt_discharge_situation (cid, mid, bilirubinLevelsDiagnosis, bilirubinNeurotoxicity,
+            whetherEncephalopathySymptomsWhenAdmission, encephalopathyTime, dischargeTime, dischargeWeight,
+            dischargePrognosis, hospitalCosts)
+        value (#{hbHbtDischargeSituation.cid}, #{hbHbtDischargeSituation.mid}, #{hbHbtDischargeSituation.bilirubinLevelsDiagnosis},
+            #{hbHbtDischargeSituation.bilirubinNeurotoxicity}, #{hbHbtDischargeSituation.whetherEncephalopathySymptomsWhenAdmission},
+            #{hbHbtDischargeSituation.encephalopathyTime}, #{hbHbtDischargeSituation.dischargeTime},
+            #{hbHbtDischargeSituation.dischargeWeight}, #{hbHbtDischargeSituation.dischargePrognosis}, #{hbHbtDischargeSituation.hospitalCosts})
+        on duplicate key update
+            bilirubinLevelsDiagnosis=#{hbHbtDischargeSituation.bilirubinLevelsDiagnosis},
+            bilirubinNeurotoxicity=#{hbHbtDischargeSituation.bilirubinNeurotoxicity},
+            whetherEncephalopathySymptomsWhenAdmission=#{hbHbtDischargeSituation.whetherEncephalopathySymptomsWhenAdmission},
+            encephalopathyTime=#{hbHbtDischargeSituation.encephalopathyTime},
+            dischargeTime=#{hbHbtDischargeSituation.dischargeTime},
+            dischargeWeight=#{hbHbtDischargeSituation.dischargeWeight},
+            dischargePrognosis=#{hbHbtDischargeSituation.dischargePrognosis},
+            hospitalCosts=#{hbHbtDischargeSituation.hospitalCosts}
+    </insert>
+
+    <!-- 查询 高胆数据库 高胆治疗 出院情况 -->
+    <select id="hbHbtDischargeSituationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBHbtDischargeSituation">
+        select cid, mid, bilirubinLevelsDiagnosis, bilirubinNeurotoxicity, whetherEncephalopathySymptomsWhenAdmission,
+            encephalopathyTime, dischargeTime, dischargeWeight, dischargePrognosis, hospitalCosts
+        from pc_hb_hbt_discharge_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入/更新 高胆数据库 随访检查 MRI检查 次数 -->
+    <insert id="hbFueMrieMriResultTimesInsertUpdate">
+        insert into pc_hb_fue_times (cid, mid, mriResultTimes)
+        value (#{childId}, #{motherId}, #{mriResultTimes})
+        on duplicate key update
+            mriResultTimes=#{mriResultTimes}
+    </insert>
+
+    <!-- 插入 高胆数据库 随访检查 MRI检查 -->
+    <insert id="hbFueMriExaminationInsert">
+        insert into pc_hb_fue_mri_examination (cid, mid, followUpTime, result, otherResult, followUpAdvice)
+        value (#{hbFueMriExamination.cid}, #{hbFueMriExamination.mid}, #{hbFueMriExamination.followUpTime}, #{hbFueMriExamination.result},
+            #{hbFueMriExamination.otherResult}, #{hbFueMriExamination.followUpAdvice})
+    </insert>
+
+    <!-- 删除 高胆数据库 随访检查 MRI检查 列表 -->
+    <delete id="hbFueMriExaminationDelete">
+        delete from pc_hb_fue_mri_examination
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 随访检查 MRI检查 次数 -->
+    <select id="hbFueMrieMriResultTimesQry" resultType="string">
+        select mriResultTimes
+        from pc_hb_fue_times
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 高胆数据库 随访检查 MRI检查 列表 -->
+    <select id="hbFueMriExaminationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBFueMriExamination">
+        select id, cid, mid, followUpTime, result, otherResult, followUpAdvice
+        from pc_hb_fue_mri_examination
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 高胆数据库 随访检查 脑干听觉诱发电位 次数 -->
+    <insert id="hbFueBaepTimesInsertUpdate">
+        insert into pc_hb_fue_times (cid, mid, brainstemAuditoryEvokedPotentialTimes)
+        value (#{childId}, #{motherId}, #{brainstemAuditoryEvokedPotentialTimes})
+        on duplicate key update
+            brainstemAuditoryEvokedPotentialTimes=#{brainstemAuditoryEvokedPotentialTimes}
+    </insert>
+
+    <!-- 插入 高胆数据库 随访检查 脑干听觉诱发电位 -->
+    <insert id="hbFueBaepInsert">
+        insert into pc_hb_fue_brainstem_auditory_evoked_potential (cid, mid, followUpTime, resultLeftEar, resultRightEar, followUpAdvice)
+        value (#{hbFueBrainstemAuditoryEvokedPotential.cid}, #{hbFueBrainstemAuditoryEvokedPotential.mid}, #{hbFueBrainstemAuditoryEvokedPotential.followUpTime},
+            #{hbFueBrainstemAuditoryEvokedPotential.resultLeftEar}, #{hbFueBrainstemAuditoryEvokedPotential.resultRightEar},
+            #{hbFueBrainstemAuditoryEvokedPotential.followUpAdvice})
+    </insert>
+
+    <!-- 删除 高胆数据库 随访检查 脑干听觉诱发电位 列表 -->
+    <delete id="hbFueBaepDelete">
+        delete from pc_hb_fue_brainstem_auditory_evoked_potential
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 随访检查 脑干听觉诱发电位 次数 -->
+    <select id="hbFueBaepTimesQry" resultType="string">
+        select brainstemAuditoryEvokedPotentialTimes
+        from pc_hb_fue_times
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 高胆数据库 随访检查 脑干听觉诱发电位 列表 -->
+    <select id="hbFueBaepQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBFueBrainstemAuditoryEvokedPotential">
+        select id, cid, mid, followUpTime, resultLeftEar, resultRightEar, followUpAdvice
+        from pc_hb_fue_brainstem_auditory_evoked_potential
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 高胆数据库 随访检查 振幅整合脑电图 次数 -->
+    <insert id="hbFueAmplitudeIntegratedEegTimesInsertUpdate">
+        insert into pc_hb_fue_times (cid, mid, amplitudeIntegratedEegTimes)
+        value (#{childId}, #{motherId}, #{amplitudeIntegratedEegTimes})
+        on duplicate key update
+            amplitudeIntegratedEegTimes=#{amplitudeIntegratedEegTimes}
+    </insert>
+
+    <!-- 插入 高胆数据库 随访检查 振幅整合脑电图 -->
+    <insert id="hbFueAmplitudeIntegratedEegInsert">
+        insert into pc_hb_fue_amplitude_integrated_eeg (cid, mid, followUpTime, result, followUpAdvice)
+        value (#{hbFueAmplitudeIntegratedEeg.cid}, #{hbFueAmplitudeIntegratedEeg.mid}, #{hbFueAmplitudeIntegratedEeg.followUpTime},
+            #{hbFueAmplitudeIntegratedEeg.result}, #{hbFueAmplitudeIntegratedEeg.followUpAdvice})
+    </insert>
+
+    <!-- 删除 高胆数据库 随访检查 振幅整合脑电图 列表 -->
+    <delete id="hbFueAmplitudeIntegratedEegDelete">
+        delete from pc_hb_fue_amplitude_integrated_eeg
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 随访检查 振幅整合脑电图 次数 -->
+    <select id="hbFueAmplitudeIntegratedEegTimesQry" resultType="string">
+        select amplitudeIntegratedEegTimes
+        from pc_hb_fue_times
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 高胆数据库 随访检查 振幅整合脑电图 列表 -->
+    <select id="hbFueAmplitudeIntegratedEegQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBFueAmplitudeIntegratedEeg">
+        select id, cid, mid, followUpTime, result, followUpAdvice
+        from pc_hb_fue_amplitude_integrated_eeg
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 高胆数据库 随访检查 婴儿全身运动评估 次数 -->
+    <insert id="hbFueGmsTimesInsertUpdate">
+        insert into pc_hb_fue_times (cid, mid, gmsTimes)
+        value (#{childId}, #{motherId}, #{gmsTimes})
+        on duplicate key update
+            gmsTimes=#{gmsTimes}
+    </insert>
+
+    <!-- 插入 高胆数据库 随访检查 婴儿全身运动评估 -->
+    <insert id="hbFueGmsInsert">
+        insert into pc_hb_fue_gms (cid, mid, followUpTime, resultWrithingMotionStage, resultRestlessMovementStage, followUpAdvice)
+        value (#{hbFueGms.cid}, #{hbFueGms.mid}, #{hbFueGms.followUpTime}, #{hbFueGms.resultWrithingMotionStage},
+            #{hbFueGms.resultRestlessMovementStage}, #{hbFueGms.followUpAdvice})
+    </insert>
+
+    <!-- 删除 高胆数据库 随访检查 婴儿全身运动评估 列表 -->
+    <delete id="hbFueGmsDelete">
+        delete from pc_hb_fue_gms
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 随访检查 婴儿全身运动评估 次数 -->
+    <select id="hbFueGmsTimesQry" resultType="string">
+        select gmsTimes
+        from pc_hb_fue_times
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 高胆数据库 随访检查 婴儿全身运动评估 列表 -->
+    <select id="hbFueGmsQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBFueGms">
+        select id, cid, mid, followUpTime, resultWrithingMotionStage, resultRestlessMovementStage, followUpAdvice
+        from pc_hb_fue_gms
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 高胆数据库 随访检查 Griffiths量表 次数 -->
+    <insert id="hbFueGriffithsScaleTimesInsertUpdate">
+        insert into pc_hb_fue_times (cid, mid, griffithsScaleTimes)
+        value (#{childId}, #{motherId}, #{griffithsScaleTimes})
+        on duplicate key update
+            griffithsScaleTimes=#{griffithsScaleTimes}
+    </insert>
+
+    <!-- 插入 高胆数据库 随访检查 Griffiths量表 -->
+    <insert id="hbFueGriffithsScaleInsert">
+        insert into pc_hb_fue_griffiths_scale (cid, mid, griffithsScaleTime, sport, individualSociety,
+            listeningSpeakingAbility, handEyeCoordination, visualManipulationAbility, totalScore)
+        value (#{hbFueGriffithsScale.cid}, #{hbFueGriffithsScale.mid}, #{hbFueGriffithsScale.griffithsScaleTime},
+            #{hbFueGriffithsScale.sport}, #{hbFueGriffithsScale.individualSociety}, #{hbFueGriffithsScale.listeningSpeakingAbility},
+            #{hbFueGriffithsScale.handEyeCoordination}, #{hbFueGriffithsScale.visualManipulationAbility},
+            #{hbFueGriffithsScale.totalScore})
+    </insert>
+
+    <!-- 删除 高胆数据库 随访检查 Griffiths量表 列表 -->
+    <delete id="hbFueGriffithsScaleDelete">
+        delete from pc_hb_fue_griffiths_scale
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 高胆数据库 随访检查 Griffiths量表 次数 -->
+    <select id="hbFueGriffithsScaleTimesQry" resultType="string">
+        select griffithsScaleTimes
+        from pc_hb_fue_times
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 高胆数据库 随访检查 Griffiths量表 列表 -->
+    <select id="hbFueGriffithsScaleQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBFueGriffithsScale">
+        select id, cid, mid, griffithsScaleTime, sport, individualSociety, listeningSpeakingAbility, handEyeCoordination,
+            visualManipulationAbility, totalScore
+        from pc_hb_fue_griffiths_scale
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 高胆数据库 随访结论 -->
+    <insert id="hbFollowUpConclusionInsertUpdate">
+        insert into pc_hb_follow_up_conclusion (cid, mid, evaluationDate, kernicterusCategory, kernicterusSeverity,
+            cerebralPalsy, cerebralPalsyPredisposition, epilepsy, cognitiveImpairment, hearingImpairment, eyeMovementDisorder,
+            extrapyramidalMovementDisorder, toothEnamelDysplasia, motorRetardation, neurodevelopmentalDelay, others)
+        value (#{hbFollowUpConclusion.cid}, #{hbFollowUpConclusion.mid}, #{hbFollowUpConclusion.evaluationDate},
+            #{hbFollowUpConclusion.kernicterusCategory}, #{hbFollowUpConclusion.kernicterusSeverity},
+            #{hbFollowUpConclusion.cerebralPalsy}, #{hbFollowUpConclusion.cerebralPalsyPredisposition},
+            #{hbFollowUpConclusion.epilepsy}, #{hbFollowUpConclusion.cognitiveImpairment},
+            #{hbFollowUpConclusion.hearingImpairment}, #{hbFollowUpConclusion.eyeMovementDisorder},
+            #{hbFollowUpConclusion.extrapyramidalMovementDisorder}, #{hbFollowUpConclusion.toothEnamelDysplasia},
+            #{hbFollowUpConclusion.motorRetardation}, #{hbFollowUpConclusion.neurodevelopmentalDelay},
+            #{hbFollowUpConclusion.others})
+        on duplicate key update
+            evaluationDate=#{hbFollowUpConclusion.evaluationDate},
+            kernicterusCategory=#{hbFollowUpConclusion.kernicterusCategory},
+            kernicterusSeverity=#{hbFollowUpConclusion.kernicterusSeverity},
+            cerebralPalsy=#{hbFollowUpConclusion.cerebralPalsy},
+            cerebralPalsyPredisposition=#{hbFollowUpConclusion.cerebralPalsyPredisposition},
+            epilepsy=#{hbFollowUpConclusion.epilepsy},
+            cognitiveImpairment=#{hbFollowUpConclusion.cognitiveImpairment},
+            hearingImpairment=#{hbFollowUpConclusion.hearingImpairment},
+            eyeMovementDisorder=#{hbFollowUpConclusion.eyeMovementDisorder},
+            extrapyramidalMovementDisorder=#{hbFollowUpConclusion.extrapyramidalMovementDisorder},
+            toothEnamelDysplasia=#{hbFollowUpConclusion.toothEnamelDysplasia},
+            motorRetardation=#{hbFollowUpConclusion.motorRetardation},
+            neurodevelopmentalDelay=#{hbFollowUpConclusion.neurodevelopmentalDelay},
+            others=#{hbFollowUpConclusion.others}
+    </insert>
+
+    <!-- 查询 高胆数据库 随访结论 -->
+    <select id="hbFollowUpConclusionQry" resultType="com.pnsrcp.web.entity.perintalPlatform.highBilirubin.HBFollowUpConclusion">
+        select cid, mid, evaluationDate, kernicterusCategory, kernicterusSeverity, cerebralPalsy, cerebralPalsyPredisposition,
+            epilepsy, cognitiveImpairment, hearingImpairment, eyeMovementDisorder, extrapyramidalMovementDisorder,
+            toothEnamelDysplasia, motorRetardation, neurodevelopmentalDelay, others
+        from pc_hb_follow_up_conclusion
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 高胆数据库 病例填写状态 -->
+    <select id="hbCaseStatusQry" resultType="com.pnsrcp.web.entity.perintalPlatform.CaseStatus">
+        select status
+        from pc_hb_hbt_basic_information
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 高胆数据库 审核次数 -->
+    <select id="hbReviewCount" resultType="int">
+        select count(id)
+        from pc_hb_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 高胆数据库 审核情况 -->
+    <select id="hbReviewQry" resultType="com.pnsrcp.web.entity.perintalPlatform.Review">
+        select id, cid, mid, status, problem, reviewerName, createTime
+        from pc_hb_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 高胆数据库 审核情况 -->
+    <insert id="hbReviewInsert">
+        insert into pc_hb_review (cid, mid, status, problem, reviewerName)
+        value (#{hbReview.cid}, #{hbReview.mid}, #{hbReview.status}, #{hbReview.problem}, #{hbReview.reviewerName})
+    </insert>
+
+    <!-- 更新 高胆数据库 填写状态 -->
+    <update id="hbStatusUpdate">
+        update pc_hb_hbt_basic_information
+        set status=#{status}
+        where cid=#{childId}
+        and mid=#{motherId}
+    </update>
+</mapper>

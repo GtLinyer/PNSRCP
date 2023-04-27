@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>消化系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,消化系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库消化系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/dgsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDDGS layui-form" lay-filter="BDDGSFIN" sec:authorize="hasRole('ROLE_BDDGS')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">生长指标</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/EN">肠内营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PN">肠外营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FR">禁食原因</a>
+                    <a href="#"><cite>喂养不耐受与NEC</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ODT">其它诊断与治疗</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ENM">肠内营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PNM">肠外营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/TNM">过渡期营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/NE">营养评价</a>
+                </span>
+                <div class="layui-row pc-db-BDDGSFIN" th:object="${fin}">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-datetime lg">
+                            <label for="PC-db-FIOGSST">喂养不耐受或胃肠道症状开始时间</label>
+                            <input id="PC-db-FIOGSST" type="text" name="feedingIntoleranceOrGastrointestinalSymptomsStartTime" th:value="${fin} ? *{#calendars.format(feedingIntoleranceOrGastrointestinalSymptomsStartTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-datetime lg">
+                            <label for="PC-db-FIOGSET">喂养不耐受或胃肠道症状结束时间</label>
+                            <input id="PC-db-FIOGSET" type="text" name="feedingIntoleranceOrGastrointestinalSymptomsEndTime" th:value="${fin} ? *{#calendars.format(feedingIntoleranceOrGastrointestinalSymptomsEndTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-FIM" class="pc-db-item lg">
+                            <label>喂养不耐受表现</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="feedingIntoleranceManifestationVomit" value="1" title="呕吐" th:checked="${fin} ? (*{feedingIntoleranceManifestationVomit eq 1} ? true : _) : _">
+                                <input type="checkbox" name="feedingIntoleranceManifestationBloating" value="1" title="腹胀" th:checked="${fin} ? (*{feedingIntoleranceManifestationBloating eq 1} ? true : _) : _">
+                                <input type="checkbox" name="feedingIntoleranceManifestationGastricRetention" value="1" title="胃潴留" th:checked="${fin} ? (*{feedingIntoleranceManifestationGastricRetention eq 1} ? true : _) : _">
+                                <input type="checkbox" name="feedingIntoleranceManifestationBileLikeRetention" value="1" title="胆汁样潴留" th:checked="${fin} ? (*{feedingIntoleranceManifestationBileLikeRetention eq 1} ? true : _) : _">
+                                <input type="checkbox" name="feedingIntoleranceManifestationBrownStomachContents" value="1" title="咖啡色胃内容物" th:checked="${fin} ? (*{feedingIntoleranceManifestationBrownStomachContents eq 1} ? true : _) : _">
+                                <input type="checkbox" name="feedingIntoleranceManifestationBloodyStools" value="1" title="血便" th:checked="${fin} ? (*{feedingIntoleranceManifestationBloodyStools eq 1} ? true : _) : _">
+                                <input type="checkbox" name="feedingIntoleranceManifestationIntestinalType" value="1" title="肠型" th:checked="${fin} ? (*{feedingIntoleranceManifestationIntestinalType eq 1} ? true : _) : _">
+                                <input type="checkbox" title="其他" lay-filter="other" th:checked="${fin} ? (*{(feedingIntoleranceManifestationOther ne null) and (feedingIntoleranceManifestationOther ne '')} ? true : _) : _">
+                                <input type="text" data-name="feedingIntoleranceManifestationOther" th:name="${fin} ? (*{(feedingIntoleranceManifestationOther ne null) and (feedingIntoleranceManifestationOther ne '')} ? 'feedingIntoleranceManifestationOther' : _) : _" th:value="${fin} ? (*{(feedingIntoleranceManifestationOther ne null) and (feedingIntoleranceManifestationOther ne '')} ? *{feedingIntoleranceManifestationOther} : _) : _" th:lay-verify="${fin} ? (*{(feedingIntoleranceManifestationOther ne null) and (feedingIntoleranceManifestationOther ne '')} ? 'requiredDB' : _) : _"  th:disabled="${fin} ? (*{(feedingIntoleranceManifestationOther ne null) and (feedingIntoleranceManifestationOther ne '')} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-FR" class="pc-db-item">
+                            <label>禁食原因</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="fastingReasonProgressiveBloating" value="1" title="进行性腹胀" th:checked="${fin} ? (*{fastingReasonProgressiveBloating eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonRepeatedRetention" value="1" title="反复潴留" th:checked="${fin} ? (*{fastingReasonRepeatedRetention eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonBrownStomachContents" value="1" title="咖啡色胃内容物" th:checked="${fin} ? (*{fastingReasonBrownStomachContents eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonBloodyStools" value="1" title="血便" th:checked="${fin} ? (*{fastingReasonBloodyStools eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonBloodOxygenInstability" value="1" title="血氧不稳定" th:checked="${fin} ? (*{fastingReasonBloodOxygenInstability eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonConfirmedInfection" value="1" title="确诊感染" th:checked="${fin} ? (*{fastingReasonConfirmedInfection eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonSuspectedInfection" value="1" title="疑似感染" th:checked="${fin} ? (*{fastingReasonSuspectedInfection eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonConfirmedNEC" value="1" title="确诊NEC" th:checked="${fin} ? (*{fastingReasonConfirmedNEC eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonSuspectedNEC" value="1" title="疑似NEC" th:checked="${fin} ? (*{fastingReasonSuspectedNEC eq 1} ? true : _) : _">
+                                <input type="checkbox" name="fastingReasonBloodTransfusion" value="1" title="输血" th:checked="${fin} ? (*{fastingReasonBloodTransfusion eq 1} ? true : _) : _">
+                                <input type="checkbox" title="其他" lay-filter="other" th:checked="${fin} ? (*{(fastingReasonOther ne null) and (fastingReasonOther ne '')} ? true : _) : _">
+                                <input type="text" data-name="fastingReasonOther" th:name="${fin} ? (*{(fastingReasonOther ne null) and (fastingReasonOther ne '')} ? 'fastingReasonOther' : _) : _" th:value="${fin} ? (*{(fastingReasonOther ne null) and (fastingReasonOther ne '')} ? *{fastingReasonOther} : _) : _" th:lay-verify="${fin} ? (*{(fastingReasonOther ne null) and (fastingReasonOther ne '')} ? 'requiredDB' : _) : _" th:disabled="${fin} ? (*{(fastingReasonOther ne null) and (fastingReasonOther ne '')} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">胃肠减压</label>
+                            <input type="checkbox" name="gastrointestinalDecompression" lay-skin="switch" lay-text="是|否" value="1" lay-filter="GD" th:checked="${fin} ? (*{gastrointestinalDecompression eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-GDST">开始时间</label>
+                            <input id="PC-db-GDST" type="text" data-name="gastrointestinalDecompressionStartTime" th:name="${fin} ? (*{gastrointestinalDecompression eq 1} ? 'gastrointestinalDecompressionStartTime' : _) : _" th:value="${fin} ? (*{gastrointestinalDecompression eq 1} ? *{#calendars.format(gastrointestinalDecompressionStartTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${fin} ? (*{gastrointestinalDecompression eq 1} ? 'requiredDB' : _) : _" th:disabled="${fin} ? (*{gastrointestinalDecompression eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-GDET">结束时间</label>
+                            <input id="PC-db-GDET" type="text" data-name="gastrointestinalDecompressionEndTime" th:name="${fin} ? (*{gastrointestinalDecompression eq 1} ? 'gastrointestinalDecompressionEndTime' : _) : _" th:value="${fin} ? (*{gastrointestinalDecompression eq 1} ? *{#calendars.format(gastrointestinalDecompressionEndTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${fin} ? (*{gastrointestinalDecompression eq 1} ? 'requiredDB' : _) : _" th:disabled="${fin} ? (*{gastrointestinalDecompression eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="layui-row pc-db-BDDGSFIN" th:object="${fin}">
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">NEC</label>
+                            <input type="checkbox" name="nec" lay-skin="switch" lay-text="是|否" value="1" lay-filter="NEC" th:checked="${fin} ? (*{nec eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-NECS" class="pc-db-item">
+                            <label>分期</label>
+                            <input type="hidden" data-name="necStaging" th:name="${fin} ? (*{nec eq 1} ? 'necStaging' : _) : _" th:value="${fin} ? (*{nec eq 1} ? *{necStaging} : _) : _" th:lay-verify="${fin} ? (*{nec eq 1} ? 'requiredRadioGroup' : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${fin ne null} ? (*{nec eq 1} ? '' : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{necStaging eq 'ⅠA'} ? 'pc-db-active' : _) : _) : _" data-value="ⅠA">
+                                    <button>ⅠA</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{necStaging eq 'ⅠB'} ? 'pc-db-active' : _) : _) : _" data-value="ⅠB">
+                                    <button>ⅠB</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{necStaging eq 'ⅡA'} ? 'pc-db-active' : _) : _) : _" data-value="ⅡA">
+                                    <button>ⅡA</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{necStaging eq 'ⅡB'} ? 'pc-db-active' : _) : _) : _" data-value="ⅡB">
+                                    <button>ⅡB</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{necStaging eq 'ⅢA'} ? 'pc-db-active' : _) : _) : _" data-value="ⅢA">
+                                    <button>ⅢA</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{necStaging eq 'ⅢB'} ? 'pc-db-active' : _) : _) : _" data-value="ⅢB">
+                                    <button>ⅢB</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-NECDD">诊断日期</label>
+                            <input id="PC-db-NECDD" type="text" data-name="necDiagnosisDate" th:name="${fin} ? (*{nec eq 1} ? 'necDiagnosisDate' : _) : _" th:value="${fin} ? (*{nec eq 1} ? *{#calendars.format(necDiagnosisDate, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${fin} ? (*{nec eq 1} ? 'requiredDB' : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-BNEC" class="pc-db-item">
+                            <label>发生NEC前</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="beforeNecVasoactiveDrugs" value="1" title="血管活性药" th:checked="${fin} ? (*{nec eq 1} ? (*{beforeNecVasoactiveDrugs eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="beforeNecFluidResuscitation" value="1" title="液体复苏" th:checked="${fin} ? (*{nec eq 1} ? (*{beforeNecFluidResuscitation eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="beforeNecHeparin" value="1" title="肝素" th:checked="${fin} ? (*{nec eq 1} ? (*{beforeNecHeparin eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="beforeNecBloodTransfusion" value="1" title="输血" th:checked="${fin} ? (*{nec eq 1} ? (*{beforeNecBloodTransfusion eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="beforeNecCBall" value="1" title="丙球" th:checked="${fin} ? (*{nec eq 1} ? (*{beforeNecCBall eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="beforeNecGlucocorticoid" value="1" title="糖皮质激素" th:checked="${fin} ? (*{nec eq 1} ? (*{beforeNecGlucocorticoid eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-DB" class="pc-db-item">
+                            <label>诊断依据</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="diagnosisBasisClinicalSymptoms" value="1" title="临床症状" th:checked="${fin} ? (*{nec eq 1} ? (*{diagnosisBasisClinicalSymptoms eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="diagnosisBasisAuxiliaryExamination" value="1" title="辅助检查" th:checked="${fin} ? (*{nec eq 1} ? (*{diagnosisBasisAuxiliaryExamination eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-DS" class="pc-db-item">
+                            <label>消化道症状</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="digestiveSymptomsBowelSoundsWeakenAndDisappear" value="1" title="肠鸣音减弱、消失" th:checked="${fin} ? (*{nec eq 1} ? (*{digestiveSymptomsBowelSoundsWeakenAndDisappear eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="digestiveSymptomsGrossBloodyStool" value="1" title="肉眼血便" th:checked="${fin} ? (*{nec eq 1} ? (*{digestiveSymptomsGrossBloodyStool eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="digestiveSymptomsFecalOccultBlood" value="1" title="大便潜血" th:checked="${fin} ? (*{nec eq 1} ? (*{digestiveSymptomsFecalOccultBlood eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="digestiveSymptomsUpperGastrointestinalBleeding" value="1" title="上消化道出血" th:checked="${fin} ? (*{nec eq 1} ? (*{digestiveSymptomsUpperGastrointestinalBleeding eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="digestiveSymptomsTightAbdominalWall" value="1" title="腹壁紧张" th:checked="${fin} ? (*{nec eq 1} ? (*{digestiveSymptomsTightAbdominalWall eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="digestiveSymptomsAbdominalTenderness" value="1" title="腹部触痛" th:checked="${fin} ? (*{nec eq 1} ? (*{digestiveSymptomsAbdominalTenderness eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-AR" class="pc-db-item">
+                            <label>腹片</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="abdominalRadiographWidenedIntestinalSpace" value="1" title="肠间隙增宽" th:checked="${fin} ? (*{nec eq 1} ? (*{abdominalRadiographWidenedIntestinalSpace eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="abdominalRadiographBowelWallGas" value="1" title="肠壁积气" th:checked="${fin} ? (*{nec eq 1} ? (*{abdominalRadiographBowelWallGas eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="abdominalRadiographHilarPneumoperitoneum" value="1" title="肝门积气" th:checked="${fin} ? (*{nec eq 1} ? (*{abdominalRadiographHilarPneumoperitoneum eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="abdominalRadiographIntestinalObstruction" value="1" title="肠梗阻" th:checked="${fin} ? (*{nec eq 1} ? (*{abdominalRadiographIntestinalObstruction eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="abdominalRadiographBowelPerforation" value="1" title="肠穿孔" th:checked="${fin} ? (*{nec eq 1} ? (*{abdominalRadiographBowelPerforation eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-CU" class="pc-db-item">
+                            <label>彩超</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="colorUltrasoundPneumaticPortalVein" value="1" title="门静脉积气" th:checked="${fin} ? (*{nec eq 1} ? (*{colorUltrasoundPneumaticPortalVein eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                                <input type="checkbox" name="colorUltrasoundAscites" value="1" title="腹水" th:checked="${fin} ? (*{nec eq 1} ? (*{colorUltrasoundAscites eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">内科保守治疗</label>
+                            <input id="PC-db-IMCT" type="checkbox" name="internalMedicineConservativeTreatment" lay-skin="switch" lay-text="是|否" value="1" lay-filter="IMCT" th:checked="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div id="PC-db-IMCTF" class="pc-db-item">
+                            <label>转归</label>
+                            <input type="hidden" data-name="internalMedicineConservativeTreatmentFate" th:name="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? 'internalMedicineConservativeTreatmentFate' : _) : _) : _" th:value="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? *{internalMedicineConservativeTreatmentFate} : _) : _) : _" th:lay-verify="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? 'requiredRadioGroup' : _) : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${fin ne null} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? '' : ' rbgOff') : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? (*{internalMedicineConservativeTreatmentFate eq '治愈'} ? 'pc-db-active' : _) : _) : _) : _" data-value="治愈">
+                                    <button>治愈</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? (*{internalMedicineConservativeTreatmentFate eq '好转'} ? 'pc-db-active' : _) : _) : _) : _" data-value="好转">
+                                    <button>好转</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? (*{internalMedicineConservativeTreatmentFate eq '肠狭窄'} ? 'pc-db-active' : _) : _) : _) : _" data-value="肠狭窄">
+                                    <button>肠狭窄</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{internalMedicineConservativeTreatment eq 1} ? (*{internalMedicineConservativeTreatmentFate eq '死亡'} ? 'pc-db-active' : _) : _) : _) : _" data-value="死亡">
+                                    <button>死亡</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">手术治疗</label>
+                            <input id="PC-db-OT" type="checkbox" name="operationTreatment" lay-skin="switch" lay-text="是|否" value="1" lay-filter="OT" th:checked="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? true : _) : _) : _" th:disabled="${fin} ? (*{nec eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-OTR" class="pc-db-item">
+                            <label>原因</label>
+                            <input type="hidden" data-name="operationTreatmentReason" th:name="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? 'operationTreatmentReason' : _) : _) : _" th:value="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? *{operationTreatmentReason} : _) : _) : _" th:lay-verify="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? 'requiredRadioGroup' : _) : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${fin ne null} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? '' : ' rbgOff') : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? (*{operationTreatmentReason eq '肠穿孔'} ? 'pc-db-active' : _) : _) : _) : _" data-value="肠穿孔">
+                                    <button>肠穿孔</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? (*{operationTreatmentReason eq '肠狭窄'} ? 'pc-db-active' : _) : _) : _) : _" data-value="肠狭窄">
+                                    <button>肠狭窄</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-OTF" class="pc-db-item">
+                            <label>转归</label>
+                            <input type="hidden" data-name="operationTreatmentFate" th:name="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? 'operationTreatmentFate' : _) : _) : _" th:value="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? *{operationTreatmentFate} : _) : _) : _" th:lay-verify="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? 'requiredRadioGroup' : _) : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${fin ne null} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? '' : ' rbgOff') : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? (*{operationTreatmentFate eq '治愈'} ? 'pc-db-active' : _) : _) : _) : _" data-value="治愈">
+                                    <button>治愈</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? (*{operationTreatmentFate eq '好转'} ? 'pc-db-active' : _) : _) : _) : _" data-value="好转">
+                                    <button>好转</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? (*{operationTreatmentFate eq '短肠综合征'} ? 'pc-db-active' : _) : _) : _) : _" data-value="短肠综合征">
+                                    <button>短肠综合征</button>
+                                </li>
+                                <li th:class="${fin} ? (*{nec eq 1} ? (*{operationTreatment eq 1} ? (*{operationTreatmentFate eq '死亡'} ? 'pc-db-active' : _) : _) : _) : _" data-value="死亡">
+                                    <button>死亡</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="DGSFIN" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDDGSWrite.min.js}"></script>
+</html>

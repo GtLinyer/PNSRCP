@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>消化系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,消化系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库消化系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/dgsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDDGS layui-form" sec:authorize="hasRole('ROLE_BDDGS')">
+                <span class="layui-breadcrumb">
+                    <a href="#"><cite>生长指标</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/EN">肠内营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PN">肠外营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FR">禁食原因</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FIN">喂养不耐受与NEC</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ODT">其它诊断与治疗</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ENM">肠内营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PNM">肠外营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/TNM">过渡期营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/NE">营养评价</a>
+                </span>
+                <div class="layui-row pc-db-BDDGSGI" th:data-birthday="${birthMsg} ? ${#calendars.format(birthMsg.birthday, 'yyyy-MM-dd')} : _" th:data-chd="${birthMsg} ? ${#calendars.format(birthMsg.childHospitalizationDate, 'yyyy-MM-dd')} : _" th:data-gender="${birthMsg} ? ${birthMsg.gender} : _" th:data-gaWeek="${birthMsg} ? ${birthMsg.gestationalAgeWeek} : _" th:data-gaDay="${birthMsg} ? ${birthMsg.gestationalAgeDay} : _" th:data-birthWeight="${birthMsg} ? ${birthMsg.birthWeight} : _">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item-table">
+                            <table class="pc-db-table tableLeft">
+                                <caption>
+                                    <div>生长指标</div>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th>日期</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>住院天数</td>
+                                </tr>
+                                <tr>
+                                    <td>体重（kg）</td>
+                                </tr>
+                                <tr>
+                                    <td>头围（cm）</td>
+                                </tr>
+                                <tr>
+                                    <td>身长（cm）</td>
+                                </tr>
+                                <tr>
+                                    <td>纠正胎龄（周）</td>
+                                </tr>
+                                <tr>
+                                    <td>纠正胎龄（日）</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="pc-db-table tableRight">
+                                <caption>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th class="blockTh"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                    <td>10</td>
+                                    <td>11</td>
+                                    <td>12</td>
+                                    <td>13</td>
+                                    <td>14</td>
+                                    <td rowspan="6">
+                                        <button id="PC-db-add" class="pc-btn"><i class="iconfont icon-zengjia"></i> 增加</button>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-weight">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="weight14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-HC">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="headCircumference14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-BL">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="bodyLength14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-cgaWeek">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaWeek14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-cgaDay">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="cgaDay14" readonly>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDDGSGI" th:object="${growthIndex}">
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-BWLMT">出生体重下降最低时间</label>
+                            <input id="PC-db-BWLMT" type="text" name="birthWeightLossMinimumTime" th:value="${growthIndex} ? *{#calendars.format(birthWeightLossMinimumTime, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-BWLMV">出生体重下降最低值</label>
+                            <input id="PC-db-BWLMV" type="number" name="birthWeightLossMinimumValue" th:value="${growthIndex} ? *{birthWeightLossMinimumValue} : _" readonly>
+                            <span>kg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-RBWT">恢复出生体重时间</label>
+                            <input id="PC-db-RBWT" type="text" name="regainBirthWeightTime" th:value="${growthIndex} ? *{#calendars.format(regainBirthWeightTime, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-RBWDA">恢复出生体重日龄</label>
+                            <input id="PC-db-RBWDA" type="number" name="regainBirthWeightDayAge" th:value="${growthIndex} ? *{regainBirthWeightDayAge} : _" readonly>
+                            <span>天/生后</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="DGSGI" lay-submit>保存信息</button>
+                </div>
+
+                <div class="layui-row pc-db-chart pc-db-BDDGSGI">
+                    <div id="PC-db-weight" class="layui-col-lg4" title="点击查看大图！">
+                        <div class="pc-db-chart-elem">
+                            <canvas id="PC-chart-weight"></canvas>
+                        </div>
+                    </div>
+                    <div id="PC-db-HC" class="layui-col-lg4" title="点击查看大图！">
+                        <div class="pc-db-chart-elem">
+                            <canvas id="PC-chart-HC"></canvas>
+                        </div>
+                    </div>
+                    <div id="PC-db-BL" class="layui-col-lg4" title="点击查看大图！">
+                        <div class="pc-db-chart-elem">
+                            <canvas id="PC-chart-BL"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+
+<div id="PC-db-fenton" class="pc-layer-panel">
+    <div class="pc-layer-chart">
+        <canvas id="PC-layer-chart"></canvas>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BMDGrowthWrite.min.js}"></script>
+</html>

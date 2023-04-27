@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.basicDatabase.BasicDatabaseMapper">
+    <!-- 查询 基础数据库 病例基本信息 数据 -->
+    <select id="caseQry" resultType="com.pnsrcp.web.entity.patientCase.BDCaseMsg">
+        select pbmi.mid, pbbs.cid, pbmi.pcMotherNum, pbbs.pcNewbornNum, pbbs.fullName, pbbs.gender, pbbs.gestationalAgeWeek, pbbs.gestationalAgeDay,
+            pbbs.birthWeight, pbmi.hospitalizationDate motherHospitalizationDate, pbbs.birthday, pbbs.childHospitalizationDate,
+            pbbs.childHospitalNum, pbds.dischargeDate, pbbs.status, pbbs.whetherHospitalized
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbmi.mid = pbbs.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        <where>
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="caseStatus > -1">
+                and pbbs.status=#{caseStatus}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+            <if test="hospitalId > 0">
+                and pbmi.hospitalId=#{hospitalId}
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    pbmi.hospitalId = #{hid}
+                </foreach>
+            </if>
+            <if test="searchKey != null and searchKey != ''">
+                <bind name="searchExp" value="'%' + searchKey + '%'"/>
+                and (pbbs.fullName like #{searchExp}
+                or pbbs.pcNewbornNum like #{searchExp}
+                or pbbs.childHospitalNum like #{searchExp}
+                or pbmi.pcMotherNum like #{searchExp})
+            </if>
+            order by pbmi.createTime desc, pbbs.createTime desc
+            <if test="page > -1 and limit > -1">
+                limit #{page},#{limit}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询 基础数据库 病例基本信息 数量 -->
+    <select id="caseCount" resultType="int">
+        select count(*)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbmi.mid = pbbs.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        <where>
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="caseStatus > -1">
+                and pbbs.status=#{caseStatus}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+            <if test="hospitalId > 0">
+                and pbmi.hospitalId=#{hospitalId}
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    pbmi.hospitalId = #{hid}
+                </foreach>
+            </if>
+            <if test="searchKey != null and searchKey != ''">
+                <bind name="searchExp" value="'%' + searchKey + '%'"/>
+                and (pbbs.fullName like #{searchExp}
+                or pbbs.pcNewbornNum like #{searchExp}
+                or pbbs.childHospitalNum like #{searchExp})
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询 基础数据库 母亲病例下的患儿病例 数量 -->
+    <select id="caseChildNumQry" resultType="int">
+        select count(cid)
+        from pc_bd_baby_situation
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 基础数据库 病例 围产新生儿科研合作平台编号 本院最大数值 -->
+    <select id="maxNumQry" resultType="integer">
+        select max(right(pcMotherNum, 4))
+        from pc_bd_mother_information
+        where hospitalId=#{hid}
+        and substring(pcMotherNum, 5, 4)=#{hospitalizationYear}
+    </select>
+
+    <!-- 删除 基础数据库 患儿病例 信息 -->
+    <delete id="caseChildDelete">
+        delete from pc_bd_baby_situation
+        where cid=#{childId}
+    </delete>
+
+    <!-- 删除 基础数据库 病例 信息 -->
+    <delete id="caseDelete">
+        delete from pc_bd_mother_information
+        where mid=#{motherId}
+    </delete>
+
+    <!-- 查询 基础数据库 抬头 基本信息 -->
+    <select id="bdBaseInformationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.BDBaseInformation">
+        select pbmi.pcMotherNum, pbmi.motherHospitalNumber motherHospitalNum, pbbs.pcNewbornNum pcChildNum, pbbs.childHospitalNum, pbbs.fullName childFullName
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbmi.mid = pbbs.mid
+        where pbmi.mid=#{motherId}
+        <if test="childId > 0">
+            and pbbs.cid=#{childId}
+        </if>
+        limit 1
+    </select>
+
+    <!-- 插入 基础数据库 母亲信息 数据 -->
+    <insert id="bdMotherInformationInsert" useGeneratedKeys="true" keyProperty="bdMotherInformation.mid" keyColumn="mid">
+        insert into pc_bd_mother_information (pcMotherNum, motherFullName, motherPhone, hospitalizationDate, motherHospitalNumber,
+            motherAge, motherNation, motherLiveProvince, motherLiveCity, motherLiveCounty, motherLiveArea, motherLiveAltitude,
+            toResidencePlaceHistory, moveInYear, moveInPeriod, beforeMovingInLiveProvince, beforeMovingInLiveCity, beforeMovingInLiveCounty,
+            beforeMovingInLiveArea, beforeMovingInLiveAltitude, diabetes, diabetesGrade, insulinTherapy, hypertension,
+            pregnancyCholestasisIntrahepatic, abnormalMotherSThyroidFunction, otherComplicationsDuringPregnancy,
+            otherComplicationsDuringPregnancy1, otherComplicationsDuringPregnancy2, otherComplicationsDuringPregnancy3,
+            otherComplicationsDuringPregnancy4, pregnancyRiskScreening, pregnancyRiskScreeningLevel, prenatalCare,
+            firstPregnancyCheckUpCard, prenatalCareNumber, fullInspectionsNumber, writerId<if test="hospitalId>0">, hospitalId</if>)
+        value (#{bdMotherInformation.pcMotherNum}, #{bdMotherInformation.motherFullName}, #{bdMotherInformation.motherPhone},
+            #{bdMotherInformation.hospitalizationDate}, #{bdMotherInformation.motherHospitalNumber}, #{bdMotherInformation.motherAge},
+            #{bdMotherInformation.motherNation}, #{bdMotherInformation.motherLiveProvince}, #{bdMotherInformation.motherLiveCity},
+            #{bdMotherInformation.motherLiveCounty}, #{bdMotherInformation.motherLiveArea}, #{bdMotherInformation.motherLiveAltitude},
+            #{bdMotherInformation.toResidencePlaceHistory}, #{bdMotherInformation.moveInYear},#{bdMotherInformation.moveInPeriod},
+            #{bdMotherInformation.beforeMovingInLiveProvince}, #{bdMotherInformation.beforeMovingInLiveCity},
+            #{bdMotherInformation.beforeMovingInLiveCounty}, #{bdMotherInformation.beforeMovingInLiveArea},
+            #{bdMotherInformation.beforeMovingInLiveAltitude}, #{bdMotherInformation.diabetes}, #{bdMotherInformation.diabetesGrade},
+            #{bdMotherInformation.insulinTherapy}, #{bdMotherInformation.hypertension}, #{bdMotherInformation.pregnancyCholestasisIntrahepatic},
+            #{bdMotherInformation.abnormalMotherSThyroidFunction}, #{bdMotherInformation.otherComplicationsDuringPregnancy},
+            #{bdMotherInformation.otherComplicationsDuringPregnancy1}, #{bdMotherInformation.otherComplicationsDuringPregnancy2},
+            #{bdMotherInformation.otherComplicationsDuringPregnancy3}, #{bdMotherInformation.otherComplicationsDuringPregnancy4},
+            #{bdMotherInformation.pregnancyRiskScreening}, #{bdMotherInformation.pregnancyRiskScreeningLevel},
+            #{bdMotherInformation.prenatalCare}, #{bdMotherInformation.firstPregnancyCheckUpCard}, #{bdMotherInformation.prenatalCareNumber},
+            #{bdMotherInformation.fullInspectionsNumber}, #{writerId}<if test="hospitalId>0">, #{hospitalId}</if>)
+    </insert>
+
+    <!-- 更新 基础数据库 母亲信息 数据 -->
+    <update id="bdMotherInformationUpdate">
+        update pc_bd_mother_information
+        set pcMotherNum=#{bdMotherInformation.pcMotherNum},
+            motherFullName=#{bdMotherInformation.motherFullName},
+            motherPhone=#{bdMotherInformation.motherPhone},
+            hospitalizationDate=#{bdMotherInformation.hospitalizationDate},
+            motherHospitalNumber=#{bdMotherInformation.motherHospitalNumber},
+            motherAge=#{bdMotherInformation.motherAge},
+            motherNation=#{bdMotherInformation.motherNation},
+            motherLiveProvince=#{bdMotherInformation.motherLiveProvince},
+            motherLiveCity=#{bdMotherInformation.motherLiveCity},
+            motherLiveCounty=#{bdMotherInformation.motherLiveCounty},
+            motherLiveArea=#{bdMotherInformation.motherLiveArea},
+            motherLiveAltitude=#{bdMotherInformation.motherLiveAltitude},
+            toResidencePlaceHistory=#{bdMotherInformation.toResidencePlaceHistory},
+            moveInYear=#{bdMotherInformation.moveInYear},
+            moveInPeriod=#{bdMotherInformation.moveInPeriod},
+            beforeMovingInLiveProvince=#{bdMotherInformation.beforeMovingInLiveProvince},
+            beforeMovingInLiveCity=#{bdMotherInformation.beforeMovingInLiveCity},
+            beforeMovingInLiveCounty=#{bdMotherInformation.beforeMovingInLiveCounty},
+            beforeMovingInLiveArea=#{bdMotherInformation.beforeMovingInLiveArea},
+            beforeMovingInLiveAltitude=#{bdMotherInformation.beforeMovingInLiveAltitude},
+            diabetes=#{bdMotherInformation.diabetes},
+            diabetesGrade=#{bdMotherInformation.diabetesGrade},
+            insulinTherapy=#{bdMotherInformation.insulinTherapy},
+            hypertension=#{bdMotherInformation.hypertension},
+            pregnancyCholestasisIntrahepatic=#{bdMotherInformation.pregnancyCholestasisIntrahepatic},
+            abnormalMotherSThyroidFunction=#{bdMotherInformation.abnormalMotherSThyroidFunction},
+            otherComplicationsDuringPregnancy=#{bdMotherInformation.otherComplicationsDuringPregnancy},
+            otherComplicationsDuringPregnancy1=#{bdMotherInformation.otherComplicationsDuringPregnancy1},
+            otherComplicationsDuringPregnancy2=#{bdMotherInformation.otherComplicationsDuringPregnancy2},
+            otherComplicationsDuringPregnancy3=#{bdMotherInformation.otherComplicationsDuringPregnancy3},
+            otherComplicationsDuringPregnancy4=#{bdMotherInformation.otherComplicationsDuringPregnancy4},
+            pregnancyRiskScreening=#{bdMotherInformation.pregnancyRiskScreening},
+            pregnancyRiskScreeningLevel=#{bdMotherInformation.pregnancyRiskScreeningLevel},
+            prenatalCare=#{bdMotherInformation.prenatalCare},
+            firstPregnancyCheckUpCard=#{bdMotherInformation.firstPregnancyCheckUpCard},
+            prenatalCareNumber=#{bdMotherInformation.prenatalCareNumber},
+            fullInspectionsNumber=#{bdMotherInformation.fullInspectionsNumber}
+        where mid=#{bdMotherInformation.mid}
+        limit 1
+    </update>
+
+    <!-- 插入/更新 基础数据库 宝宝情况 数据 -->
+    <insert id="bdBabySituationInsertUpdate"
+            parameterType="com.pnsrcp.web.entity.perintalPlatform.basicDatabse.BDBabySituation"
+            useGeneratedKeys="true" keyProperty="bdBabySituation.cid" keyColumn="cid">
+        insert into pc_bd_baby_situation (cid, mid, pcNewbornNum, fullName, birthday, ruptureDate, ruptureTime, fetalPosition, pregnancyNumber,
+            birthNumber, abortionNumber, deliveryMethod, cesareanSectionReason, multicellularNumber, gender, twins, threeBirths, gestationalAgeWeek,
+            gestationalAgeDay, birthWeight, birthHeadCircumference, birthLength, bodyTemperatureWithin1hAfterBirth, maternalWeightGainRate,
+            whetherHospitalized, childSource, childHospitalizationDate, newbornEnterRoomDate, childHospitalNum, birthHospital,
+            childrenPaymentMethodLocalResidentsMedicalInsurance, childrenPaymentMethodOffSiteMedicalInsurance,
+            childrenPaymentMethodResidentsMinimumLivingGuarantee, childrenPaymentMethodSocialAssistance, childrenPaymentMethodBusinessInsurance,
+            childrenPaymentMethodOwnExpense)
+        value (#{bdBabySituation.cid}, #{bdBabySituation.mid}, #{bdBabySituation.pcNewbornNum}, #{bdBabySituation.fullName}, #{bdBabySituation.birthday},
+            #{bdBabySituation.ruptureDate}, #{bdBabySituation.ruptureTime}, #{bdBabySituation.fetalPosition},
+            #{bdBabySituation.pregnancyNumber}, #{bdBabySituation.birthNumber}, #{bdBabySituation.abortionNumber},
+            #{bdBabySituation.deliveryMethod}, #{bdBabySituation.cesareanSectionReason}, #{bdBabySituation.multicellularNumber},
+            #{bdBabySituation.gender}, #{bdBabySituation.twins}, #{bdBabySituation.threeBirths}, #{bdBabySituation.gestationalAgeWeek},
+            #{bdBabySituation.gestationalAgeDay}, #{bdBabySituation.birthWeight}, #{bdBabySituation.birthHeadCircumference},
+            #{bdBabySituation.birthLength}, #{bdBabySituation.bodyTemperatureWithin1hAfterBirth}, #{bdBabySituation.maternalWeightGainRate},
+            #{bdBabySituation.whetherHospitalized}, #{bdBabySituation.childSource}, #{bdBabySituation.childHospitalizationDate},
+            #{bdBabySituation.newbornEnterRoomDate}, #{bdBabySituation.childHospitalNum}, #{bdBabySituation.birthHospital},
+            #{bdBabySituation.childrenPaymentMethodLocalResidentsMedicalInsurance}, #{bdBabySituation.childrenPaymentMethodOffSiteMedicalInsurance},
+            #{bdBabySituation.childrenPaymentMethodResidentsMinimumLivingGuarantee}, #{bdBabySituation.childrenPaymentMethodLocalResidentsMedicalInsurance},
+            #{bdBabySituation.childrenPaymentMethodBusinessInsurance}, #{bdBabySituation.childrenPaymentMethodOwnExpense})
+        on duplicate key update
+            pcNewbornNum=#{bdBabySituation.pcNewbornNum},
+            fullName=#{bdBabySituation.fullName},
+            birthday=#{bdBabySituation.birthday},
+            ruptureDate=#{bdBabySituation.ruptureDate},
+            ruptureTime=#{bdBabySituation.ruptureTime},
+            fetalPosition=#{bdBabySituation.fetalPosition},
+            pregnancyNumber=#{bdBabySituation.pregnancyNumber},
+            birthNumber=#{bdBabySituation.birthNumber},
+            abortionNumber=#{bdBabySituation.abortionNumber},
+            deliveryMethod=#{bdBabySituation.deliveryMethod},
+            cesareanSectionReason=#{bdBabySituation.cesareanSectionReason},
+            multicellularNumber=#{bdBabySituation.multicellularNumber},
+            gender=#{bdBabySituation.gender},
+            twins=#{bdBabySituation.twins},
+            threeBirths=#{bdBabySituation.threeBirths},
+            gestationalAgeWeek=#{bdBabySituation.gestationalAgeWeek},
+            gestationalAgeDay=#{bdBabySituation.gestationalAgeDay},
+            birthWeight=#{bdBabySituation.birthWeight},
+            birthHeadCircumference=#{bdBabySituation.birthHeadCircumference},
+            birthLength=#{bdBabySituation.birthLength},
+            bodyTemperatureWithin1hAfterBirth=#{bdBabySituation.bodyTemperatureWithin1hAfterBirth},
+            maternalWeightGainRate=#{bdBabySituation.maternalWeightGainRate},
+            whetherHospitalized=#{bdBabySituation.whetherHospitalized},
+            childSource=#{bdBabySituation.childSource},
+            childHospitalizationDate=#{bdBabySituation.childHospitalizationDate},
+            newbornEnterRoomDate=#{bdBabySituation.newbornEnterRoomDate},
+            childHospitalNum=#{bdBabySituation.childHospitalNum},
+            birthHospital=#{bdBabySituation.birthHospital},
+            childrenPaymentMethodLocalResidentsMedicalInsurance=#{bdBabySituation.childrenPaymentMethodLocalResidentsMedicalInsurance},
+            childrenPaymentMethodOffSiteMedicalInsurance=#{bdBabySituation.childrenPaymentMethodOffSiteMedicalInsurance},
+            childrenPaymentMethodResidentsMinimumLivingGuarantee=#{bdBabySituation.childrenPaymentMethodResidentsMinimumLivingGuarantee},
+            childrenPaymentMethodLocalResidentsMedicalInsurance=#{bdBabySituation.childrenPaymentMethodLocalResidentsMedicalInsurance},
+            childrenPaymentMethodBusinessInsurance=#{bdBabySituation.childrenPaymentMethodBusinessInsurance},
+            childrenPaymentMethodOwnExpense=#{bdBabySituation.childrenPaymentMethodOwnExpense}
+    </insert>
+
+    <!-- 更新 基础数据库 宝宝情况 新生儿胎数 -->
+    <update id="bdBSFetusesNumUpdate">
+        update pc_bd_baby_situation
+        set multicellularNumber=#{fetusesNum}
+        where mid=#{motherId}
+    </update>
+
+    <!-- 查询 基础数据库 宝宝情况 母亲孩子的ID -->
+    <select id="motherChildIdQry" resultType="integer">
+        select cid
+        from pc_bd_baby_situation
+        where mid=#{motherId}
+    </select>
+
+    <!-- 更新 基础数据库 宝宝情况 母亲孩子的围产新生儿科研合作平台编号 -->
+    <update id="bdBSPcNewBornNumUpdate">
+        update pc_bd_baby_situation
+        set pcNewbornNum=#{pcNewBornNum}
+        where cid=#{childId}
+        and mid=#{motherId}
+    </update>
+
+    <!-- 插入 基础数据库 宝宝情况 新的患儿 -->
+    <insert id="bdBSChildInsert" useGeneratedKeys="true" keyProperty="bdMotherBabyMsg.cid" keyColumn="cid">
+        insert into pc_bd_baby_situation (mid, multicellularNumber, pcNewbornNum)
+        value (#{bdMotherBabyMsg.mid}, #{bdMotherBabyMsg.multicellularNumber}, #{bdMotherBabyMsg.pcNewbornNum})
+    </insert>
+
+    <!-- 删除 基础数据库 宝宝情况 多余的病例 -->
+    <delete id="bdBSChildDelete">
+        delete from pc_bd_baby_situation
+        where mid=#{motherId}
+        and pcNewbornNum=#{pcNewbornNumDel}
+        and fullName is not null
+    </delete>
+
+    <!-- 查询 基础数据库 母亲信息 是否存在 -->
+    <select id="bdMotherInformationTestQry" resultType="int">
+        select count(mid)
+        from pc_bd_mother_information
+        where motherFullName=#{motherFullName}
+        and motherPhone=#{motherPhone}
+        and motherAge=#{motherAge}
+        and motherHospitalNumber=#{motherHospitalNumber}
+    </select>
+
+    <!-- 查询 基础数据库 母亲信息 数据 -->
+    <select id="bdMotherInformationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabse.BDMotherInformation">
+        select mid, pcMotherNum, motherFullName, motherPhone, hospitalizationDate, motherHospitalNumber, motherAge, motherNation,
+            motherLiveProvince, motherLiveCity, motherLiveCounty, motherLiveArea, motherLiveAltitude, toResidencePlaceHistory, moveInYear,
+            moveInPeriod, beforeMovingInLiveProvince, beforeMovingInLiveCity, beforeMovingInLiveCounty, beforeMovingInLiveArea,
+            beforeMovingInLiveAltitude, diabetes, diabetesGrade, insulinTherapy, hypertension, pregnancyCholestasisIntrahepatic,
+            abnormalMotherSThyroidFunction, otherComplicationsDuringPregnancy, otherComplicationsDuringPregnancy1,
+            otherComplicationsDuringPregnancy2, otherComplicationsDuringPregnancy3, otherComplicationsDuringPregnancy4,
+            pregnancyRiskScreening, pregnancyRiskScreeningLevel, prenatalCare, firstPregnancyCheckUpCard, prenatalCareNumber,
+            fullInspectionsNumber
+        from pc_bd_mother_information
+        where mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 基础数据库 宝宝情况 数据 -->
+    <select id="bdBabySituationQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabse.BDBabySituation">
+        select cid, mid, pcNewbornNum, fullName, birthday, ruptureDate, ruptureTime, fetalPosition, pregnancyNumber, birthNumber, abortionNumber,
+            deliveryMethod, cesareanSectionReason, multicellularNumber, gender, twins, threeBirths, gestationalAgeWeek, gestationalAgeDay,
+            birthWeight, birthHeadCircumference, birthLength, bodyTemperatureWithin1hAfterBirth, maternalWeightGainRate, whetherHospitalized,
+            childSource, childHospitalizationDate, newbornEnterRoomDate, childHospitalNum, birthHospital, childrenPaymentMethodLocalResidentsMedicalInsurance,
+            childrenPaymentMethodOffSiteMedicalInsurance, childrenPaymentMethodResidentsMinimumLivingGuarantee, childrenPaymentMethodSocialAssistance,
+            childrenPaymentMethodBusinessInsurance, childrenPaymentMethodOwnExpense
+        from pc_bd_baby_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 基础数据库 死因诊断ID和名称 -->
+    <select id="bdDeathCauseDiagnosisQry" resultType="map">
+        select id, deathCauseDiagnosis
+        from pc_bd_death_cause_diagnosis
+        where dccId=#{deathCauseClassificationId}
+    </select>
+
+    <!-- 查询 基础数据库 畸形类型ID和名称 -->
+    <select id="bdDeformityTypeQry" resultType="map">
+        select id, deformitySystem
+        from pc_bd_deformity_type
+        where dsId=#{deformitySystemId}
+    </select>
+
+    <!-- 查询 基础数据库 孕期信息 母亲孕期体重增加 -->
+    <select id="bdWeightGainDuringPregnancyQry" resultType="string">
+        select weightGainDuringPregnancy
+        from pc_bd_gestation_information
+        where mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 基础数据库 出生相关 初始数据 -->
+    <select id="bdBirthMsgQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabse.BDBirthMsg">
+        select birthday, gender, birthWeight, childHospitalizationDate, gestationalAgeWeek, gestationalAgeDay
+        from pc_bd_baby_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 基础数据库 围产信息 分娩日期 -->
+    <select id="bdDeliveryDateQry" resultType="date">
+        select deliveryDate
+        from pc_bd_perinatal_information
+        where mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 基础数据库 危重评分 初始数据 -->
+    <select id="bdCaMsgQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabse.BDCAMsg">
+        select pbbs.cid, pbbs.mid, pbbs.gender, pbbs.birthWeight, pbbs.gestationalAgeWeek, pbbs.bodyTemperatureWithin1hAfterBirth,
+        pbrs.apgarScore5Min
+        from pc_bd_baby_situation pbbs
+        left join pc_bd_recovery_situation pbrs
+        on pbbs.cid = pbrs.cid
+        where pbbs.mid=#{motherId}
+        and pbbs.cid=#{childId}
+    </select>
+
+    <!-- 查询 基础数据库 宫外生长迟缓 -->
+    <select id="bdEctopicGrowthRetardationQry" resultType="string">
+        select dischargeExtrauterineGrowthRetardation
+        from pc_bd_dgs_nutritional_evaluation
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 基础数据库 出生时 体重、头围、身长 数据 -->
+    <select id="bdBirthWHcBlQry" resultType="hashmap">
+        select birthWeight, birthHeadCircumference, birthLength
+        from pc_bd_baby_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 基础数据库 绒毛膜羊膜炎 -->
+    <select id="bdIsChorioamnionitisryQry" resultType="string">
+        select chorioamnionitis
+        from pc_bd_perinatal_information
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 基础数据库 插入/更新病例 是否已完成 -->
+<!--    <select id="bdCompletedQry" resultType="int">-->
+<!--        select count(${bdAuthList.get(3)}.cid)-->
+<!--        from-->
+<!--        <foreach item="bdAuth" collection="bdAuthList" separator=",">-->
+<!--            ${bdAuth}-->
+<!--        </foreach>-->
+<!--        <where>-->
+<!--            <foreach item="bdAuth" collection="bdAuthList" separator=" and ">-->
+<!--                <if test="bdAuthList.get(3) neq bdAuth">-->
+<!--                    ${bdAuthList.get(3)}.mid=${bdAuth}.mid-->
+<!--                </if>-->
+<!--            </foreach>-->
+<!--            and ${bdAuthList.get(3)}.cid=#{childId}-->
+<!--            and ${bdAuthList.get(4)}.cid=#{childId}-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <!-- 更新 基础数据库 病例状态 -->
+    <update id="bdStatusUpdate">
+        update pc_bd_baby_situation
+        set status=#{status}
+        where cid=#{childId}
+        and mid=#{motherId}
+        <if test="status eq 1">
+            and status!=2
+            and status!=3
+        </if>
+    </update>
+
+    <!-- 查询 基础数据库 审核情况 -->
+    <select id="bdReviewQry" resultType="com.pnsrcp.web.entity.perintalPlatform.Review">
+        select id, cid, mid, status, problem, reviewerName, createTime
+        from pc_bd_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 基础数据库 病例填写状态 -->
+    <select id="bdCaseStatusQry" resultType="com.pnsrcp.web.entity.perintalPlatform.CaseStatus">
+        select status
+        from pc_bd_baby_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 基础数据库 审核次数 -->
+    <select id="bdReviewCount" resultType="int">
+        select count(id)
+        from pc_bd_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 基础数据库 审核信息 -->
+    <insert id="bdReviewInsert">
+        insert into pc_bd_review (cid, mid, status, problem, reviewerName)
+        value (#{bdReview.cid}, #{bdReview.mid}, #{bdReview.status}, #{bdReview.problem}, #{bdReview.reviewerName})
+    </insert>
+</mapper>

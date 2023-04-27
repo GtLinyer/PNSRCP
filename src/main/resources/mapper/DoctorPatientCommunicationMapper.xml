@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.doctorPatientCommunication.DoctorPatientCommunicationMapper">
+    <!-- 为 医患交流库 查询 消化系统 肠内营养 强化剂种类 数据 -->
+    <select id="enhancerTypeQry" resultType="string">
+        select enhancerType
+        from pc_bd_dgs_enteral_nutrition
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入 医患交流库 医患沟通 数据 -->
+    <insert id="dpcDoctorPatientCommunicationInsert">
+        insert into pc_dpc_doctor_patient_communication (cid, mid, isParents, text)
+        value (#{childId}, #{motherId}, #{isParents}, #{text})
+    </insert>
+
+    <!-- 删除 医患交流库 医患沟通 数据 -->
+    <delete id="dpcDoctorPatientCommunicationDelete">
+        delete from pc_dpc_doctor_patient_communication
+        where cid=#{childId}
+        and mid=#{motherId}
+        and id=#{dcpId}
+        and isParents=#{isParents}
+    </delete>
+
+    <!-- 查询 医患交流库 医患沟通 数据 -->
+    <select id="dpcDoctorPatientCommunicationQry"
+            resultType="com.pnsrcp.web.entity.perintalPlatform.doctorPatientCommunication.DPCDoctorPatientCommunication">
+        select id, cid, mid, isParents, text, createTime
+        from pc_dpc_doctor_patient_communication
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 医患交流库 病例填写状态 -->
+    <select id="dpcCaseStatusQry" resultType="com.pnsrcp.web.entity.perintalPlatform.CaseStatus">
+        select status
+        from pc_dpc_breast_milk_diary
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 医患交流库 审核次数 -->
+    <select id="dpcReviewCount" resultType="int">
+        select count(id)
+        from pc_dpc_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 医患交流库 审核情况 -->
+    <select id="dpcReviewQry" resultType="com.pnsrcp.web.entity.perintalPlatform.Review">
+        select id, cid, mid, status, problem, reviewerName, createTime
+        from pc_dpc_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 医患交流库 审核情况 -->
+    <insert id="dpcReviewInsert">
+        insert into pc_dpc_review (cid, mid, status, problem, reviewerName)
+        value (#{dpcReview.cid}, #{dpcReview.mid}, #{dpcReview.status}, #{dpcReview.problem}, #{dpcReview.reviewerName})
+    </insert>
+
+    <!-- 更新 医患交流库 填写状态 -->
+    <update id="dpcStatusUpdate">
+        update pc_dpc_breast_milk_diary
+        set status=#{status}
+        where cid=#{childId}
+        and mid=#{motherId}
+    </update>
+</mapper>

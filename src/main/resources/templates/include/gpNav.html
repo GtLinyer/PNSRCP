@@ -1,0 +1,65 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="zh">
+<body>
+<ul class="layui-nav layui-nav-tree" lay-shrink="all" th:fragment="navigation">
+    <!-- 基础数据库 导航 -->
+    <li th:replace="include/navMenu::basicDatabase"></li>
+
+    <!-- 医患交流库 导航 -->
+    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+    <!-- 母婴同室库 导航 -->
+    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+    <!-- 父母心理库 导航 -->
+    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+    <!-- 研究数据库 导航 -->
+    <li th:replace="include/navMenu::researchDatabase"></li>
+
+    <!-- 超声影像库 导航 -->
+    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+    <!-- 新生儿随访 导航 -->
+    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_FD')">
+        <a class="pc-item" href="javascript:void(0);">
+            <i class="pc-icon iconfont icon-suifang"></i>
+            <cite>随访数据库</cite>
+        </a>
+
+        <dl class="layui-nav-child">
+            <dd sec:authorize="hasRole('ROLE_FDFI')">
+                <a href="/perinatalPlatform/followDatabase/write/FI">
+                    <i class="pc-icon iconfont icon-jibenxinxi1"></i>
+                    <cite>随访信息</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_FDGC')">
+                <a href="/perinatalPlatform/followDatabase/write/GC/BW">
+                    <i class="pc-icon iconfont icon-quxian"></i>
+                    <cite>生长曲线</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_FDDL')">
+                <a href="/perinatalPlatform/followDatabase/write/DL/VI">
+                    <i class="pc-icon iconfont icon-chengchangfayu"></i>
+                    <cite>发育水平</cite>
+                </a>
+            </dd>
+            <dd class="layui-this" sec:authorize="hasRole('ROLE_FDGP')">
+                <a href="#">
+                    <i class="pc-icon iconfont icon-chengchang"></i>
+                    <cite>成长历程</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_FD')">
+                <a href="/perinatalPlatform/followDatabase/review">
+                    <i class="pc-icon iconfont icon-shenhe"></i>
+                    <cite>病例审核</cite>
+                </a>
+            </dd>
+        </dl>
+    </li>
+</ul>
+</body>
+</html>

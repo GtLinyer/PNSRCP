@@ -1,0 +1,279 @@
+/****    主体样式    ****/
+html,body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    position: relative;
+    font-family: "Microsoft YaHei UI", serif;
+    background-color: #F2F2F2;
+}
+a {
+    text-decoration-line: none !important;
+    transition: color 0.3s ease-in-out 0s !important;
+    -webkit-transition: color 0.3s ease-in-out 0s !important;
+    -moz-transition: color 0.3s ease-in-out 0s !important;
+    -o-transition: color 0.3s ease-in-out 0s !important;
+}
+.layui-form-checkbox[lay-skin=primary]:hover i {
+    border-color: #FFB7C5;
+    color: #fff;
+}
+a:hover {
+    color: #1E9FFF !important;
+}
+a:active {
+    color: #E5AA0B !important;
+}
+.pc-login-input-line,
+.pc-login-eye,
+.pc-label>span {
+    transition: all 0.3s ease-in-out 0s !important;
+    -webkit-transition: all 0.3s ease-in-out 0s !important;
+    -moz-transition: all 0.3s ease-in-out 0s !important;
+    -o-transition: all 0.3s ease-in-out 0s !important;
+}
+.pc-label>span,
+.pc-label>span.active {
+    left: 0.75rem;
+    transform: translateY(-10px) scale(0.8);
+    -webkit-transform: translateY(-10px) scale(0.8);
+    -moz-transform: translateY(-10px) scale(0.8);
+    -o-transform: translateY(-10px) scale(0.8);
+    transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+}
+.pc-label>span {
+    color: #9e9e9e;
+    position: absolute;
+    top: -5px;
+    left: 39px;
+    font-size: 1rem;
+    cursor: text;
+    transform-origin: 0 100%;
+    -webkit-transform-origin: 0 100%;
+    -moz-transform-origin: 0 100%;
+    -o-transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    text-align: initial;
+    transform: translateY(12px);
+    -webkit-transform: translateY(12px);
+    -moz-transform: translateY(12px);
+    -o-transform: translateY(12px);
+}
+.pc-login-input {
+    height: 38px;
+    line-height: 1.3;
+    line-height: 38px\9;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 10px;
+    padding-bottom: 2px;
+    border-width: 0;
+}
+.pc-login-input:focus+.pc-login-input-line {
+    width: 100%;
+}
+.pc-login-input-line {
+    position: relative;
+    top: -2px;
+    height: 2px;
+    width: 0;
+}
+.layui-form-danger:focus+.pc-login-input-line {
+    background-color: #FF5722;
+}
+.pc-login-input-line {
+    background-color: #FAC2C2;
+}
+.pc-login-head h1,
+.pc-login .layui-form h2,
+.pc-login-icon,
+.pc-login-eye,
+.pc-foot {
+    text-align: center;
+}
+.pc-login-head,
+.layui-form-item,
+.pc-center {
+    position: relative;
+}
+
+/****    头部样式    ****/
+.pc-login-head {
+    width: 100%;
+    height: 210px;
+    background: url("/images/loginHead.webp") no-repeat center center;
+    background-size: cover;
+    display: inline-block;
+}
+.pc-login-head>div {
+    margin-top: 54px;
+    position: relative;
+}
+.pc-login-head img {
+    position: absolute;
+    height: 88px;
+    top: 8px;
+    left: 80px;
+}
+.pc-login-head h1 {
+    font-size: 38px;
+    color: white;
+    font-family: "Microsoft YaHei UI", serif;
+}
+.pc-login-head h1:first-of-type {
+    letter-spacing: 16px;
+}
+.pc-login-head h1:last-child {
+    font-size: 32px;
+    padding-top: 16px;
+}
+
+/****    中部样式    ****/
+.pc-login {
+    min-height: 100%;
+    padding-bottom: -88px;
+}
+.pc-center {
+    position: relative;
+    z-index: 10;
+    min-height: 100%;
+    padding-bottom: 88px;
+}
+.pc-login .layui-form {
+    background-color: #F2F2F2;
+    padding: 20px 160px;
+    width: 300px;
+    margin: -10px auto 10px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+.pc-login .layui-form h2 {
+    font-size: 38px;
+    letter-spacing: 16px;
+    padding: 20px 0;
+    color: #FFB7C5;
+}
+.pc-login-input {
+    padding-left: 40px;
+}
+.pc-login-input:focus+div+.pc-login-icon {
+    color: #FAC2C2;
+}
+.pc-login-icon {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    width: 38px;
+    line-height: 36px;
+    color: #d2d2d2;
+}
+.pc-login-eye {
+    color: #d2d2d2;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    width: 38px;
+    line-height: 36px;
+    cursor: pointer;
+    z-index: 999;
+}
+.pc-login-pwd input {
+    padding-right: 40px;
+}
+#PC-login-verCode-img {
+    float: right;
+    cursor: pointer;
+}
+.pc-checkVerCode-icon {
+    height: 30px;
+    width: 30px;
+    background-color: #F2F2F2;
+    position: absolute;
+    left: 4px;
+    top: 4px;
+}
+.pc-login-btn {
+    background-color: #FFB7C5;
+}
+.layui-form-checked[lay-skin=primary] i {
+    border-color: #FAC2C2 !important;
+    background-color: #FAC2C2;
+    color: #fff;
+}
+/****    底部样式    ****/
+.pc-foot {
+    position: relative;
+    z-index: 10;
+    background-color: #FFB7C5;
+    margin-top: -88px;
+    height: 88px;
+    color: rgba(0, 0, 0, 0.5);
+    line-height: 20px;
+}
+.pc-foot p:first-child {
+    padding-top: 18px;
+}
+.pc-foot p,
+.pc-foot p a {
+    color: white;
+}
+/*** 平板模式 ***/
+@media screen and (max-width: 1300px) {
+    .pc-login-head h1 {
+        font-size: 32px;
+    }
+    .pc-login-head h1:last-child {
+        padding-top: 4px;
+        font-size: 28px;
+    }
+}
+@media screen and (max-width: 1200px) {
+    .pc-login-head img {
+        height: 72px;
+        left: 40px;
+    }
+}
+@media screen and (max-width: 1100px) {
+    .pc-login-head img {
+        left: 30px;
+    }
+    .pc-login-head>div {
+        margin-top: 12px;
+        text-align: center;
+    }
+}
+/*** 移动模式 ***/
+@media screen and (max-width: 768px) {
+    .pc-login-head h1 {
+        font-size: 24px;
+    }
+    .pc-login-head h1:last-child {
+        padding-top: 4px;
+        font-size: 16px;
+    }
+    .pc-login-head img {
+        height: 42px;
+        position: unset;
+        margin: 10px auto;
+    }
+    .pc-login .layui-form {
+        padding: 14px;
+    }
+    .pc-login .layui-form h2 {
+        font-size: 28px;
+    }
+    .pc-foot {
+        font-size: 12px;
+    }
+    .pc-foot p:first-child {
+        padding-top: 14px;
+    }
+}

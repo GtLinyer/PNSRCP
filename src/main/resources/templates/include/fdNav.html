@@ -1,0 +1,65 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="zh">
+<body>
+<ul class="layui-nav layui-nav-tree" lay-shrink="all" th:fragment="navigation">
+    <!-- 基础数据库 导航 -->
+    <li th:replace="include/navMenu::basicDatabase"></li>
+
+    <!-- 医患交流库 导航 -->
+    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_DPC')">
+        <a class="pc-item" href="javascript:void(0);">
+            <i class="pc-icon iconfont icon-jiaoliu"></i>
+            <cite>医患交流库</cite>
+        </a>
+
+        <dl class="layui-nav-child">
+            <dd sec:authorize="hasRole('ROLE_DPCBMD')">
+                <a href="/perinatalPlatform/doctorPatientCommunication/write/BMD">
+                    <i class="pc-icon iconfont icon-rizhi"></i>
+                    <cite>母乳日志</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_DPCGC')">
+                <a href="/perinatalPlatform/doctorPatientCommunication/write/GC">
+                    <i class="pc-icon iconfont icon-quxian"></i>
+                    <cite>生长曲线</cite>
+                </a>
+            </dd>
+            <dd class="layui-this" sec:authorize="hasRole('ROLE_DPCFS')">
+                <a href="#">
+                    <i class="pc-icon iconfont icon-weiyang"></i>
+                    <cite>喂养情况</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_DPCDPC')">
+                <a href="/perinatalPlatform/doctorPatientCommunication/write/DPC">
+                    <i class="pc-icon iconfont icon--bubblecommunicationdiscussingspeecht"></i>
+                    <cite>医患沟通</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_DPC')">
+                <a href="/perinatalPlatform/doctorPatientCommunication/review">
+                    <i class="pc-icon iconfont icon-shenhe"></i>
+                    <cite>病例审核</cite>
+                </a>
+            </dd>
+        </dl>
+    </li>
+
+    <!-- 母婴同室库 导航 -->
+    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+    <!-- 父母心理库 导航 -->
+    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+    <!-- 研究数据库 导航 -->
+    <li th:replace="include/navMenu::researchDatabase"></li>
+
+    <!-- 超声影像库 导航 -->
+    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+    <!-- 随访数据库 导航 -->
+    <li th:replace="include/navMenu::followDatabase"></li>
+</ul>
+</body>
+</html>

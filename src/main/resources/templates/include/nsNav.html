@@ -1,0 +1,119 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="zh">
+<body>
+<ul class="layui-nav layui-nav-tree" lay-shrink="all" th:fragment="navigation">
+    <!-- 基础数据库 导航 -->
+    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_BD')">
+        <a class="pc-item" href="javascript:void(0);">
+            <i class="pc-icon iconfont icon-jichushujuku"></i>
+            <cite>基础数据库</cite>
+        </a>
+
+        <dl class="layui-nav-child">
+            <dd sec:authorize="hasRole('ROLE_BDMI')">
+                <a href="/perinatalPlatform/basicDatabase/write/MI">
+                    <i class="pc-icon iconfont icon-mother-nurse"></i>
+                    <cite>母亲信息</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDGI')">
+                <a href="/perinatalPlatform/basicDatabase/write/GI">
+                    <i class="pc-icon iconfont icon-yunqi"></i>
+                    <cite>孕期信息</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDPI')">
+                <a href="/perinatalPlatform/basicDatabase/write/PI">
+                    <i class="pc-icon iconfont icon-huaiyun"></i>
+                    <cite>围产信息</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDBS')">
+                <a href="/perinatalPlatform/basicDatabase/write/BS">
+                    <i class="pc-icon iconfont icon-baobao"></i>
+                    <cite>宝宝情况</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDRS')">
+                <a href="/perinatalPlatform/basicDatabase/write/RS">
+                    <i class="pc-icon iconfont icon-fusu"></i>
+                    <cite>复苏情况</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDCA')">
+                <a href="/perinatalPlatform/basicDatabase/write/CA">
+                    <i class="pc-icon iconfont icon-weizhong"></i>
+                    <cite>危重评估</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDRST')">
+                <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">
+                    <i class="pc-icon iconfont icon-huxixitong"></i>
+                    <cite>呼吸系统</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDDGS')">
+                <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">
+                    <i class="pc-icon iconfont icon-xiaohuaxitong"></i>
+                    <cite>消化系统</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDIS')">
+                <a href="/perinatalPlatform/basicDatabase/write/IS/EOS">
+                    <i class="pc-icon iconfont icon-jiance"></i>
+                    <cite>感染监测</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDCS')">
+                <a href="/perinatalPlatform/basicDatabase/write/CS">
+                    <i class="pc-icon iconfont icon-xunhuanxitong"></i>
+                    <cite>循环系统</cite>
+                </a>
+            </dd>
+            <dd class="layui-this" sec:authorize="hasRole('ROLE_BDNS')">
+                <a href="#">
+                    <i class="pc-icon iconfont icon-shenjingwaike"></i>
+                    <cite>神经系统</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDRP')">
+                <a href="/perinatalPlatform/basicDatabase/write/RP/SS">
+                    <i class="pc-icon iconfont icon-shiwangmobingbian"></i>
+                    <cite>视网膜病</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BDDS')">
+                <a href="/perinatalPlatform/basicDatabase/write/DS">
+                    <i class="pc-icon iconfont icon-chuyuanjilu"></i>
+                    <cite>出院情况</cite>
+                </a>
+            </dd>
+            <dd sec:authorize="hasRole('ROLE_BD')">
+                <a href="/perinatalPlatform/basicDatabase/review">
+                    <i class="pc-icon iconfont icon-shenhe"></i>
+                    <cite>病例审核</cite>
+                </a>
+            </dd>
+        </dl>
+    </li>
+
+    <!-- 医患交流库 导航 -->
+    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+    <!-- 母婴同室库 导航 -->
+    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+    <!-- 父母心理库 导航 -->
+    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+    <!-- 研究数据库 导航 -->
+    <li th:replace="include/navMenu::researchDatabase"></li>
+
+    <!-- 超声影像库 导航 -->
+    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+    <!-- 随访数据库 导航 -->
+    <li th:replace="include/navMenu::followDatabase"></li>
+</ul>
+</body>
+</html>

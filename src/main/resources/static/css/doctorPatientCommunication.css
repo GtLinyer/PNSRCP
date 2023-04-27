@@ -1,0 +1,264 @@
+/** 公共样式 **/
+.pc-db-chart {
+    padding: 15px;
+}
+.pc-db-chart .pc-db-chart-elem {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+.pc-db-panel {
+    position: relative;
+    width: 300px;
+    background-color: white;
+    border-radius: 10px;
+    margin: 20px;
+    box-shadow: 0 0 12px 1px #FFB7C5;
+}
+.pc-db-panel>div {
+    position: relative;
+}
+.pc-db-panel input {
+    padding: 3px 5px;
+    border-radius: 4px;
+    border: 1px solid #FFB7C5;
+    float: right;
+    position: relative;
+    top: -2px;
+}
+.pc-db-panel input[type=number][readonly] {
+    background-color: #FFF8DC;
+    cursor: default;
+}
+.pc-db-panel span,
+.pc-db-panel i {
+    position: absolute;
+    color: #FFB7C5;
+}
+.pc-db-panel>h2 {
+    padding: 20px 20px 10px;
+    font-size: 18px;
+    color: #FFB7C5;
+}
+.pc-db-panel>div {
+    padding: 16px 20px;
+    border-top: 1px solid #CFCFCF;
+}
+.pc-db-panel>div:last-child {
+    padding-bottom: 20px;
+}
+
+/** 母乳日志 **/
+.pc-db-DPCBMD .pc-db-chart .pc-db-chart-elem {
+    cursor: pointer;
+}
+.pc-db-DPCBMD .pc-db-panel .layui-form-switch {
+    left: 78px;
+    top: -2px;
+    margin-top: 0;
+}
+.pc-db-DPCBMD .pc-db-panel input {
+    width: 40px;
+    padding-right: 66px;
+}
+.pc-db-DPCBMD .pc-db-panel span {
+    right: 22px;
+}
+.pc-db-DPCBMD .pc-db-item {
+    padding: 20px 40px;
+}
+.pc-db-DPCBMD #PC-db-showHistory {
+    margin: 5px 10px;
+}
+
+/** 生长曲线 **/
+.pc-db-DPCGC .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaWeek>td,
+.pc-db-DPCGC .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaDay>td {
+    background-color: transparent;
+}
+.pc-db-DPCGC .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaWeek>td>input,
+.pc-db-DPCGC .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaDay>td>input {
+    color: #FFB7C5;
+}
+.pc-db-DPCGC .pc-db-chart {
+    margin-top: 20px;
+}
+.pc-db-DPCGC .pc-db-chart>div {
+    padding: 15px;
+}
+.pc-db-DPCGC .pc-db-chart .pc-db-chart-elem {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+.pc-db-DPCGC .pc-db-item-table>.pc-db-table.tableLeft thead>tr>th:first-child {
+    width: 120px;
+    min-width: 120px;
+}
+.pc-db-DPCGC .pc-db-item-table>.pc-db-table.tableRight {
+    margin-left: 126px;
+}
+#PC-db-fenton .layui-layer-content {
+    padding: 20px;
+    width: 760px;
+}
+#PC-db-fenton .pc-layer-chart {
+    width: 760px;
+}
+
+/** 喂养情况 **/
+/* 奶量情况 */
+.pc-db-DPCBFSMQ .pc-db-panel span,
+.pc-db-DPCBFSMQ .pc-db-panel i {
+    top: 18px;
+    right: 25px;
+}
+.pc-db-DPCBFSMQ .pc-db-panel input {
+    padding-right: 28px;
+}
+.pc-db-DPCBFSMQ .pc-db-panel input[type=number] {
+    width: 50px;
+}
+.pc-db-DPCBFSMQ .pc-db-panel input[type=text] {
+    width: 84px;
+    cursor: pointer;
+}
+/* 母乳强化 */
+.pc-db-DPCBFSBMF .pc-db-panel .pc-db-radioBtn-group,
+.pc-db-DPCBFSBMF .pc-db-panel .pc-db-radioBtn-group button {
+    cursor: default;
+}
+.pc-db-DPCBFSBMF .pc-db-panel .pc-db-radioBtn-group:hover>li {
+    box-shadow: none;
+}
+
+/** 医患交流 **/
+.pc-db-DPCDPC,
+.pc-db-DPCDPC>.layui-row>div {
+    overflow: hidden;
+}
+.pc-db-DPCDPC>.layui-row,
+.pc-db-DPCDPC>.layui-row>div:first-child {
+    height: 100%;
+}
+.pc-db-DPCDPC>.layui-row,
+.pc-db-DPCDPC .layui-col-lg7>.pc-db-item {
+    overflow-y: scroll;
+}
+.pc-db-DPCDPC .layui-col-lg7>.pc-db-item {
+    margin-right: 40px;
+    background-color: rgba(255,183,197,0.2);
+    padding: 5px 20px;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+.pc-db-DPCDPC .layui-col-lg5>.pc-db-item {
+    padding: 40px 10px;
+}
+.pc-db-DPCDPC .pc-db-chat-block {
+    position: relative;
+    padding: 20px 0;
+}
+.pc-db-DPCDPC .pc-db-chat-block>.pc-db-avatar {
+    position: absolute;
+    border-radius: 25px;
+    background-color: #FFB7C5;
+    color: white;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-right .pc-db-avatar {
+    right: 0;
+    top: 20px;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-right .pc-db-avatar>h2 {
+    padding: 7px;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-left .pc-db-avatar>h2 {
+    font-size: 16px;
+    padding: 13px 0;
+}
+.pc-db-DPCDPC .pc-db-chat-block .pc-db-chat-pop {
+    display: inline-block;
+    width: 70%;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+}
+.pc-db-DPCDPC .pc-db-chat-block .pc-db-chat-pop-wrap {
+    position: relative;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-left .pc-db-chat-pop-wrap {
+    margin-left: 80px;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-right .pc-db-chat-pop-wrap {
+    margin-right: 80px;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-right .pc-db-chat-pop-wrap,
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-left .pc-db-chat-pop>div:last-child {
+    text-align: right;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-right .pc-db-chat-pop>div:first-child {
+    text-align: left;
+}
+.pc-db-DPCDPC .pc-db-chat-block .pc-db-chat-pop>div:last-child {
+    font-size: 12px;
+    color: #8D8D8D;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-left .pc-db-chat-pop:before {
+    position: absolute;
+    content: "\00a0";
+    width: 0;
+    height: 0;
+    border-width: 8px 18px 8px 0;
+    border-style: solid;
+    border-color: transparent white transparent transparent;
+    top: 15px;
+    left: -18px;
+}
+.pc-db-DPCDPC .pc-db-chat-block.pc-db-right .pc-db-chat-pop:before {
+    position: absolute;
+    content: "\00a0";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-width: 8px 0 8px 18px;
+    border-style: solid;
+    border-color: transparent transparent transparent white;
+    top: 15px;
+    right: -18px;
+}
+.pc-db-DPCDPC .pc-db-chat-block .pc-db-chat-pop button {
+    background-color: #FF5722;
+    border: none;
+    padding: 2px 8px;
+    color: white !important;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.pc-db-DPCDPC #PC-db-edit .w-e-text-container {
+    cursor: text;
+}
+.pc-db-DPCDPC h1 {
+    font-size: unset;
+    padding: unset;
+    display: block;
+    background-color: unset;
+    color: unset;
+    border-radius: unset;
+}
+.pc-db-DPCDPC .pc-db-item input {
+    width: unset;
+    padding: unset;
+    border-radius: unset;
+    border: unset;
+}
+.pc-db-DPCDPC .pc-db-item input:focus {
+    box-shadow: unset;
+}

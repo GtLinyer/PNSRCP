@@ -1,0 +1,70 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="zh">
+<body>
+    <div class="layui-header" th:fragment="adminHead">
+        <!-- 水平菜单 左侧 -->
+        <ul class="layui-nav layui-layout-left fa-im">
+            <!-- 侧边伸缩 按钮 -->
+            <li class="layui-nav-item pc-flexible" lay-unselect>
+                <a id="PC-side-flexible" href="javascript:void(0);" title="侧边伸缩">
+                    <i class="layui-icon layui-icon-shrink-right"></i>
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <button class="layui-btn layui-btn-normal layui-btn-xs layui-btn-radius pc-admin-btn-back" onclick="window.history.back();">
+                    <i class="iconfont icon-return"></i>
+                    返回
+                </button>
+            </li>
+
+            <!-- 标题 -->
+            <li class="layui-nav-item pc-menu-head layui-hide-xs">
+                <span>围产新生儿协作研究平台</span>
+            </li>
+            <!-- 反馈 -->
+            <li class="layui-nav-item pc-menu-head" sec:authorize="hasRole('ROLE_HC')">
+                <a href="/feedback">
+                    <cite>问题反馈</cite>
+                    <i class="iconfont icon-fankui"></i>
+                </a>
+            </li>
+        </ul>
+
+        <!-- 水平菜单 右侧 -->
+        <ul class="layui-nav layui-layout-right">
+            <!-- 搜索 -->
+            <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                <form class="pc-menu-search layui-form" action="javascript:void(0);">
+                    <input type="text" name="searchKey" placeholder="患儿姓名/住院号/编号"/>
+                    <button lay-filter="search" type="submit" lay-submit>
+                        <i class="layui-icon layui-icon-search"></i>
+                    </button>
+                </form>
+            </li>
+
+            <!-- 个人操作 下拉菜单 -->
+            <li class="layui-nav-item" lay-unselect>
+                <a href="javascript:void(0);">
+                    <cite>
+                        <span sec:authentication="principal.username"></span>
+                        <span sec:authentication="principal.user.fullName"></span>
+                    </cite>
+                </a>
+
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:modifyPwd()">修改密码</a></dd>
+                    <hr/>
+                    <dd><a href="/logout">退出登录</a></dd>
+                </dl>
+            </li>
+
+            <!-- 全屏 按钮 -->
+            <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                <a id="PC-fullscreen" href="javascript:void(0);" title="全屏">
+                    <i class="layui-icon layui-icon-screen-full"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

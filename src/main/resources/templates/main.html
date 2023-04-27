@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>首页 - 围产新生儿科研合作平台</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,首页"/>
+    <meta name="description" content="围产新生儿科研合作平台首页"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#FAC2C2"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/manage.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/head::adminHead"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <i class="iconfont icon-home"></i>
+                            <cite>首页</cite>
+                        </h1>
+                    </a>
+                </div>
+
+                <div class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <div class="pc-nav-block-1">
+                        <p class="pc-nav-btn-p" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="pc-nav-btn" href="/manage/hospital">系统管理</a>
+                        </p>
+                        <p class="pc-nav-btn-p" sec:authorize="hasRole('ROLE_BD')">
+                            <a class="pc-nav-btn" href="/perinatalPlatform/case">基础数据库</a>
+                        </p>
+                        <p class="pc-nav-btn-p" sec:authorize="hasRole('ROLE_HB')">
+                            <a class="pc-nav-btn" href="/perinatalPlatform/highBilirubin/case">高胆数据库</a>
+                        </p>
+                    </div>
+                    <div class="pc-nav-block-2">
+                        <div class="pc-nav-data-head">
+                            <i class="iconfont icon-pie-chart"></i>
+                            <span>数据量</span>
+                        </div>
+                        <p th:each="dataAmount : ${dataAmountList}" th:object="${dataAmount}" th:text="(*{month}) + '（' + (*{sum}) + '）'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework">
+                <div class="pc-admin-head">
+                    <span>协作医院</span>
+                    <span sec:authorize="hasRole('ROLE_ADMIN')">超级管理员 （<th:block sec:authentication="principal.username"></th:block>）</span>
+                    <span sec:authorize="hasRole('ROLE_HC')">[[${hospitalLocation}]] [[${hospitalName}]] （[[${hospitalAbbreviation}]]）</span>
+                    <span sec:authorize="hasRole('ROLE_AC')">区域管理员 [[${areaName}]] （[[${areaAbbreviation}]]）</span>
+                </div>
+                <form class="pc-admin-timeFilter layui-form" action="javascript:void(0);">
+                    <select name="selectType">
+                        <option value="motherHospitalizationDate">母亲住院日期</option>
+                        <option value="childHospitalizationDate">新生儿住院日期</option>
+                        <option value="dischargeDate">新生儿出院日期</option>
+                    </select>
+                    <div id="PC-main-date">从
+                        <span class="pc-admin-dateInput">
+                            <input id="PC-main-dateInput-start" class="pc-date" type="text" name="startDate" lay-filter="required" readonly required>
+                            <i class="iconfont icon-rili"></i>
+                        </span>
+                        至
+                        <span class="pc-admin-dateInput">
+                            <input id="PC-main-dateInput-end" class="pc-date" type="text" name="endDate" lay-filter="required" readonly required>
+                            <i class="iconfont icon-rili"></i>
+                        </span>
+                    </div>
+                    <div class="pc-inline-block">
+                        <span>在院</span>
+                        <select name="inHospital">
+                            <option value="">全部</option>
+                            <option value="0">在院</option>
+                            <option value="1">出院</option>
+                            <option value="2">未住院</option>
+                        </select>
+                        <button type="submit" class="pc-btn" lay-filter="filter" lay-submit>筛选</button>
+                    </div>
+                </form>
+                <div class="layui-row pc-admin-labelFrame">
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>总病例数</span>
+                            <span><span id="PC-main-casesTotalNumber">-</span> 例</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>GA<32W</span>
+                            <span><span id="PC-main-ga32w">-</span> 例</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>BW<1500g</span>
+                            <span><span id="PC-main-bw1500g">-</span> 例</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>今日新增</span>
+                            <span><span id="PC-main-todayAdd">-</span> 例</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>填写中</span>
+                            <span><span id="PC-main-writing">-</span> 例</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>已完成</span>
+                            <span><span id="PC-main-completed">-</span> 例</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>审核通过</span>
+                            <span><span id="PC-main-reviewPass">-</span> 例</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-admin-label">
+                            <span>审核不通过</span>
+                            <span><span id="PC-main-reviewReject">-</span> 例</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="layui-row pc-admin-charts">
+                        <div class="layui-col-lg6">
+                            <div class="pc-admin-chart">
+                                <div>胎龄（w）</div>
+                                <canvas id="gestationalAgeChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-lg6">
+                            <div class="pc-admin-chart">
+                                <div>出生体重（g）</div>
+                                <canvas id="birthWeightChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-lg6">
+                            <div class="pc-admin-chart">
+                                <div>并发症</div>
+                                <canvas id="complicationChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-lg6">
+                            <div class="pc-admin-chart">
+                                <div>预后</div>
+                                <canvas id="prognosisChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/chartjs-plugin-datalabels.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+</html>

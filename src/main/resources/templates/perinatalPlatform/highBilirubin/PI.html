@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>围产信息 - 高胆数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,高胆数据库,围产信息"/>
+    <meta name="description" content="围产新生儿科研合作平台高胆数据库围产信息"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/highBilirubin.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 围产信息 导航 -->
+                    <li class="layui-nav-item layui-this" sec:authorize="hasRole('ROLE_HBPI')">
+                        <a class="pc-item" href="#">
+                            <i class="pc-icon iconfont icon-huaiyun"></i>
+                            <cite>围产信息</cite>
+                        </a>
+                    </li>
+
+                    <!-- 高胆治疗 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBT')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/HBT/BI">
+                            <i class="pc-icon iconfont icon-zhuyuan"></i>
+                            <cite>高胆治疗</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访检查 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUE')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUE/MRIE">
+                            <i class="pc-icon iconfont icon-microscope-full"></i>
+                            <cite>随访检查</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访结论 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUC')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUC">
+                            <i class="pc-icon iconfont icon-pingjiazongjie"></i>
+                            <cite>随访结论</cite>
+                        </a>
+                    </li>
+
+                    <!-- 病例审核 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HB')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/review">
+                            <i class="pc-icon iconfont icon-shenhe"></i>
+                            <cite>病例审核</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-HBPI layui-form" th:object="${perinatalInformation}" sec:authorize="hasRole('ROLE_HBPI')">
+                <div class="layui-row">
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-MFN">母亲姓名</label>
+                            <input id="PC-db-MFN" type="text" name="motherFullName" lay-verify="requiredDB" th:value="${perinatalInformation} ? *{motherFullName} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-MP">母亲手机号</label>
+                            <input id="PC-db-MP" type="text" name="motherPhone" lay-verify="requiredDB|phone" th:value="${perinatalInformation} ? *{motherPhone} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-MHN">母亲住院号</label>
+                            <input id="PC-db-MHN" type="text" name="motherHospitalNumber" lay-verify="requiredDB" th:value="${perinatalInformation} ? *{motherHospitalNumber} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-pcHbMotherNum">高胆母亲编号</label>
+                            <input id="PC-db-pcHbMotherNum" type="text" name="pcHbMotherNum" lay-verify="requiredDB" th:data-num="${hbNumber}" th:value="${perinatalInformation} ? (*{pcHbMotherNum ne ''} ? *{pcHbMotherNum} : ('hm' + ${hospitalAbbr})) : ('hm' + ${hospitalAbbr})" readonly>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="layui-row pc-db-HBPIOI">
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-motherAge">母亲年龄</label>
+                            <input id="PC-db-motherAge" type="number" name="motherAge" lay-verify="requiredDB" th:value="${perinatalInformation} ? *{motherAge} : _">
+                            <span>岁</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>母亲民族</label>
+                            <input type="hidden" name="motherNation" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{motherNation} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{motherNation eq '汉族'} ? 'pc-db-active': _) : _" data-value="汉族">
+                                    <button>汉族</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherNation eq '少数民族'} ? 'pc-db-active': _) : _" data-value="少数民族">
+                                    <button>少数民族</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>母亲ABO血型</label>
+                            <input type="hidden" name="motherAboBloodType" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{motherAboBloodType} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{motherAboBloodType eq 'A'} ? 'pc-db-active': _) : _" data-value="A">
+                                    <button>A</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherAboBloodType eq 'B'} ? 'pc-db-active': _) : _" data-value="B">
+                                    <button>B</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherAboBloodType eq 'AB'} ? 'pc-db-active': _) : _" data-value="AB">
+                                    <button>AB</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherAboBloodType eq 'O'} ? 'pc-db-active': _) : _" data-value="O">
+                                    <button>O</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherAboBloodType eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>母亲RH血型</label>
+                            <input type="hidden" name="motherRhBloodType" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{motherRhBloodType} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{motherRhBloodType eq 'RH+'} ? 'pc-db-active': _) : _" data-value="RH+">
+                                    <button>RH+</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherRhBloodType eq 'RH-'} ? 'pc-db-active': _) : _" data-value="RH-">
+                                    <button>RH-</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherRhBloodType eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>母亲文化水平</label>
+                            <input type="hidden" name="motherEducationalLevel" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{motherEducationalLevel} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{motherEducationalLevel eq '小学'} ? 'pc-db-active': _) : _" data-value="小学">
+                                    <button>小学</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherEducationalLevel eq '中学'} ? 'pc-db-active': _) : _" data-value="中学">
+                                    <button>中学</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherEducationalLevel eq '大学'} ? 'pc-db-active': _) : _" data-value="大学">
+                                    <button>大学</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherEducationalLevel eq '研究生及以上'} ? 'pc-db-active': _) : _" data-value="研究生及以上">
+                                    <button>研究生及以上</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-fatherAge">父亲年龄</label>
+                            <input id="PC-db-fatherAge" type="number" name="fatherAge" lay-verify="requiredDB" th:value="${perinatalInformation} ? *{fatherAge} : _">
+                            <span>岁</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>父亲民族</label>
+                            <input type="hidden" name="fatherNation" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{fatherNation} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{fatherNation eq '汉族'} ? 'pc-db-active': _) : _" data-value="汉族">
+                                    <button>汉族</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherNation eq '少数民族'} ? 'pc-db-active': _) : _" data-value="少数民族">
+                                    <button>少数民族</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>父亲ABO血型</label>
+                            <input type="hidden" name="fatherAboBloodType" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{fatherAboBloodType} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{fatherAboBloodType eq 'A'} ? 'pc-db-active': _) : _" data-value="A">
+                                    <button>A</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherAboBloodType eq 'B'} ? 'pc-db-active': _) : _" data-value="B">
+                                    <button>B</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherAboBloodType eq 'AB'} ? 'pc-db-active': _) : _" data-value="AB">
+                                    <button>AB</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherAboBloodType eq 'O'} ? 'pc-db-active': _) : _" data-value="O">
+                                    <button>O</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherAboBloodType eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>父亲RH血型</label>
+                            <input type="hidden" name="fatherRhBloodType" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{fatherRhBloodType} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{fatherRhBloodType eq 'RH+'} ? 'pc-db-active': _) : _" data-value="RH+">
+                                    <button>RH+</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherRhBloodType eq 'RH-'} ? 'pc-db-active': _) : _" data-value="RH-">
+                                    <button>RH-</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherRhBloodType eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>父亲文化水平</label>
+                            <input type="hidden" name="fatherEducationalLevel" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{fatherEducationalLevel} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{fatherEducationalLevel eq '小学'} ? 'pc-db-active': _) : _" data-value="小学">
+                                    <button>小学</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherEducationalLevel eq '中学'} ? 'pc-db-active': _) : _" data-value="中学">
+                                    <button>中学</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherEducationalLevel eq '大学'} ? 'pc-db-active': _) : _" data-value="大学">
+                                    <button>大学</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{fatherEducationalLevel eq '研究生及以上'} ? 'pc-db-active': _) : _" data-value="研究生及以上">
+                                    <button>研究生及以上</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="layui-row pc-db-HBPIOI">
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-pregnancyNumber">胎次</label>
+                            <input id="PC-db-pregnancyNumber" type="number" name="pregnancyNumber" lay-verify="requiredDB" th:value="${perinatalInformation} ? *{pregnancyNumber} : _">
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-birthNumber">产次</label>
+                            <input id="PC-db-birthNumber" type="number" name="birthNumber" lay-verify="requiredDB" th:value="${perinatalInformation} ? *{birthNumber} : _">
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-abortionNumber">流产次数</label>
+                            <input id="PC-db-abortionNumber" type="number" name="abortionNumber" lay-verify="requiredDB" th:value="${perinatalInformation} ? *{abortionNumber} : _">
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>分娩方式</label>
+                            <input type="hidden" name="deliveryMode" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{deliveryMode} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{deliveryMode eq '阴道顺产'} ? 'pc-db-active': _) : _" data-value="阴道顺产">
+                                    <button>阴道顺产</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{deliveryMode eq '产钳或胎吸助产阴道分娩'} ? 'pc-db-active': _) : _" data-value="产钳或胎吸助产阴道分娩">
+                                    <button>产钳或胎吸助产阴道分娩</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{deliveryMode eq '剖宫产'} ? 'pc-db-active': _) : _" data-value="剖宫产">
+                                    <button>剖宫产</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{deliveryMode eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>母亲高血压</label>
+                            <input type="hidden" name="motherHypertension" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{motherHypertension} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{motherHypertension eq '否'} ? 'pc-db-active': _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherHypertension eq '妊娠前高血压'} ? 'pc-db-active': _) : _" data-value="妊娠前高血压">
+                                    <button>妊娠前高血压</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherHypertension eq '妊娠期高血压'} ? 'pc-db-active': _) : _" data-value="妊娠期高血压">
+                                    <button>妊娠期高血压</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherHypertension eq '子痫前期'} ? 'pc-db-active': _) : _" data-value="子痫前期">
+                                    <button>子痫前期</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherHypertension eq '子痫'} ? 'pc-db-active': _) : _" data-value="子痫">
+                                    <button>子痫</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{motherHypertension eq 'HELLP综合征'} ? 'pc-db-active': _) : _" data-value="HELLP综合征">
+                                    <button>HELLP综合征</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>妊娠期糖尿病</label>
+                            <input type="hidden" name="pregnancyDiabetes" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{pregnancyDiabetes} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{pregnancyDiabetes eq '否'} ? 'pc-db-active': _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyDiabetes eq '1型糖尿病'} ? 'pc-db-active': _) : _" data-value="1型糖尿病">
+                                    <button>1型糖尿病</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyDiabetes eq '2型糖尿病'} ? 'pc-db-active': _) : _" data-value="2型糖尿病">
+                                    <button>2型糖尿病</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyDiabetes eq '3型糖尿病'} ? 'pc-db-active': _) : _" data-value="3型糖尿病">
+                                    <button>3型糖尿病</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyDiabetes eq '类型不详'} ? 'pc-db-active': _) : _" data-value="类型不详">
+                                    <button>类型不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item lg">
+                            <label>妊娠期肝内胆汁淤积症</label>
+                            <input type="hidden" name="pregnancyIntrahepaticCholestasis" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{pregnancyIntrahepaticCholestasis} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{pregnancyIntrahepaticCholestasis eq '否'} ? 'pc-db-active': _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyIntrahepaticCholestasis eq '是'} ? 'pc-db-active': _) : _" data-value="是">
+                                    <button>是</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyIntrahepaticCholestasis eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>妊娠期甲减</label>
+                            <input type="hidden" name="pregnancyHypothyroidism" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{pregnancyHypothyroidism} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{pregnancyHypothyroidism eq '否'} ? 'pc-db-active': _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyHypothyroidism eq '是'} ? 'pc-db-active': _) : _" data-value="是">
+                                    <button>是</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyHypothyroidism eq '亚临床'} ? 'pc-db-active': _) : _" data-value="亚临床">
+                                    <button>亚临床</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{pregnancyHypothyroidism eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>子女人数</label>
+                            <input type="hidden" name="childrenNumber" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{childrenNumber} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{childrenNumber eq '初胎'} ? 'pc-db-active': _) : _" data-value="初胎">
+                                    <button>初胎</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{childrenNumber eq '二胎及以上'} ? 'pc-db-active': _) : _" data-value="二胎及以上">
+                                    <button>二胎及以上</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>既往子女光疗</label>
+                            <input type="hidden" name="previousChildrenPhototherapy" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{previousChildrenPhototherapy} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{previousChildrenPhototherapy eq '否'} ? 'pc-db-active': _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{previousChildrenPhototherapy eq '是'} ? 'pc-db-active': _) : _" data-value="是">
+                                    <button>是</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{previousChildrenPhototherapy eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>既往子女换血</label>
+                            <input type="hidden" name="previousChildrenExchangeBlood" lay-verify="requiredRadioGroup" th:value="${perinatalInformation} ? *{previousChildrenExchangeBlood} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${perinatalInformation} ? (*{previousChildrenExchangeBlood eq '否'} ? 'pc-db-active': _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{previousChildrenExchangeBlood eq '是'} ? 'pc-db-active': _) : _" data-value="是">
+                                    <button>是</button>
+                                </li>
+                                <li th:class="${perinatalInformation} ? (*{previousChildrenExchangeBlood eq '不详'} ? 'pc-db-active': _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="PI" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/HBWrite.min.js}"></script>
+</html>

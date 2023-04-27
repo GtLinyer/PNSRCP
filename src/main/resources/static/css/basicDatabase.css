@@ -1,0 +1,1658 @@
+.pc-db-item>.layui-form-switch {
+    margin: 0;
+    position: absolute;
+}
+.pc-db-item>.pc-db-spanItem {
+    display: inline-block;
+    position: absolute;
+}
+.pc-db-head {
+    padding: 20px 0 10px;
+    color: #FFB7C5;
+}
+.pc-db-BDRTS>div:nth-child(2),
+.pc-db-BDIS>div:nth-child(2) {
+    margin-top: 20px;
+}
+.pc-db-item-table .layui-form-selectup dl {
+    top: unset !important;
+    bottom: unset !important;
+}
+.pc-db-spanItem.shrink>.layui-form-checkbox,
+.pc-db-item-checkbox.shrink>.layui-form-checkbox,
+.pc-db-attach.shrink>.layui-form-checkbox {
+    margin-bottom: 5px;
+}
+
+/* 弹出 表格 */
+#PC-db-RespManage,
+#PC-db-ADP {
+    background-color: #E4E4E4;
+}
+#PC-db-RespManage .pc-db-layer-table,
+#PC-db-ADP .pc-db-layer-table {
+    overflow-x: scroll;
+}
+#PC-db-RespManage .pc-db-table,
+#PC-db-ADP .pc-db-table {
+    width: auto;
+}
+#PC-db-RespManage .pc-db-table thead>tr>th,
+#PC-db-ADP .pc-db-table thead>tr>th {
+    height: 20px;
+    width: 72px;
+    min-width: 72px;
+}
+#PC-db-RespManage .pc-db-table tbody>tr>td,
+#PC-db-ADP .pc-db-table tbody>tr>td {
+    text-align: center;
+}
+#PC-db-RespManage .pc-db-table.tableLeft,
+#PC-db-ADP .pc-db-table.tableLeft {
+    z-index: 5;
+    position: absolute;
+    background-color: #F2F2F2;
+    box-shadow: 1px 0 1px #AFAFAF;
+}
+#PC-db-RespManage .pc-db-table.tableLeft thead>tr>th:first-child,
+#PC-db-ADP .pc-db-table.tableLeft thead>tr>th:first-child {
+    width: 120px;
+    min-width: 120px;
+}
+#PC-db-RespManage .pc-db-table.tableRight,
+#PC-db-ADP .pc-db-table.tableRight {
+    margin-left: 266px;
+    background-color: white;
+}
+#PC-db-RespManage .pc-db-table.tableRight thead>tr>th,
+#PC-db-ADP .pc-db-table.tableRight thead>tr>th {
+    width: 96px;
+    min-width: 96px;
+}
+#PC-db-RespManage .pc-db-table.tableRight tbody>tr:first-child,
+#PC-db-RespManage .pc-db-table.tableRight tbody>tr:last-child,
+#PC-db-ADP .pc-db-table.tableRight tbody>tr:first-child,
+#PC-db-ADP .pc-db-table.tableRight tbody>tr.pc-db-table-block {
+    background-color: #F2F2F2;
+}
+#PC-db-RespManage .pc-db-table.tableRight tbody>tr>td.pc-db-active>div,
+#PC-db-ADP .pc-db-table.tableRight tbody>tr>td.pc-db-active {
+    background-color: #FFB7C5;
+}
+
+/** 母亲信息 **/
+.pc-db-BDMIH .pc-db-item>input,
+.pc-db-BDMIH .pc-db-item>.pc-db-enter,
+.pc-db-BDMIH .pc-db-item>.layui-form-switch {
+    left: 116px;
+}
+.pc-db-BDMIH #PC-db-moveInYear {
+    width: 40px;
+}
+.pc-db-BDMIH #PC-db-moveInYear+i {
+    left: 168px;
+}
+.pc-db-BDMIH .pc-db-item-datetime i {
+    left: 280px;
+}
+#PC-db-motherPhone {
+    width: 152px;
+}
+.pc-db-BDMIH .pc-db-item-unit>span {
+    left: 168px;
+}
+.pc-db-BDMIH .pc-db-item.bda>input {
+    left: 38px;
+}
+.pc-db-BDMIH .pc-db-item-unit.bda>span {
+    left: 90px;
+}
+.pc-db-BDMIH .pc-db-attach.bdmn {
+    left: 582px;
+}
+.pc-db-BDMIH .mla>.pc-db-item>.pc-db-radioBtn-group {
+    display: inline-flex;
+}
+.pc-db-BDMIH #PC-db-diabetes>.pc-db-attach {
+    left: 502px;
+}
+.pc-db-BDMIH .pc-db-enter.pc-inline-flex {
+    top: 12px;
+}
+.pc-db-BDMIL .pc-db-item>input,
+.pc-db-BDMIL .pc-db-item>.pc-db-enter,
+.pc-db-BDMIL .pc-db-item>.layui-form-switch {
+    left: 170px;
+}
+.pc-db-BDMIL .pc-db-item-unit>span {
+    left: 220px;
+}
+.pc-db-BDMIL .pc-db-attach {
+    left: 300px;
+}
+
+/** 孕期信息 **/
+.pc-db-BDGI .pc-db-item>input,
+.pc-db-BDGI .pc-db-item>.pc-db-enter,
+.pc-db-BDGI .pc-db-item>.layui-form-switch {
+    left: 102px;
+}
+.pc-db-BDGI .pc-db-item>.pc-db-item-checkbox {
+    left: 134px;
+}
+.pc-db-BDGI .pc-db-item-unit>span {
+    left: 154px;
+}
+
+/** 围产信息 **/
+.pc-db-BDPI .pc-db-item>input,
+.pc-db-BDPI .pc-db-item>.pc-db-enter,
+.pc-db-BDPI .pc-db-item>.layui-form-switch,
+.pc-db-BDPI .pc-db-item>.pc-db-spanItem {
+    left: 130px;
+}
+.pc-db-BDPI .pc-db-item.time>input {
+    left: 70px;
+}
+.pc-db-BDPI .pc-db-item>.pc-db-enter.auw24hbd {
+    left: 200px;
+}
+.pc-db-BDPI .pc-db-item.at>input,
+.pc-db-BDPI .pc-db-item.ar>input {
+    position: unset;
+}
+.pc-db-BDPI .pc-db-item-unit>span {
+    left: 184px;
+}
+.pc-db-BDPI .pc-db-item-unit-lg>span {
+    left: 206px;
+}
+.pc-db-BDPI .pc-db-item.unset>input {
+    position: unset;
+}
+.pc-db-BDPI .pc-db-item-datetime i {
+    left: 234px;
+}
+.pc-db-BDPI .pc-db-item-datetime.aud i {
+    left: 294px;
+}
+.pc-db-BDPI .pc-db-attach#PC-db-HEO {
+    left: 326px;
+}
+.pc-db-BDPI .pc-db-attach {
+    left: 264px;
+}
+.pc-db-BDPI .pc-db-attach>span {
+    margin-right: 40px;
+}
+.pc-db-BDPI .pc-db-item.sm>input {
+    left: 42px;
+    top: 12px;
+}
+.pc-db-BDPI .pc-db-item-unit.sm>span {
+    left: 90px;
+}
+.pc-db-BDPI .pc-db-item-unit-lg.sm>span {
+    left: 98px;
+}
+.pc-db-BDPI .pc-db-item>.pc-db-attach>.layui-form-checkbox {
+    margin: 5px 0;
+}
+
+/** 宝宝情况 **/
+.pc-db-BDBS .pc-db-item>input,
+.pc-db-BDBS .pc-db-item>.pc-db-enter,
+.pc-db-BDBS .pc-db-item>.pc-db-spanItem {
+    left: 86px;
+}
+.pc-db-BDBS .pc-db-item.pcnn>input {
+    left: 134px;
+}
+.pc-db-BDBS .pc-db-item-datetime i {
+    left: 250px;
+}
+.pc-db-BDBS .pc-db-item-unit>span {
+    left: 132px;
+}
+.pc-db-BDBS .pc-db-item-unit-lg>input {
+    left: 134px;
+}
+.pc-db-BDBS .pc-db-item-unit-lg>span {
+    left: 204px;
+}
+.pc-db-BDBS .pc-db-item>.pc-db-attach {
+    left: 288px;
+}
+.pc-db-BDBSL .pc-db-item>.layui-form-switch,
+.pc-db-BDBSL .pc-db-item>.pc-db-spanItem,
+.pc-db-BDBSL .pc-db-item>input {
+    left: 136px;
+}
+.pc-db-BDBSL .pc-db-item>.pc-db-enter,
+.pc-db-BDBSL .pc-db-item.pc-db-item-datetime>input {
+    left: 74px;
+}
+.pc-db-BDBSL .pc-db-item-datetime>i {
+    left: 238px;
+}
+.pc-db-BDBSL .pc-db-item.pc-db-item-datetime.lg>input {
+    left: 118px;
+}
+.pc-db-BDBSL .pc-db-item-datetime.lg>i {
+    left: 282px;
+}
+.pc-db-BDBSL .pc-db-item-unit>span {
+    left: 188px;
+}
+.pc-db-BDBSL .pc-db-item-unit-lg>span {
+    left: 206px;
+}
+
+/** 复苏情况 **/
+.pc-db-BDRS .pc-db-item>input,
+.pc-db-BDRS .pc-db-item>.pc-db-enter,
+.pc-db-BDRS .pc-db-item>.layui-form-switch,
+.pc-db-BDRS .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDRS .pc-db-item>.pc-db-spanItem {
+    left: 118px;
+}
+.pc-db-BDRS .pc-db-item-unit-lg.lg>input {
+    left: 180px;
+}
+.pc-db-BDRS .pc-db-item-unit-lg.lg>span {
+    left: 252px;
+}
+.pc-db-BDRS .pc-db-item.amso>.layui-form-switch {
+    left: 194px;
+}
+.pc-db-BDRS .pc-db-item-unit>span {
+    left: 164px;
+}
+.pc-db-BDRS .pc-db-item-unit-lg>span {
+    left: 168px;
+}
+.pc-db-BDRS .pc-db-item-datetime i {
+    left: 278px;
+}
+.pc-db-BDRS .pc-db-item>.pc-db-attach {
+    left: 200px;
+}
+.pc-db-BDRS .pc-db-item>.pc-db-attach.duclt {
+    left: 242px;
+}
+.pc-db-BDRS>div>.pc-db-item.apgarat>label {
+    color: #FFB7C5;
+}
+.pc-db-BDRS .pc-db-item.apgars {
+    margin-top: 10px;
+}
+.pc-db-BDRS .pc-db-item.apgars>.pc-db-spanItem>input {
+    margin-right: 20px;
+}
+.pc-db-BDRS .pc-db-item .pc-db-attach.duclt>span {
+    color: #FFB7C5;
+}
+.pc-db-BDRS .pc-db-table>tbody>tr>td:last-child {
+    text-align: center;
+}
+.pc-db-BDRS #PC-db-DCT,
+.pc-db-BDRS #PC-db-deformityTable {
+    overflow: unset;
+}
+.pc-db-BDRS .pc-db-table .pc-db-table-select {
+    background-color: white;
+}
+.pc-db-pic {
+    display: inline-block;
+    padding: 68px 60px 108px 24px;
+    overflow-x: scroll;
+}
+.pc-db-pic>ul,.pc-db-pic>ul>li {
+    position: relative;
+}
+.pc-db-pic>ul {
+    white-space: nowrap;
+}
+.pc-db-pic>ul>li {
+    display: inline-block;
+}
+.pc-db-pic>ul>li:not(:last-child) {
+    width: 124px;
+}
+.pc-db-pic>ul>li {
+    display: inline-block;
+}
+.pc-db-pic>ul>li:before {
+    content: '';
+    width: 14px;
+    height: 16px;
+    border-radius: 100%;
+    background: white;
+    position: absolute;
+    top: 0;
+    border: #FFB7C5 8px solid;
+    z-index: 10;
+}
+.pc-db-pic>ul>li:not(:last-child):after {
+    content: '';
+    width: 124px;
+    height: 16px;
+    background-color: #FFB7C5;
+    position: absolute;
+    left: 16px;
+    top: 8px;
+}
+.pc-db-pic>ul>li>div {
+    height: 38px;
+    border-radius: 50px;
+    position: absolute;
+    padding: 10px;
+    background-color: #FFB7C5;
+    text-align: center;
+    color: white;
+    left: -20px;
+}
+.pc-db-pic>ul>li:nth-child(odd)>div {
+    top: -76px;
+}
+.pc-db-pic>ul>li:nth-child(even)>div {
+    top: 52px;
+}
+.pc-db-pic>ul>li>div:after {
+    position: absolute;
+    content: "\00a0";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    right: 34px;
+}
+.pc-db-pic>ul>li:nth-child(odd)>div:after {
+    border-width: 16px 4px 0 4px;
+    border-color: #FFB7C5 transparent transparent transparent;
+    top: 58px;
+}
+.pc-db-pic>ul>li:nth-child(even)>div:after {
+    border-width: 0 4px 16px 4px;
+    border-color: transparent transparent #FFB7C5 transparent;
+    top: -16px;
+}
+.pc-db-pic>ul>li.color1:after,
+.pc-db-pic>ul>li.color1>div {
+    background-color: #D35400;
+}
+.pc-db-pic>ul>li.color2:after,
+.pc-db-pic>ul>li.color2>div {
+    background-color: #3498DB;
+}
+.pc-db-pic>ul>li.color3:after,
+.pc-db-pic>ul>li.color3>div {
+    background-color: #8E44AD;
+}
+.pc-db-pic>ul>li.color4:after,
+.pc-db-pic>ul>li.color4>div {
+    background-color: #F39C12;
+}
+.pc-db-pic>ul>li.color5:after,
+.pc-db-pic>ul>li.color5>div {
+    background-color: #229954;
+}
+.pc-db-pic>ul>li.color6:after,
+.pc-db-pic>ul>li.color6>div {
+    background-color: #A93226;
+}
+.pc-db-pic>ul>li.color1>div:after {
+    border-color: #D35400 transparent transparent transparent;
+}
+.pc-db-pic>ul>li.color2>div:after {
+    border-color: transparent transparent #3498DB transparent;
+}
+.pc-db-pic>ul>li.color3>div:after {
+    border-color: #8E44AD transparent transparent transparent;
+}
+.pc-db-pic>ul>li.color4>div:after {
+    border-color: transparent transparent #F39C12 transparent;
+}
+.pc-db-pic>ul>li.color5>div:after {
+    border-color: #229954 transparent transparent transparent;
+}
+.pc-db-pic>ul>li.color6>div:after {
+    border-color: transparent transparent #A93226 transparent;
+}
+
+/** 危重评估 **/
+.pc-db-BD.pc-body-framework>.pc-db-h1-wrap>h1 {
+    font-size: 16px;
+}
+.pc-db-BD.pc-body-framework>.pc-db-h1-wrap {
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+.pc-db-table>thead>tr>th:first-child {
+    min-width: 160px;
+    width: 160px;
+}
+.pc-db-BDCA .pc-db-item-table {
+    overflow: unset;
+}
+.pc-db-BDCA .pc-db-table>tbody td>.pc-db-radioBtn-group {
+    margin: 0 auto;
+}
+.pc-db-BDCA #PC-db-gender>.pc-db-radioBtn-group {
+    width: 62px;
+}
+.pc-db-BDCA .pc-db-item>input {
+    left: 120px;
+}
+.pc-db-BDCA .pc-db-item-unit>span {
+    left: 168px;
+}
+.pc-db-BDCA .pc-db-item-unit-lg>span {
+    left: 172px;
+}
+.pc-db-BDCA table .pc-db-table-select {
+    background-color: white;
+}
+.pc-db-BDCA .pc-db-table td>.pc-btn-danger {
+    padding: 4px 8px;
+}
+.pc-db-BDCA .pc-db-table .pc-db-radioBtn-group>li {
+    background-color: #FFF8DC;
+}
+
+/** 呼吸系统 **/
+/* 呼吸支持 */
+.pc-db-BDRTSRSH .pc-db-item>input,
+.pc-db-BDRTSRSH .pc-db-item>.pc-db-spanItem {
+    left: 70px;
+}
+.pc-db-BDRTSRSH .pc-db-item-date>i {
+    left: 172px;
+}
+.pc-db-BDRTSRSH .pc-db-item>.pc-db-enter {
+    left: 108px;
+}
+.pc-db-BDRTSRSH .pc-db-item-unit>span {
+    left: 124px;
+}
+.pc-db-BDRTSRSH .pc-db-item-unit-lg>span {
+    left: 126px;
+}
+.pc-db-BDRTSRSH .layui-col-sm2>.pc-db-item>label {
+    color: #FFB7C5;
+}
+.pc-db-BDRTSRSL {
+    margin-top: 20px;
+}
+.pc-db-BDRTSRSL .pc-db-item>input,
+.pc-db-BDRTSRSL1 .pc-db-item>input {
+    left: 104px;
+}
+.pc-db-BDRTSRSL .pc-db-item-unit>span,
+.pc-db-BDRTSRSL1 .pc-db-item-unit>span {
+    left: 152px;
+}
+.pc-db-BDRTSRSL .pc-db-item>.pc-db-spanItem,
+.pc-db-BDRTSRSL1 .pc-db-item>.pc-db-spanItem {
+    left: 104px;
+}
+.pc-db-BDRTSRSL .pc-db-item-table>.pc-db-table,
+.pc-db-BDRTSRSL1 .pc-db-item-table>.pc-db-table {
+    min-width: 878px;
+}
+#PC-db-RespManage .pc-db-table tbody>tr {
+    height: 36px;
+}
+#PC-db-RespManage .pc-db-table.tableRight tbody>tr>td.pc-db-active>div {
+    padding: 18px 0;
+}
+#PC-db-RespManage .pc-db-table .pc-row>div {
+    padding: 1.258em 0;
+    float: left;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 4.16666666667%;
+}
+#PC-db-RespManage .pc-db-table .pc-row>div.pc-db-active {
+    background-color: #FFB7C5;
+}
+
+/* HFNC失败 */
+.pc-db-BDRTSHFH .pc-db-item>input,
+.pc-db-BDRTSHFH .pc-db-item>.pc-db-spanItem,
+.pc-db-BDRTSHFH .pc-db-item>.layui-form-switch {
+    left: 130px;
+}
+.pc-db-BDRTSHFH .pc-db-item.rsmahfnc>.pc-db-enter {
+    left: 196px;
+}
+.pc-db-BDRTSHFH .pc-db-item-datetime i {
+    left: 294px;
+}
+.pc-db-BDRTSHF .pc-db-item>.layui-form-switch {
+    left: 182px;
+}
+.pc-db-BDRTSHF .pc-db-item>input {
+    left: 84px;
+}
+.pc-db-BDRTSHF .pc-db-item-unit-lg>span {
+    left: 136px;
+}
+.pc-db-BDRTSHF .pc-db-item-unit>span {
+    left: 132px;
+}
+
+/* 无创通气失败 */
+.pc-db-BDRTSNVFH .pc-db-item>input,
+.pc-db-BDRTSNVFH .pc-db-item>.pc-db-enter,
+.pc-db-BDRTSNVFH .pc-db-item>.pc-db-spanItem {
+    left: 148px;
+}
+.pc-db-BDRTSNVFH .pc-db-item>.layui-form-switch {
+    left: 134px;
+}
+.pc-db-BDRTSNVFH .pc-db-item.rbg-lg>.pc-db-enter {
+    left: 214px;
+}
+.pc-db-BDRTSNVFH .pc-db-item-unit>span {
+    left: 224px;
+}
+.pc-db-BDRTSNVFH .pc-db-item-datetime i {
+    left: 312px;
+}
+.pc-db-BDRTSNVF .pc-db-item>.layui-form-switch {
+    left: 198px;
+}
+.pc-db-BDRTSNVF .pc-db-item>input {
+    left: 84px;
+}
+.pc-db-BDRTSNVF .pc-db-item-unit-lg>span {
+    left: 136px;
+}
+.pc-db-BDRTSNVF .pc-db-item-unit>span {
+    left: 132px;
+}
+
+/* 撤机情况 */
+.pc-db-BDRTSWSH .pc-db-item>input,
+.pc-db-BDRTSWSH .pc-db-item>.pc-db-enter,
+.pc-db-BDRTSWSH .pc-db-item>.layui-form-switch {
+    left: 100px;
+}
+.pc-db-BDRTSWSS .pc-db-item>input,
+.pc-db-BDRTSWSS .pc-db-item>.pc-db-enter,
+.pc-db-BDRTSWSS .pc-db-item>.layui-form-switch {
+    left: 144px;
+}
+.pc-db-BDRTSWSS .pc-db-item-datetime i {
+    left: 308px;
+}
+.pc-db-BDRTSWSS .pc-db-item-unit>span {
+    left: 222px;
+}
+.pc-db-BDRTSWSS .pc-db-item>.pc-db-spanItem {
+    left: 176px;
+}
+.pc-db-BDRTSWS .pc-db-item>.layui-form-switch {
+    left: 136px;
+}
+.pc-db-BDRTSWS .pc-db-item>input {
+    left: 84px;
+}
+.pc-db-BDRTSWS .pc-db-item.awnivm>input {
+    left: 150px
+}
+.pc-db-BDRTSWS .pc-db-item-unit-lg>span {
+    left: 136px;
+}
+.pc-db-BDRTSWS .pc-db-item-unit>span {
+    left: 132px;
+}
+
+/* BPD */
+.pc-db-BDRTSBPD .pc-db-item>input,
+.pc-db-BDRTSBPD .pc-db-item>.pc-db-enter {
+    left: 106px;
+}
+.pc-db-BDRTSBPD .pc-db-item-unit>span {
+    left: 158px;
+}
+.pc-db-BDRTSBPD .pc-db-item-table>.pc-db-table {
+    min-width: 940px;
+}
+
+/* RDS */
+.pc-db-BDRTSRDS .pc-db-item>input,
+.pc-db-BDRTSRDS .pc-db-item>.pc-db-enter,
+.pc-db-BDRTSRDS .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDRTSRDS .pc-db-item>.layui-form-switch {
+    left: 68px;
+}
+.pc-db-BDRTSRDS .pc-db-item-datetime i {
+    left: 232px;
+}
+.pc-db-BDRTSRDS .pc-db-item-unit>span {
+    left: 122px;
+}
+.pc-db-BDRTSRDS .pc-db-item-table>.pc-db-table {
+    min-width: 924px;
+}
+
+/* 呼吸暂停 */
+.pc-db-BDRTSAP .pc-db-item>input,
+.pc-db-BDRTSAP .pc-db-item>.layui-form-switch {
+    left: 86px;
+}
+.pc-db-BDRTSAP .pc-db-item-datetime i {
+    left: 250px;
+}
+.pc-db-BDRTSAP .pc-db-item-unit>span {
+    left: 138px;
+}
+.pc-db-BDRTSAP .pc-db-item-table>.pc-db-table {
+    min-width: 934px;
+}
+
+/* 其他诊断与治疗 */
+.pc-db-BDRTSODT .pc-db-item>input  {
+    left: 72px;
+}
+.pc-db-BDRTSODT .pc-db-item>.layui-form-switch {
+    left: 102px;
+}
+.pc-db-BDRTSODT .pc-db-item.lg>.layui-form-switch {
+    left: 162px;
+}
+.pc-db-BDRTSODT .pc-db-item-date i {
+    left: 174px;
+}
+
+/** 消化系统 **/
+.pc-db-BDDGS>div:nth-child(2) {
+    margin-top: 20px;
+}
+/* 生长指标 */
+.pc-db-BDDGSGI .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaWeek>td,
+.pc-db-BDDGSGI .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaDay>td {
+    background-color: transparent;
+}
+.pc-db-BDDGSGI .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaWeek>td>input,
+.pc-db-BDDGSGI .pc-db-item-table>.pc-db-table.tableRight tbody>tr.pc-db-cgaDay>td>input {
+    color: #FFB7C5;
+}
+.pc-db-BDDGSGI .pc-db-item>input {
+    left: 166px;
+}
+.pc-db-BDDGSGI .pc-db-item-date>i {
+    left: 268px;
+}
+.pc-db-BDDGSGI .pc-db-item-unit>span {
+    left: 218px;
+}
+.pc-db-BDDGSGI .pc-db-item-unit-lg>span {
+    left: 218px;
+}
+.pc-db-BDDGSGI.pc-db-chart>div {
+    padding: 15px;
+}
+.pc-db-BDDGSGI.pc-db-chart .pc-db-chart-elem {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+.pc-db-BDDGSGI .pc-db-item-table>.pc-db-table.tableLeft thead>tr>th:first-child {
+    width: 120px;
+    min-width: 120px;
+}
+.pc-db-BDDGSGI .pc-db-item-table>.pc-db-table.tableRight {
+    margin-left: 126px;
+}
+#PC-db-fenton .layui-layer-content {
+    padding: 20px;
+    width: 760px;
+}
+#PC-db-fenton .pc-layer-chart {
+    width: 760px;
+}
+/* 肠内营养 */
+.pc-db-BDDGSEN .pc-db-item-table>.pc-db-table.tableLeft thead>tr>th:first-child {
+    width: 144px;
+    min-width: 144px;
+}
+.pc-db-BDDGSEN .pc-db-item-table>.pc-db-table.tableRight {
+    margin-left: 366px;
+}
+.pc-db-BDDGSEN .pc-db-table>tbody td.pc-db-table-click {
+    cursor: pointer;
+    padding: 0 10px;
+    background-color: white;
+}
+.pc-db-BDDGSEN .pc-db-table>tbody td.pc-db-table-click.pc-db-active {
+    background-color: #FFB7C5;
+}
+.pc-db-BDDGSEN .pc-db-item>.pc-db-spanItem {
+    left: 88px;
+}
+.pc-db-BDDGSEN .pc-db-item>.pc-db-spanItem>span {
+    margin-right: 10px;
+}
+.pc-db-BDDGSEN .pc-db-item>.pc-db-enter,
+.pc-db-BDDGSEN .pc-db-item>input {
+    left: 166px;
+}
+.pc-db-BDDGSEN .pc-db-item-date>i {
+    left: 268px;
+}
+.pc-db-BDDGSEN .pc-db-item-datetime>i {
+    left: 330px;
+}
+.pc-db-BDDGSEN .pc-db-item-unit>span {
+    left: 240px;
+}
+.pc-db-BDDGSEN .pc-db-item-unit-lg>span {
+    left: 218px;
+}
+/* 肠外营养 */
+.pc-db-BDDGSPN .pc-db-item-table>.pc-db-table.tableRight tbody>tr {
+    color: #FFB7C5;
+    text-align: center;
+}
+.pc-db-BDDGSPN .pc-db-item-table>.pc-db-table.tableLeft thead>tr>th:first-child {
+    width: 124px;
+    min-width: 124px;
+}
+.pc-db-BDDGSPN .pc-db-item-table>.pc-db-table.tableRight {
+    margin-left: 346px;
+}
+.pc-db-BDDGSPN .pc-db-item-table.addList>.pc-db-table {
+    width: 100%;
+}
+.pc-db-BDDGSPN .pc-db-item>input {
+    left: 100px;
+}
+.pc-db-BDDGSPN .pc-db-item-unit>span {
+    left: 154px;
+}
+/* 禁食原因 */
+.pc-db-BDDGSFR .pc-db-item>input,
+.pc-db-BDDGSFR .pc-db-item>.layui-form-switch,
+.pc-db-BDDGSFR .pc-db-item>.pc-db-item-checkbox {
+    left: 70px;
+}
+.pc-db-BDDGSFR .pc-db-item-unit>span {
+    left: 124px;
+}
+.pc-db-BDDGSFR .pc-db-item-datetime>i {
+    left: 234px;
+}
+/*  喂养不耐受与NEC */
+.pc-db-BDDGSFIN .pc-db-item>.pc-db-item-checkbox {
+    left: 88px;
+}
+.pc-db-BDDGSFIN .pc-db-item.lg>.pc-db-item-checkbox {
+    left: 120px;
+}
+.pc-db-BDDGSFIN .pc-db-item>input {
+    left: 70px;
+}
+.pc-db-BDDGSFIN .pc-db-item.lg>input {
+    left: 246px;
+}
+.pc-db-BDDGSFIN .pc-db-item>.pc-db-enter {
+    left: 40px;
+}
+.pc-db-BDDGSFIN .pc-db-item>.layui-form-switch {
+    left: 100px;
+}
+.pc-db-BDDGSFIN .pc-db-item-datetime>i {
+    left: 234px;
+}
+.pc-db-BDDGSFIN .pc-db-item-datetime.lg>i {
+    left: 410px;
+}
+.pc-db-BDDGSFIN .pc-db-item>.pc-db-item-checkbox>.layui-form-checkbox {
+    margin-bottom: 5px
+}
+/*  其它诊断与治疗 */
+.pc-db-BDDGSODT .pc-db-item>.layui-form-switch,
+.pc-db-BDDGSODT .pc-db-item>.pc-db-enter {
+    left: 100px;
+}
+.pc-db-BDDGSODT .pc-db-item.lg>.layui-form-switch {
+    left: 164px;
+}
+.pc-db-BDDGSODT .pc-db-item>input {
+    left: 88px;
+}
+.pc-db-BDDGSODT .pc-db-item.lg>input {
+    left: 214px;
+}
+.pc-db-BDDGSODT .pc-db-item-datetime>i {
+    left: 252px;
+}
+.pc-db-BDDGSODT .pc-db-item-datetime.lg>i {
+    left: 378px;
+}
+.pc-db-BDDGSODT .pc-db-item-unit-lg>span {
+    left: 144px;
+}
+/* 肠内营养管理 */
+.pc-db-BDDGSENM .pc-db-table.tableLeft thead>tr>th:first-child {
+    width: 168px;
+    min-width: 168px;
+}
+.pc-db-BDDGSENM .pc-db-table.tableRight {
+    margin-left: 390px;
+}
+.pc-db-BDDGSENM .pc-db-item>input {
+    left: 136px;
+}
+.pc-db-BDDGSENM .pc-db-item.lg>input {
+    left: 180px;
+}
+.pc-db-BDDGSENM .pc-db-item-date>i {
+    left: 238px;
+}
+.pc-db-BDDGSENM .pc-db-item-date.lg>i {
+    left: 282px;
+}
+.pc-db-BDDGSENM .pc-db-item-unit>span,
+.pc-db-BDDGSENM .pc-db-item-unit-lg>span {
+    left: 188px;
+}
+.pc-db-BDDGSENM .pc-db-table.tableRight tr.pc-db-TDMVPK>td,
+.pc-db-BDDGSENM .pc-db-table.tableRight tr.pc-db-TDMVPK>td>input {
+    background-color: transparent;
+}
+.pc-db-BDDGSENM .pc-db-table.tableRight tr.pc-db-TDMVPK>td>input {
+    color: #FFB7C5;
+}
+/* 肠外营养管理 */
+.pc-db-BDDGSPNM .pc-db-item-table>.pc-db-table.tableRight tbody>tr {
+    color: #FFB7C5;
+    text-align: center;
+}
+.pc-db-BDDGSPNM .pc-db-item-table>.pc-db-table.tableLeft thead>tr>th:first-child {
+    width: 166px;
+    min-width: 166px;
+}
+.pc-db-BDDGSPNM .pc-db-item-table>.pc-db-table.tableRight {
+    margin-left: 388px;
+}
+.pc-db-BDDGSPNM .pc-db-item>input {
+    left: 188px;
+}
+.pc-db-BDDGSPNM .pc-db-item-unit>span {
+    left: 240px;
+}
+.pc-db-BDDGSPNM .pc-db-item-unit-lg>span {
+    left: 246px;
+}
+.pc-db-BDDGSPNM .pc-db-item-date>i {
+    left: 290px;
+}
+.pc-db-BDDGSPNM .pc-db-item-date.lg>input {
+    left: 228px;
+}
+.pc-db-BDDGSPNM .pc-db-item-date.lg>i {
+    left: 330px;
+}
+.pc-db-BDDGSPNM #PC-db-AASUC {
+    padding-right: 78px;
+}
+/* 过渡期营养管理 */
+.pc-db-BDDGSTNM .pc-db-item-table>.pc-db-table>thead>tr>th {
+    width: 96px;
+    min-width: 96px;
+}
+.pc-db-BDDGSTNM .pc-db-item-table>.pc-db-table>thead>tr>th:first-child {
+    width: 158px;
+    min-width: 158px;
+}
+.pc-db-BDDGSTNM .pc-db-item-table>.pc-db-table>tbody>tr>td:first-child {
+    padding-left: 5px;
+    text-align: left;
+    color: #FFB7C5;
+}
+.pc-db-BDDGSTNM .pc-db-item-table>.pc-db-table>tbody>tr:first-child>td {
+    background-color: transparent;
+}
+.pc-db-BDDGSTNM .pc-db-item-table>.pc-db-table>tbody>tr:first-child>td>input {
+    color: #FFB7C5;
+}
+/* 营养评价 */
+.pc-db-BDDGSNE .pc-db-item>.pc-db-spanItem>span {
+    margin-right: 10px;
+}
+.pc-db-BDDGSNE .pc-db-item>input,
+.pc-db-BDDGSNE .pc-db-item>.layui-form-switch,
+.pc-db-BDDGSNE .pc-db-item>.pc-db-spanItem {
+    left: 134px;
+}
+.pc-db-BDDGSNE>div:first-child {
+    margin-right: -20px;
+}
+.pc-db-BDDGSNE>div:not(:first-child) {
+    padding-left: 20px;
+    border-left: 1px solid #B4B4B4;
+}
+.pc-db-BDDGSNE>div.layui-row>div:not(:first-child) {
+    margin-top: 20px;
+}
+.pc-db-BDDGSNE:nth-child(2)>div.layui-row:first-child>div:nth-child(2) {
+    margin-top: 92px;
+}
+.pc-db-BDDGSNE:nth-child(2)>div.layui-row:first-child>div:nth-child(3) {
+    margin-top: 71px;
+}
+.pc-db-BDDGSNE:nth-child(4)>div.layui-row:not(:last-child)>div:nth-child(2) {
+    margin-top: 71px;
+}
+.pc-db-BDDGSNE>div.layui-row>div:not(:first-child) {
+}
+.pc-db-BDDGSNE .pc-db-item-date>i {
+    left: 236px;
+}
+.pc-db-BDDGSNE .pc-db-item-unit>span {
+    left: 182px;
+}
+.pc-db-BDDGSNE .pc-db-item-unit-lg>span {
+    left: 186px;
+}
+.pc-db-BDDGSNE .pc-db-item.lg>input {
+    left: 246px;
+}
+.pc-db-BDDGSNE .pc-db-item.lg>.layui-form-switch {
+    left: 164px;
+}
+
+/** 感染监测 **/
+/* EOS流程 */
+.pc-db-BDISEOS .pc-db-item>input,
+.pc-db-BDISEOS .pc-db-item>.layui-form-switch {
+    left: 80px;
+}
+.pc-db-BDISEOS .pc-db-item>.pc-db-enter {
+    left: 108px;
+}
+.pc-db-BDISEOS .pc-db-item.lg>.layui-form-switch {
+    left: 144px;
+}
+.pc-db-BDISEOS2 .pc-db-item>input,
+.pc-db-BDISEOS1 .pc-db-item>input {
+    left: 118px;
+}
+.pc-db-BDISEOS1 .pc-db-item.lg>.layui-form-switch {
+    left: 134px;
+}
+.pc-db-BDISEOS2 .pc-db-item>.layui-form-switch {
+    left: 134px;
+}
+.pc-db-BDISEOS3 .pc-db-item>input {
+    left: 148px;
+}
+.pc-db-BDISEOS4 .pc-db-item>.layui-form-switch {
+    left: 102px;
+}
+.pc-db-BDISEOS .pc-db-item-datetime i {
+    left: 244px;
+}
+.pc-db-BDISEOS .pc-db-item-unit>span {
+    left: 132px;
+}
+.pc-db-BDISEOS1 .pc-db-item-unit>span,
+.pc-db-BDISEOS2 .pc-db-item-unit>span {
+    left: 170px;
+}
+.pc-db-BDISEOS3 .pc-db-item-unit>span {
+    left: 200px;
+}
+.pc-db-BDISEOST1 .pc-db-item-table>.pc-db-table {
+    min-width: 534px;
+}
+.pc-db-BDISEOST2 .pc-db-item-table>.pc-db-table {
+    min-width: 700px;
+}
+.pc-db-BDISEOST3 .pc-db-item-table>.pc-db-table {
+    min-width: 724px;
+}
+.pc-db-BDISEOST4 .pc-db-item-table>.pc-db-table {
+    min-width: 724px;
+}
+.pc-db-BDISEOS1,
+.pc-db-BDISEOS2,
+.pc-db-BDISEOS3,
+.pc-db-BDISEOS4 {
+    margin-top: 20px;
+}
+/* LOS流程 */
+.pc-db-BDISLOS .pc-db-item>input,
+.pc-db-BDISLOS .pc-db-item>.layui-form-switch {
+    left: 80px;
+}
+.pc-db-BDISLOS .pc-db-item.lg>.layui-form-switch {
+    left: 134px;
+}
+.pc-db-BDISLOS .pc-db-item-datetime i {
+    left: 244px;
+}
+.pc-db-BDISLOS .pc-db-item-unit>span {
+    left: 132px;
+}
+.pc-db-BDISLOST1>.layui-col-lg8>.pc-db-item-table {
+    margin-left: 20px;
+}
+.pc-db-BDISLOS1 .pc-db-item>input,
+.pc-db-BDISLOS1 .pc-db-item>.layui-form-switch {
+    left: 86px;
+}
+.pc-db-BDISLOS1 .pc-db-item.lg>.layui-form-switch,
+.pc-db-BDISLOS3 .pc-db-item.lg>.layui-form-switch {
+    left: 134px;
+}
+.pc-db-BDISLOS1 .pc-db-item.lg>input,
+.pc-db-BDISLOS2 .pc-db-item>input {
+    left: 118px;
+}
+.pc-db-BDISLOS1 .pc-db-item-unit>span {
+    left: 138px;
+}
+.pc-db-BDISLOS1 .pc-db-item-unit.lg>span,
+.pc-db-BDISLOS2 .pc-db-item-unit>span {
+    left: 170px;
+}
+.pc-db-BDISLOS1 .pc-db-item-datetime i {
+    left: 250px;
+}
+.pc-db-BDISLOS2 #PC-db-NSI>.layui-form-switch,
+.pc-db-BDISLOS4 .pc-db-item>.layui-form-switch {
+    left: 104px;
+}
+.pc-db-BDISLOS3 .pc-db-item>input {
+    left: 70px;
+}
+.pc-db-BDISLOS3 .pc-db-item.lg>input {
+    left: 148px;
+}
+.pc-db-BDISLOS3 .pc-db-item-unit>span {
+    left: 122px;
+}
+.pc-db-BDISLOS3 .pc-db-item-unit.lg>span {
+    left: 200px;
+}
+.pc-db-BDISLOS3 .pc-db-item-datetime i {
+    left: 234px;
+}
+.pc-db-BDISLOST1 .pc-db-item-table.table1>.pc-db-table {
+    min-width: 404px;
+}
+.pc-db-BDISLOST1 .pc-db-item-table.table2>.pc-db-table {
+    min-width: 700px;
+}
+.pc-db-BDISLOST2 .pc-db-item-table>.pc-db-table {
+    min-width: 800px;
+}
+.pc-db-BDISLOST3 .pc-db-item-table>.pc-db-table {
+    min-width: 724px;
+}
+.pc-db-BDISLOST4 .pc-db-item-table>.pc-db-table {
+    min-width: 800px;
+}
+.pc-db-BDISLOS1,
+.pc-db-BDISLOS2,
+.pc-db-BDISLOS3,
+.pc-db-BDISLOS4 {
+    margin-top: 20px;
+}
+/* 抗菌药物 */
+.pc-danger-color {
+    color: red;
+}
+.pc-db-BDISAD .pc-db-item>input {
+    left: 142px;
+}
+.pc-db-BDISAD .pc-db-item-unit>span {
+    left: 196px;
+}
+.pc-db-BDISAD .pc-db-item-table>.pc-db-table {
+    min-width: 1000px;
+}
+#PC-db-ADP .pc-db-table thead>tr>th {
+    height: 36px;
+}
+#PC-db-ADP .pc-db-table thead>th>td {
+    text-align: center;
+}
+#PC-db-ADP .pc-db-table tbody>tr {
+    height: 42px;
+}
+/* 评价指标 */
+.pc-db-BDISEI .pc-db-item>.layui-form-switch {
+    left: 214px;
+}
+/* 其它感染诊断 */
+.pc-db-BDISOID .pc-db-item>.layui-form-switch {
+    left: 136px;
+}
+.pc-db-BDISOID .pc-db-item>input {
+    left: 76px;
+}
+.pc-db-BDISOID .pc-db-item-datetime i {
+    left: 240px;
+}
+/** 循环系统 **/
+.pc-db-BDCS .pc-db-head {
+    padding: 16px 20px 16px 0;
+    text-align: right;
+}
+.pc-db-BDCS1 .pc-db-item>.layui-form-switch {
+    left: 104px;
+}
+.pc-db-BDCS1 .pc-db-item.lg>.layui-form-switch {
+    left: 120px;
+}
+.pc-db-BDCS1 .pc-db-item>input {
+    left: 70px;
+}
+.pc-db-BDCS1 .pc-db-item-date i {
+    left: 172px;
+}
+.pc-db-BDCS1 .pc-db-item-datetime i {
+    left: 234px;
+}
+.pc-db-BDCS1 .pc-db-item-unit>span {
+    left: 118px;
+}
+.pc-db-BDCS1 .pc-db-item>.pc-db-attach {
+    left: 172px;
+}
+.pc-db-BDCS3 .pc-db-item>.layui-form-switch {
+    left: 78px;
+}
+.pc-db-BDCS3 .pc-db-item.lg>.layui-form-switch {
+    left: 150px;
+}
+.pc-db-BDCS3 .pc-db-item>input {
+    left: 70px;
+}
+.pc-db-BDCS3 .pc-db-item-date i {
+    left: 172px;
+}
+/** 神经系统 **/
+.pc-db-BDNS>div:nth-child(2) {
+    margin-top: 20px;
+}
+.pc-db-BDNS .pc-db-images {
+    width: 288px;
+    height: 300px;
+    display: inline-block;
+    border: 4px solid #FFB7C5;
+    margin: 5px;
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+    vertical-align: top;
+}
+.pc-db-BDNS .pc-db-images img {
+    cursor: pointer;
+    width: 100%;
+}
+.pc-db-BDNS .pc-db-images>div:first-child {
+    padding: 5px;
+    text-align: center;
+    background-color: #FFB7C5;
+    color: white;
+}
+.pc-db-BDNS .pc-db-images>div:nth-of-type(2) {
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 4px solid #FFB7C5;
+}
+.pc-db-BDNS textarea {
+    border: 1px solid #FFB7C5;
+    border-radius: 5px;
+    padding: 5px;
+}
+/* 超声/MRI/CT */
+.pc-db-BDNSUS .pc-db-head,
+.pc-db-BDNSMR .pc-db-head,
+.pc-db-BDNSCT .pc-db-head {
+    padding: 10px;
+}
+.pc-body-framework .pc-db-BDNSUS .pc-db-h1-wrap,
+.pc-body-framework .pc-db-BDNSMR .pc-db-h1-wrap,
+.pc-body-framework .pc-db-BDNSCT .pc-db-h1-wrap {
+    margin-top: 20px;
+}
+.pc-db-BDNSUS .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDNSMR .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDNSCT .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDNSUS .pc-db-item>.pc-db-enter,
+.pc-db-BDNSMR .pc-db-item>.pc-db-enter,
+.pc-db-BDNSCT .pc-db-item>.pc-db-enter,
+.pc-db-BDNSUS .pc-db-item>input,
+.pc-db-BDNSMR .pc-db-item>input,
+.pc-db-BDNSCT .pc-db-item>input,
+.pc-db-BDNSUS .pc-db-item>.layui-form-switch,
+.pc-db-BDNSMR .pc-db-item>.layui-form-switch,
+.pc-db-BDNSCT .pc-db-item>.layui-form-switch {
+    left: 132px;
+}
+.pc-db-BDNSUS .pc-db-item.lg>.layui-form-switch,
+.pc-db-BDNSMR .pc-db-item.lg>.layui-form-switch,
+.pc-db-BDNSCT .pc-db-item.lg>.layui-form-switch {
+    left: 164px;
+}
+.pc-db-BDNSUS .pc-db-item-datetime i,
+.pc-db-BDNSMR .pc-db-item-datetime i,
+.pc-db-BDNSCT .pc-db-item-datetime i {
+    left: 296px;
+}
+.pc-db-BDNSUS .pc-db-item>span,
+.pc-db-BDNSMR .pc-db-item>span,
+.pc-db-BDNSCT .pc-db-item>span {
+    left: 210px;
+}
+.pc-db-BDNSUS .pc-db-item-unit>span,
+.pc-db-BDNSMR .pc-db-item-unit>span,
+.pc-db-BDNCT .pc-db-item-unit>span {
+    left: 186px;
+}
+/* 脑电图 */
+.pc-db-BDNSEEG .pc-db-item>input {
+    left: 148px;
+}
+.pc-db-BDNSEEG .pc-db-item>span {
+    left: 202px;
+}
+/* 辅助检查 */
+.pc-db-BDNSAE .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDNSAE .pc-db-item>.pc-db-enter,
+.pc-db-BDNSAE .pc-db-item>input,
+.pc-db-BDNSAE .pc-db-item>.layui-form-switch {
+    left: 88px;
+}
+.pc-db-BDNSAE .pc-db-item-unit-lg>input {
+    left: 102px;
+}
+.pc-db-BDNSAE .pc-db-item.lg>.pc-db-item-checkbox,
+.pc-db-BDNSAE .pc-db-item.lg>.pc-db-enter {
+    left: 118px;
+}
+.pc-db-BDNSAE .pc-db-item-datetime i {
+    left: 252px;
+}
+.pc-db-BDNSAE .pc-db-item-unit-lg>span {
+    left: 178px;
+}
+/* 治疗及诊断 */
+.pc-db-BDNSTD .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDNSTD .pc-db-item>.pc-db-enter,
+.pc-db-BDNSTD .pc-db-item>input {
+    left: 88px;
+}
+.pc-db-BDNSTD .pc-db-item>.layui-form-switch {
+    left: 102px;
+}
+.pc-db-BDNSTD .pc-db-item.lg>.layui-form-switch {
+    left: 168px;
+}
+.pc-db-BDNSTD .pc-db-item.lg>.pc-db-enter,
+.pc-db-BDNSTD .pc-db-item.lg>input {
+    left: 138px;
+}
+.pc-db-BDNSTD .pc-db-item-date i {
+    left: 190px;
+}
+.pc-db-BDNSTD .pc-db-item-datetime i {
+    left: 252px;
+}
+.pc-db-BDNSTD .pc-db-item-datetime.lg i {
+    left: 302px;
+}
+/** 视网膜病 **/
+/* 筛查情况 */
+.pc-db-BDRP>.layui-breadcrumb+div {
+    margin-top: 20px;
+}
+.pc-db-BDRPSS .pc-db-item>.layui-form-switch {
+    left: 172px;
+}
+.pc-db-BDRPSS .pc-db-item>input {
+    left: 114px;
+}
+.pc-db-BDRPSS .pc-db-item-date i {
+    left: 216px;
+}
+.pc-db-BDRPSS .pc-db-item-date span {
+    position: absolute;
+    left: 256px;
+}
+.pc-db-BDRPSS .pc-db-item>.pc-db-spanItem {
+    left: 80px;
+}
+.pc-db-BDRPSS .pc-db-item>.pc-db-spanItem>span {
+    margin-right: 20px;
+}
+.pc-db-BDRPSS .pc-db-item-unit>span {
+    left: 168px;
+}
+.pc-db-BDRPSS .pc-db-table>thead>tr>th:first-child {
+    width: unset;
+    min-width: unset;
+}
+.pc-db-BDRPSS .pc-db-table>tbody .ga>div>span {
+    position: absolute;
+    top: 6px;
+    right: 0;
+}
+/* 筛查评估 */
+.pc-db-BDRPSA .pc-db-head {
+    padding: 14px 0 10px;
+}
+.pc-db-BDRPSA .pc-db-item>.layui-form-switch,
+.pc-db-BDRPSA .pc-db-item>input {
+    left: 104px;
+}
+.pc-db-BDRPSA .pc-db-item.lg>.layui-form-switch,
+.pc-db-BDRPSA .pc-db-item.lg>input {
+    left: 166px;
+}
+.pc-db-BDRPSA .pc-db-item-datetime i {
+    left: 268px;
+}
+.pc-db-BDRPSA .pc-db-item-unit>span {
+    left: 224px;
+}
+.pc-db-BDRPSA .pc-db-item-date i {
+    left: 206px;
+}
+.pc-db-BDRPSA .pc-db-item.checkbox>.layui-form-checkbox {
+    margin: 8px 0;
+}
+.pc-db-BDRPSA .pc-db-item.checkbox>.layui-form-checkbox>span {
+    font-size: 16px;
+}
+.pc-db-BDRPSA .pc-db-item.checkbox>.layui-form-checkbox input {
+    width: 86px;
+}
+/* ROP诊断 */
+.pc-db-BDRPROP .pc-db-item>.pc-db-enter,
+.pc-db-BDRPROP .pc-db-item>.layui-form-switch,
+.pc-db-BDRPROP .pc-db-item>input {
+    left: 70px;
+}
+.pc-db-BDRPROP .pc-db-item.lg>.pc-db-enter,
+.pc-db-BDRPROP .pc-db-item.lg>input {
+    left: 134px;
+}
+.pc-db-BDRPROP .pc-db-item-date i {
+    left: 172px;
+}
+.pc-db-BDRPROP .pc-db-item-date.lg i {
+    left: 236px;
+}
+
+/** 出院情况 **/
+.pc-db-BDDS>.layui-row>div:last-child {
+    border-left: 1px solid #B4B4B4;
+    padding-left: 20px;
+}
+.pc-db-BDDS #PC-db-HC {
+    width: 80px;
+}
+.pc-db-BDDS #PC-db-HC+span {
+    left: 168px;
+}
+.pc-db-BDDS .pc-db-item>.pc-db-enter,
+.pc-db-BDDS .pc-db-item>.pc-db-spanItem,
+.pc-db-BDDS .pc-db-item>.pc-db-item-checkbox,
+.pc-db-BDDS .pc-db-item>input {
+    left: 76px;
+}
+.pc-db-BDDS .pc-db-item.lg>.layui-form-switch {
+    left: 176px;
+}
+.pc-db-BDDS .pc-db-item>.layui-form-switch,
+.pc-db-BDDS .pc-db-item.lg>.pc-db-spanItem {
+    left: 104px;
+}
+.pc-db-BDDS .pc-db-item.lg>input {
+    left: 110px;
+}
+.pc-db-BDDS .pc-db-item-unit.lg>span {
+    left: 166px;
+}
+.pc-db-BDDS .pc-db-item-unit-lg>span {
+    left: 140px;
+}
+.pc-db-BDDS .pc-db-item-date i {
+    left: 178px;
+}
+.pc-db-BDDS .pc-db-item>.pc-db-item-checkbox>.layui-form-checkbox {
+    margin: 5px 0;
+}
+.pc-db-BDDS .pc-db-spanItem>.layui-form-select .layui-input {
+    height: unset;
+}
+.pc-db-BDDS .pc-db-spanItem>.layui-form-select .layui-input:hover {
+    border: 1px solid #FFB7C5 !important;
+    box-shadow: 0 0 4px #FFB7C5;
+}
+.pc-db-BDDS .layui-form-select dl {
+    top: 32px;
+}
+.pc-db-BDDS .layui-form-selectup dl {
+    top: auto;
+    bottom: 34px;
+}
+.pc-db-BDDS .pc-db-item-datetime i {
+    left: 240px;
+}
+.pc-db-BDDS .pc-db-item-unit>span {
+    left: 124px;
+}
+.pc-db-BDDS .pc-db-scroll {
+    overflow-x: scroll;
+}
+.pc-db-BDDS .pc-db-connect {
+    width: 610px;
+}
+.pc-db-BDDS .pc-db-connect:after, .pc-db-BDDS .pc-db-connect:before {
+    content: "";
+    display: block;
+    clear: both;
+}
+.pc-db-BDDS .pc-db-connect>.row {
+    width: 20%;
+    float: left;
+}
+.pc-db-BDDS .pc-db-connect ul>li {
+    padding: 6px 0;
+    position: relative;
+}
+.pc-db-BDDS .pc-db-connect ul>li div {
+    display: inline-block;
+}
+.pc-db-BDDS .pc-db-connect .wrap {
+    cursor: pointer;
+    padding: 3px;
+    border: 1px solid rgba(16, 166, 180, 0.2);
+    border-radius: 5px 5px 18px 5px;
+}
+.pc-db-BDDS .pc-db-connect .wrap>div {
+    height: 20px;
+    color: #FFB7C5;
+    font-size: 14px;
+    padding: 3px 5px;
+    background-color: #DFDFDF;
+    border-radius: 5px 5px 15px 5px;
+}
+.pc-db-BDDS .pc-db-connect ul>li.hover .wrap,
+.pc-db-BDDS .pc-db-connect ul>li.active .wrap {
+    border: 1px solid rgba(16, 166, 180, 1);
+}
+.pc-db-BDDS .pc-db-connect ul>li.hover .wrap>div,
+.pc-db-BDDS .pc-db-connect ul>li.active .wrap>div {
+    color: white;
+    background-color: #FFB7C5;
+}
+.pc-db-BDDS .pc-db-connect ul>li.hover .line-front,
+.pc-db-BDDS .pc-db-connect ul>li.hover .line-vertical-up,
+.pc-db-BDDS .pc-db-connect ul>li.hover .line-vertical-down,
+.pc-db-BDDS .pc-db-connect ul>li.hoverBehind .line-behind,
+.pc-db-BDDS .pc-db-connect ul>li.hoverLeft .line-vertical-up,
+.pc-db-BDDS .pc-db-connect ul>li.hoverLeft .line-vertical-down,
+.pc-db-BDDS .pc-db-connect ul>li.active .line-front,
+.pc-db-BDDS .pc-db-connect ul>li.active .line-vertical-up,
+.pc-db-BDDS .pc-db-connect ul>li.active .line-vertical-down,
+.pc-db-BDDS .pc-db-connect ul>li.activeBehind .line-behind,
+.pc-db-BDDS .pc-db-connect ul>li.activeLeft .line-vertical-up,
+.pc-db-BDDS .pc-db-connect ul>li.activeLeft .line-vertical-down {
+    border-color: #FFB7C5;
+}
+.pc-db-BDDS .pc-db-connect .margin-top1 {
+    margin-top: 46px;
+}
+.pc-db-BDDS .pc-db-connect .margin-top2 {
+    margin-top: 92px;
+}
+.pc-db-BDDS .pc-db-connect .margin-top6 {
+    margin-top: 276px;
+}
+.pc-db-BDDS .pc-db-connect .line-front,
+.pc-db-BDDS .pc-db-connect .line-behind {
+    border-top: 2px dashed rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 50%;
+}
+.pc-db-BDDS .pc-db-connect .line-front {
+    width: 18px;
+    left: -18px;
+}
+.pc-db-BDDS .pc-db-connect .line-vertical-up,
+.pc-db-BDDS .pc-db-connect .line-vertical-down {
+    border-left: 2px dashed rgba(0, 0, 0, 0.1);
+    height: 46px;
+    position: absolute;
+    left: -18px;
+}
+.pc-db-BDDS .pc-db-connect .line-vertical-up {
+    top: -50%;
+}
+.pc-db-BDDS .pc-db-connect .line-vertical-down {
+    top: 50%;
+}
+.pc-db-BDDS .pc-db-connect .line-behind.w {
+    width: 28px;
+    right: 20px;
+}
+.pc-db-BDDS .pc-db-connect .line-behind.n {
+    width: 10px;
+    right: 18px;
+}
+.pc-db-BDDS .pc-db-table>tbody>tr>td:last-child {
+    text-align: center;
+}
+.pc-db-BDDS #PC-db-DCT {
+    overflow: unset;
+}
+.pc-db-BDDS .pc-db-table .pc-db-table-select {
+    background-color: white;
+}
+
+/* 平板模式 */
+@media screen and (max-width: 1170px) {
+    .pc-db-BDPI .pc-db-spanItem>input {
+        margin-top: 5px;
+    }
+    .pc-db-BDDS>.layui-row>div:last-child {
+        border-left: none;
+        padding-left: 0;
+    }
+    /** 消化系统 **/
+    .pc-db-BDDGSNE>div:first-child {
+        margin-right: unset;
+    }
+    .pc-db-BDDGSNE>div:not(:first-child) {
+        padding-left: unset;
+        border-left: unset;
+    }
+    .pc-db-BDDGSNE>div.layui-row>div {
+        margin-top: 20px !important;
+    }
+    .pc-db-BDDGSNE:nth-child(2)+hr {
+        display: none;
+    }
+}
+/* 移动模式 */
+@media screen and (max-width: 768px) {
+    /** 母亲信息 **/
+    #PC-db-motherNation,
+    .pc-db-BDMIH .pc-db-item .pc-db-attach.bdmn,
+    #PC-db-diabetes>.pc-db-attach,
+    .pc-db-BDMIH .pc-db-radioBtn-group.pc-db-enter,
+    .pc-db-BDMIL .pc-db-radioBtn-group.pc-db-enter,
+    .pc-db-BDMIL .pc-db-attach {
+        position: unset;
+        margin-top: 10px;
+    }
+    /** 孕期信息 **/
+    .pc-db-BDGI .pc-db-item>.pc-db-enter,
+    .pc-db-BDGI .pc-db-item>.pc-db-attach {
+        margin-top: 5px;
+        position: unset;
+    }
+    .pc-db-BDGI .pc-db-item>.pc-db-attach>.layui-form-checkbox {
+        margin: 5px 0;
+    }
+    /** 围产信息 **/
+    .pc-db-BDPI .pc-db-item>.pc-db-enter,
+    .pc-db-BDPI .pc-db-item>.pc-db-attach {
+        margin-top: 5px;
+        position: unset;
+    }
+    .pc-db-BDPI .pc-db-item>.pc-db-attach {
+        display: block;
+        margin-top: 10px;
+    }
+    .pc-db-BDPI .pc-db-item>.pc-db-enter.pc-inline-flex>input[type=text] {
+        margin-top: 5px;
+    }
+    /** 宝宝情况 **/
+    .pc-db-BDBS .pc-db-item>.pc-db-enter,
+    .pc-db-BDBS .pc-db-item>.pc-db-attach {
+        margin-top: 5px;
+        position: unset;
+    }
+    .pc-db-BDBS .pc-db-item>.pc-db-attach {
+        display: block;
+        margin-top: 10px;
+    }
+    /** 复苏情况 **/
+    .pc-db-BDRS .pc-db-item>.pc-db-enter,
+    .pc-db-BDRS .pc-db-item>.pc-db-attach,
+    .pc-db-BDRS .pc-db-item>.pc-db-block {
+        margin-top: 5px;
+        position: unset;
+    }
+    .pc-db-BDRS .pc-db-item>.pc-db-attach {
+        display: block;
+        margin-top: 10px;
+    }
+    .pc-db-BDRS .pc-db-item>.pc-db-block.uabg,
+    .pc-db-BDRS .pc-db-item>.pc-db-block.apgaras {
+        margin-left: 80px;
+    }
+    .pc-db-BDRS .pc-db-item.apgars>.pc-db-spanItem>input {
+        margin-top: 5px;
+    }
+    /** 呼吸系统 **/
+    .pc-db-BDRTS .pc-db-BDRTSRSH .pc-db-item>.pc-db-enter {
+        position: unset;
+    }
+    .pc-db-BDISLOST1>.layui-col-lg8>.pc-db-item-table {
+        margin: 0;
+    }
+}

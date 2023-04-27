@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>发育水平 - 随访数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,随访数据库,发育水平"/>
+    <meta name="description" content="围产新生儿科研合作平台随访数据库发育水平"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/followDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/dlNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-FDDL layui-form" sec:authorize="hasRole('ROLE_FDDL')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/followDatabase/write/DL/VI">视力</a>
+                    <a href="#"><cite>听力</cite></a>
+                    <a href="/perinatalPlatform/followDatabase/write/DL/GS">Gesell量表</a>
+                    <a href="/perinatalPlatform/followDatabase/write/DL/GF">Griffiths量表</a>
+                    <a href="/perinatalPlatform/followDatabase/write/DL/GM">GMFCS</a>
+                    <a href="/perinatalPlatform/followDatabase/write/DL/CB">CBCL量表</a>
+                </span>
+                <div class="layui-row pc-db-FDDLHR" th:data-birthday="${#calendars.format(birthMsg.birthday, 'yyyy-MM-dd')}" th:data-gaw="${birthMsg.gestationalAgeWeek}" th:data-gad="${birthMsg.gestationalAgeDay}">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-HCN">检查次数</label>
+                            <input id="PC-db-HCN" type="number" name="hearingCheckNumber" th:value="${hearingCheckNumber} ? ${hearingCheckNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>矫正年龄</th>
+                                    <th>左耳AABR</th>
+                                    <th>左耳诊断</th>
+                                    <th>右耳AABR</th>
+                                    <th>右耳诊断</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${hcList} ? ${hcList.size()} : _">
+                                <tr th:each="hc, status : ${hcList}" th:object="${hc}">
+                                    <td>
+                                        <input th:id="'PC-db-HCD' + (${status.index} + 1)" type="text" th:name="'hearingCheckDate' + (${status.index} + 1)" th:value="*{#calendars.format(hearingCheckDate, 'yyyy-MM-dd')}" lay-verify="required" placeholder="请选择检查日期" lay-reqText="请选择检查日期！" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-CA' + (${status.index} + 1)" type="text" readonly>
+                                        <input th:id="'PC-db-CGAW' + (${status.index} + 1)" type="hidden" th:name="'cgaWeek' + (${status.index} + 1)" th:value="*{cgaWeek}">
+                                        <input th:id="'PC-db-CGAD' + (${status.index} + 1)" type="hidden" th:name="'cgaDay' + (${status.index} + 1)" th:value="*{cgaDay}">
+                                        <input th:id="'PC-db-CAM' + (${status.index} + 1)" type="hidden" th:name="'correctedAgeMonth' + (${status.index} + 1)" th:value="*{correctedAgeMonth}">
+                                        <input th:id="'PC-db-CAD' + (${status.index} + 1)" type="hidden" th:name="'correctedAgeDay' + (${status.index} + 1)" th:value="*{correctedAgeDay}">
+                                    </td>
+                                    <td>
+                                        <select th:name="'leftEarAabr' + (${status.index} + 1)" lay-reqText="请选择左耳AABR！" lay-verify="required">
+                                            <option value=''>请选择左耳AABR</option>
+                                            <option value="未查" th:selected="*{leftEarAabr eq '未查'} ? true : _">未查</option>
+                                            <option value="通过" th:selected="*{leftEarAabr eq '通过'} ? true : _">通过</option>
+                                            <option value="未通过" th:selected="*{leftEarAabr eq '未通过'} ? true : _">未通过</option>
+                                            <option value="不详" th:selected="*{leftEarAabr eq '不详'} ? true : _">不详</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:name="'leftEarDiagnosis' + (${status.index} + 1)" lay-reqText="请选择左耳诊断！" lay-verify="required">
+                                            <option value=''>请选择左耳诊断</option>
+                                            <option value="未查" th:selected="*{leftEarDiagnosis eq '未查'} ? true : _">未查</option>
+                                            <option value="正常" th:selected="*{leftEarDiagnosis eq '正常'} ? true : _">正常</option>
+                                            <option value="听力受损" th:selected="*{leftEarDiagnosis eq '听力受损'} ? true : _">听力受损</option>
+                                            <option value="助听器或人工耳蜗" th:selected="*{leftEarDiagnosis eq '助听器或人工耳蜗'} ? true : _">助听器或人工耳蜗</option>
+                                            <option value="不详" th:selected="*{leftEarDiagnosis eq '不详'} ? true : _">不详</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:name="'rightEarAabr' + (${status.index} + 1)" lay-reqText="请选择右耳AABR！" lay-verify="required">
+                                            <option value=''>请选择右耳AABR</option>
+                                            <option value="未查" th:selected="*{rightEarAabr eq '未查'} ? true : _">未查</option>
+                                            <option value="通过" th:selected="*{rightEarAabr eq '通过'} ? true : _">通过</option>
+                                            <option value="未通过" th:selected="*{rightEarAabr eq '未通过'} ? true : _">未通过</option>
+                                            <option value="不详" th:selected="*{rightEarAabr eq '不详'} ? true : _">不详</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:name="'rightEarDiagnosis' + (${status.index} + 1)" lay-reqText="请选择右耳诊断！" lay-verify="required">
+                                            <option value=''>请选择右耳诊断</option>
+                                            <option value="未查" th:selected="*{rightEarDiagnosis eq '未查'} ? true : _">未查</option>
+                                            <option value="正常" th:selected="*{rightEarDiagnosis eq '正常'} ? true : _">正常</option>
+                                            <option value="听力受损" th:selected="*{rightEarDiagnosis eq '听力受损'} ? true : _">听力受损</option>
+                                            <option value="助听器或人工耳蜗" th:selected="*{rightEarDiagnosis eq '助听器或人工耳蜗'} ? true : _">助听器或人工耳蜗</option>
+                                            <option value="不详" th:selected="*{rightEarDiagnosis eq '不详'} ? true : _">不详</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button th:id="'PC-db-hcDelete' + (${status.index} + 1)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addHC" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="pc-db-save">
+                        <button class="pc-btn pc-btn-save" lay-filter="DLHR" lay-submit>保存信息</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/FDWrite.min.js}"></script>
+</html>

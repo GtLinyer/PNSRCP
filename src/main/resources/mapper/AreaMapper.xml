@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.manage.AreaMapper">
+    <!-- 获取 区域信息 -->
+    <select id="areaQuery" resultType="com.pnsrcp.web.entity.manage.Area">
+        select a.aid, a.areaName,a.abbreviation, a.chargeId, u.fullName chargeName, a.hospitalNum, u.username, u.fullName, u.phone, a.status
+        from pc_area a
+        join pc_user u
+        on a.chargeId=u.uid
+        <where>
+            <if test="aid > 0">
+                aid=#{aid}
+            </if>
+            <if test="uid > 0">
+                and uid=#{uid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取 区域 状态 -->
+    <select id="areaStatusQry" resultType="int">
+        select status
+        from pc_area
+        where aid=#{aid}
+        limit 1
+    </select>
+
+    <!-- 插入 区域 -->
+    <insert id="areaInsert">
+        insert into pc_area (areaName, abbreviation, chargeId, status)
+        value (#{area.areaName}, #{area.abbreviation}, #{area.chargeId}, #{area.status})
+    </insert>
+
+    <!-- 更新 区域信息 -->
+    <update id="areaUpdate">
+        update pc_area
+        set areaName=#{area.areaName},
+            abbreviation=#{area.abbreviation},
+            status=#{area.status}
+        where aid=#{area.aid}
+        limit 1
+    </update>
+
+    <!-- 更新 区域状态 -->
+    <update id="areaStatusUpdate">
+        update pc_area
+        set status=#{status}
+        where aid=#{aid}
+        limit 1
+    </update>
+
+    <!-- 获取 以省分组的 医院信息的 映射关系 -->
+    <resultMap id="areaHospitalMap" type="com.pnsrcp.web.entity.manage.AreaHospital">
+        <id property="province" column="province"/>
+        <collection property="hospitalList" ofType="com.pnsrcp.web.entity.manage.Hospital" javaType="ArrayList">
+            <id property="hid" column="hid"/>
+            <result property="hospitalName" column="hospitalName"/>
+        </collection>
+    </resultMap>
+
+    <!-- 更新 区域下属医院数量 -->
+    <update id="areaHospitalNumUpdate">
+        update pc_area
+        set hospitalNum=(select count(hid)
+                        from pc_hospital_area_relationship
+                        where aid=#{aid})
+        where aid=#{aid}
+        limit 1
+    </update>
+
+    <!-- 获取 此医院所属 所有区域ID -->
+    <select id="thisHospitalAreaQry" resultType="integer">
+        select aid
+        from pc_hospital_area_relationship
+        where hid=#{hid}
+    </select>
+
+    <!-- 获取 区域负责人ID -->
+    <select id="areaChargePersonId" resultType="int">
+        select aid
+        from pc_area
+        where chargeId=#{uid}
+        limit 1
+    </select>
+</mapper>

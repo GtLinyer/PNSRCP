@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>生长曲线 - 随访数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,随访数据库,生长曲线"/>
+    <meta name="description" content="围产新生儿科研合作平台随访数据库生长曲线"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/followDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/gcNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-FDGC layui-form" sec:authorize="hasRole('ROLE_FDGC')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/followDatabase/write/GC/BW">体重</a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/BL">身长</a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/HC">头围</a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/FD">喂养</a>
+                    <a href="#"><cite>生长评估</cite></a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/NT">营养</a>
+                </span>
+                <div class="layui-row pc-db-FDGCGA pc-db-FDGCGA1" th:data-birthday="${#calendars.format(birthMsg.birthday, 'yyyy-MM-dd')}" th:data-gaw="${birthMsg.gestationalAgeWeek}" th:data-gad="${birthMsg.gestationalAgeDay}" th:data-gender="${birthMsg.gender}">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <ul class="pc-db-option">
+                                <li class="pc-db-active"><a href="#">1月—12月</a></li>
+                                <li><a href="/perinatalPlatform/followDatabase/write/GC/GA/13mTo6y">13月—6岁</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item-table">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>矫正年龄</th>
+                                    <th>实际年龄</th>
+                                    <th>日期</th>
+                                    <th>体重（kg）</th>
+                                    <th>身长（cm）</th>
+                                    <th>头围（cm）</th>
+                                    <th>体重<br/>百分位<br/>（%）</th>
+                                    <th>身长<br/>百分位<br/>（%）</th>
+                                    <th>头围<br/>百分位<br/>（%）</th>
+                                    <th>体重Z评分</th>
+                                    <th>身长<br/>Z评分</th>
+                                    <th>头围<br/>Z评分</th>
+                                    <th>体重<br/>增长速度<br/>（g/w）</th>
+                                    <th>身长<br/>增长速度<br/>（cm/w）</th>
+                                    <th>头围<br/>增长速度<br/>（cm/w）</th>
+                                    <th>喂养方式</th>
+                                    <th>热卡</th>
+                                    <th>母乳<br/>强化剂</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>40周</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA40WAA" type="text" readonly>
+                                        <input type="hidden" name="ca40wActualAgeMonth">
+                                        <input type="hidden" name="ca40wActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca40wDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca40wFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca40wCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca40wBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA1MAA" type="text" readonly>
+                                        <input type="hidden" name="ca1mActualAgeMonth">
+                                        <input type="hidden" name="ca1mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca1mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca1mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca1mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca1mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA2MAA" type="text" readonly>
+                                        <input type="hidden" name="ca2mActualAgeMonth">
+                                        <input type="hidden" name="ca2mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca2mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca2mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca2mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca2mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA3MAA" type="text" readonly>
+                                        <input type="hidden" name="ca3mActualAgeMonth">
+                                        <input type="hidden" name="ca3mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca3mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca3mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca3mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca3mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA4MAA" type="text" readonly>
+                                        <input type="hidden" name="ca4mActualAgeMonth">
+                                        <input type="hidden" name="ca4mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca4mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca4mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca4mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca4mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>5月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA5MAA" type="text" readonly>
+                                        <input type="hidden" name="ca5mActualAgeMonth">
+                                        <input type="hidden" name="ca5mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca5mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca5mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca5mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca5mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>6月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA6MAA" type="text" readonly>
+                                        <input type="hidden" name="ca6mActualAgeMonth">
+                                        <input type="hidden" name="ca6mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca6mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca6mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca6mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca6mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>7月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA7MAA" type="text" readonly>
+                                        <input type="hidden" name="ca7mActualAgeMonth">
+                                        <input type="hidden" name="ca7mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca7mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca7mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca7mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca7mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>8月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA8MAA" type="text" readonly>
+                                        <input type="hidden" name="ca8mActualAgeMonth">
+                                        <input type="hidden" name="ca8mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca8mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca8mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca8mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca8mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>9月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA9MAA" type="text" readonly>
+                                        <input type="hidden" name="ca9mActualAgeMonth">
+                                        <input type="hidden" name="ca9mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca9mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca9mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca9mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca9mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>10月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA10MAA" type="text" readonly>
+                                        <input type="hidden" name="ca10mActualAgeMonth">
+                                        <input type="hidden" name="ca10mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca10mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca10mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca10mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca10mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>11月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA11MAA" type="text" readonly>
+                                        <input type="hidden" name="ca11mActualAgeMonth">
+                                        <input type="hidden" name="ca11mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca11mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca11mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca11mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca11mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>12月</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input id="PC-db-CA12MAA" type="text" readonly>
+                                        <input type="hidden" name="ca12mActualAgeMonth">
+                                        <input type="hidden" name="ca12mActualAgeDay">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca12mDate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyWeight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyLength" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mHeadCircumference" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyWeightPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyLengthPercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mHeadCircumferencePercentile" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyWeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyLengthZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mHeadCircumferenceZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyWeightGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mBodyLengthGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mHeadCircumferenceGainRate" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca12mFeedingMethod" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ca12mCalories" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="ca12mBreastMilkFortifier" readonly>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="pc-db-save">
+                        <button class="pc-btn pc-btn-save" lay-filter="GCGA1" lay-submit>保存信息</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/FDWrite.min.js}"></script>
+</html>

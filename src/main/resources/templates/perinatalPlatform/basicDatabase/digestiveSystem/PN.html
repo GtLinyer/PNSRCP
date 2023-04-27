@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>消化系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,消化系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库消化系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/dgsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDDGS layui-form" sec:authorize="hasRole('ROLE_BDDGS')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">生长指标</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/EN">肠内营养</a>
+                    <a href="#"><cite>肠外营养</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FR">禁食原因</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FIN">喂养不耐受与NEC</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ODT">其它诊断与治疗</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ENM">肠内营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PNM">肠外营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/TNM">过渡期营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/NE">营养评价</a>
+                </span>
+                <div class="layui-row pc-db-BDDGSPN" th:data-chd="${birthMsg} ? ${#calendars.format(birthMsg.childHospitalizationDate, 'yyyy-MM-dd')} : _">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item-table">
+                            <table class="pc-db-table tableLeft">
+                                <caption>
+                                    <div>肠外营养</div>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>1-7d</th>
+                                    <th>8-14d</th>
+                                    <th>合计</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="4">住院天数</td>
+                                </tr>
+                                <tr>
+                                    <td>50% 葡萄糖（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>10% 葡萄糖（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>5% 葡萄糖（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>50% 灭菌水（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>6% 氨基酸（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>20% 脂肪乳（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>非PN液体（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>合计液体量（ml/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="pc-db-table tableRight">
+                                <caption>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th class="blockTh"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                    <td>10</td>
+                                    <td>11</td>
+                                    <td>12</td>
+                                    <td>13</td>
+                                    <td>14</td>
+                                    <td rowspan="9">
+                                        <button id="PC-db-add" class="pc-btn"><i class="iconfont icon-zengjia"></i> 增加</button>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-G50P">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose50Percent14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-G10P">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose10Percent14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-G5P">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="glucose5Percent14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-SW">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="sterilizedWater50Percent14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-AA6P">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcid6Percent14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-FM20P">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="fatMilk20Percent14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-NPNL">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid1">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid2">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid3">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid4">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid5">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid6">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid7">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid8">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid9">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid10">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid11">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid12">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid13">
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="nonPNLiquid14">
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-colSum">
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDDGSPN">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-CTD">置管合计天数</label>
+                            <input id="PC-db-CTD" type="number" name="catheterizationTotalDays" value="0" readonly>
+                            <span>天</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg10">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>置管方式</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>合计（天数）</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${pnTpList} ? ${pnTpList.size()} : _">
+                                <tr th:each="pnTp, status : ${pnTpList}" th:object="${pnTp}">
+                                    <td>
+                                        <select th:name="'tubePlacement' + (${status.index} + 1)" lay-reqText="请选择置管方式！" lay-verify="required">
+                                            <option value="">请选择置管方式</option>
+                                            <option value="脐静脉置管" th:selected="*{tubePlacement eq '脐静脉置管'} ? true : _">脐静脉置管</option>
+                                            <option value="脐动脉置管" th:selected="*{tubePlacement eq '脐动脉置管'} ? true : _">脐动脉置管</option>
+                                            <option value="PICC" th:selected="*{tubePlacement eq 'PICC'} ? true : _">PICC</option>
+                                            <option value="外周静脉置管" th:selected="*{tubePlacement eq '外周静脉置管'} ? true : _">外周静脉置管</option>
+                                            <option value="外周动脉置管" th:selected="*{tubePlacement eq '外周动脉置管'} ? true : _">外周动脉置管</option>
+                                            <option value="外科中心静脉置管" th:selected="*{tubePlacement eq '外科中心静脉置管'} ? true : _">外科中心静脉置管</option>
+                                        </select>
+                                    </td>
+                                    <td class="startDate">
+                                        <input th:id="'PC-db-startTpDate' + (${status.index} + 1)" type="text" th:name="'startTpDate' + (${status.index} + 1)" th:value="*{#calendars.format(startTpDate, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择开始时间" lay-reqText="请选择开始时间！" readonly>
+                                    </td>
+                                    <td class="endDate">
+                                        <input th:id="'PC-db-endTpDate' + (${status.index} + 1)" type="text" th:name="'endTpDate' + (${status.index} + 1)" th:value="*{#calendars.format(endTpDate, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择结束时间" lay-reqText="请选择结束时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-totalDays' + (${status.index} + 1)" type="number" th:name="'totalDays' + (${status.index} + 1)" th:value="*{totalDays}" class="totalDays" lay-verify="required" readonly>
+                                    </td>
+                                    <td>
+                                        <button onclick="deleteTp(this);" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addTP" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="DGSPN" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDDGSPNWrite.min.js}"></script>
+</html>

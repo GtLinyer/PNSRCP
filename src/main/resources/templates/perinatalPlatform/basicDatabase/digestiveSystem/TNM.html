@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>消化系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,消化系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库消化系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/dgsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDDGS layui-form" sec:authorize="hasRole('ROLE_BDDGS')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">生长指标</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/EN">肠内营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PN">肠外营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FR">禁食原因</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FIN">喂养不耐受与NEC</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ODT">其它诊断与治疗</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ENM">肠内营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PNM">肠外营养管理</a>
+                    <a href="#"><cite>过渡期营养管理</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/NE">营养评价</a>
+                </span>
+                <div class="layui-row pc-db-BDDGSTNM" th:data-birthday="${birthMsg} ? ${#calendars.format(birthMsg.birthday, 'yyyy-MM-dd')} : _" th:data-gender="${birthMsg} ? ${birthMsg.gender} : _">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item-table">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>合计奶量（ml/kg/d）</th>
+                                    <th>10</th>
+                                    <th>20</th>
+                                    <th>30</th>
+                                    <th>40</th>
+                                    <th>50</th>
+                                    <th>60</th>
+                                    <th>70</th>
+                                    <th>80</th>
+                                    <th>90</th>
+                                    <th>100</th>
+                                    <th>110</th>
+                                    <th>120</th>
+                                    <th>130</th>
+                                    <th>140</th>
+                                    <th>150</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>日期</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo10Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo20Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo30Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo40Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo50Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo60Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo70Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo80Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo90Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo100Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo110Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo120Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo130Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo140Date" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="text" name="milkTo150Date" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>生后天数</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140DaysAfterBirth" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150DaysAfterBirth" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>纠正胎龄（周）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150CorrectGestationalAgeWeek" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>纠正胎龄（天）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150CorrectGestationalAgeDay" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>体重（kg）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140Weight" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150Weight" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>体重z评分</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140WeightZScore" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150WeightZScore" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>实际肠内营养（ml/kg/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140ActualEnteralNutrition" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150ActualEnteralNutrition" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠内氨基酸（g/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150EnteralAminoAcidsGPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠内氨基酸（g/kg/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150EnteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠内热卡（kcal/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150EnteralCalorieKcalPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠内热卡（kcal/kg/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150EnteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠外氨基酸（g/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150ParenteralAminoAcidsGPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠外氨基酸（g/kg/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150ParenteralAminoAcidsGPKgPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠外热卡（kcal/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150ParenteralCalorieKcalPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>肠外热卡（kcal/kg/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150ParenteralCalorieKcalPKgPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>合计蛋白（g/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140TotalProteinGPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150TotalProteinGPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>合计蛋白（g/kg/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140TotalProteinGPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150TotalProteinGPKgPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>合计热卡（kcal/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140TotalCalorieKcalPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150TotalCalorieKcalPD" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>合计热卡（kcal/kg/d）</td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo10TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo20TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo30TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo40TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo50TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo60TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo70TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo80TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo90TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo100TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo110TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo120TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo130TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo140TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="milkTo150TotalCalorieKcalPKgPD" readonly>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button id="PC-db-save" class="pc-btn pc-btn-save" lay-filter="DGSTNM" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDDGSWrite.min.js}"></script>
+</html>

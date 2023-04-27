@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>感染监测 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,感染监测"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库感染监测"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/isNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDIS layui-form" lay-filter="LOS" sec:authorize="hasRole('ROLE_BDIS')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/IS/EOS">EOS流程</a>
+                    <a href="#"><cite>LOS流程</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/IS/AD">抗菌药物</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/IS/EI">评价指标</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/IS/OID">其它感染诊断</a>
+                </span>
+                <div class="layui-row pc-db-BDISLOS" th:object="${los}">
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="pc-db-ABOGE72HD">>72h/生后</label>
+                            <input id="PC-db-ABOGE72HD" type="text" name="afterBirthOrGe72hDate" th:data-birthday="${#calendars.format(birthday, 'yyyy-MM-dd HH:mm:ss')}" th:value="${los} ? *{#calendars.format(afterBirthOrGe72hDate, 'yyyy-MM-dd HH:mm:ss')} : _" lay-verify="requiredDB" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">生后是否需要评估</label>
+                            <input type="checkbox" name="needEvaluateAfterBirth" lay-skin="switch" lay-text="是|否" value="1" th:checked="${los} ? (*{needEvaluateAfterBirth eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-evaluationsNumber">评估次数</label>
+                            <input id="PC-db-evaluationsNumber" type="number" name="evaluationsNumber" th:value="${los} ? *{evaluationsNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">早产</label>
+                            <input type="checkbox" name="prematureDelivery" lay-skin="switch" lay-text="是|否" value="1" th:checked="${los} ? (*{prematureDelivery eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8 layui-col-sm12">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">低出生体重儿</label>
+                            <input type="checkbox" name="lowBirthWeightInfant" lay-skin="switch" lay-text="是|否" value="1" th:checked="${los} ? (*{lowBirthWeightInfant eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOST1">
+                    <div class="layui-col-lg4 layui-col-sm10">
+                        <div class="pc-db-item-table addList table1">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>评估时间</th>
+                                    <th>危险因素</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${losRfList} ? ${losRfList.size()} : _">
+                                <tr th:each="losRf, status : ${losRfList}" th:object="${losRf}">
+                                    <td>
+                                        <input th:id="'PC-db-RFET' + (${status.index} + 1)" type="text" th:name="'rfEvaluationTime' + (${status.index} + 1)" th:value="*{#calendars.format(rfEvaluationTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="requiredDB" placeholder="请选择评估时间" lay-reqText="请选危险因素评估时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <select th:name="'riskFactor' + (${status.index} + 1)" lay-reqText="请选择危险因素！" lay-verify="required">
+                                            <option value="">请选择危险因素</option>
+                                            <option value="机械通气" th:selected="*{riskFactor eq '机械通气'} ? ture : _">机械通气</option>
+                                            <option value="中心静脉置管" th:selected="*{riskFactor eq '中心静脉置管'} ? ture : _">中心静脉置管</option>
+                                            <option value="脐动脉或静脉置管" th:selected="*{riskFactor eq '脐动脉或静脉置管'} ? ture : _">脐动脉或静脉置管</option>
+                                            <option value="肠外营养" th:selected="*{riskFactor eq '肠外营养'} ? ture : _">肠外营养</option>
+                                            <option value="不合理应用抗菌药物" th:selected="*{riskFactor eq '不合理应用抗菌药物'} ? ture : _">不合理应用抗菌药物</option>
+                                            <option value="不恰当的新生儿处理" th:selected="*{riskFactor eq '不恰当的新生儿处理'} ? ture : _">不恰当的新生儿处理</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button onclick="deleteRf(this);" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addLOSRF" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8 layui-col-sm12">
+                        <div class="pc-db-item-table addList table2">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>评估时间</th>
+                                    <th>系统位置</th>
+                                    <th>异常临床表现</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${losAeList} ? ${losAeList.size()} : _">
+                                <tr th:each="losAe, status : ${losAeList}" th:object="${losAe}">
+                                    <td>
+                                        <input th:id="'PC-db-AET' + (${status.index} + 1)" type="text" th:name="'aeTime' + (${status.index} + 1)" th:value="*{#calendars.format(aeTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择评估时间" lay-reqText="请选异常择评估时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <select th:id="'PC-db-AESL' + (${status.index} + 1)" th:name="'aeSystemLocation' + (${status.index} + 1)" lay-filter="AESL" th:data-value="*{aeSystemLocation}" lay-reqText="请选择系统位置！" lay-verify="required">
+                                            <option value="">请选择系统位置</option>
+                                            <option value="全身" th:selected="*{aeSystemLocation eq '全身'} ? true : _">全身</option>
+                                            <option value="消化系统" th:selected="*{aeSystemLocation eq '消化系统'} ? true : _">消化系统</option>
+                                            <option value="呼吸系统" th:selected="*{aeSystemLocation eq '呼吸系统'} ? true : _">呼吸系统</option>
+                                            <option value="循环系统" th:selected="*{aeSystemLocation eq '循环系统'} ? true : _">循环系统</option>
+                                            <option value="泌尿系统" th:selected="*{aeSystemLocation eq '泌尿系统'} ? true : _">泌尿系统</option>
+                                            <option value="血液系统" th:selected="*{aeSystemLocation eq '血液系统'} ? true : _">血液系统</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:id="'PC-db-AEACM' + (${status.index} + 1)" th:name="'aeAbnormalClinicalManifestation' + (${status.index} + 1)" th:data-value="*{aeAbnormalClinicalManifestation}" lay-reqText="请选择异常临床表现！" lay-verify="required">
+                                            <option value="">请选择异常临床表现</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button onclick="deleteAe(this);" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addLOSAE" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOS1" th:object="${los}">
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">确诊晚发型败血症</label>
+                            <input type="checkbox" name="diagnosedLateOnsetSepsis" lay-filter="DLOS" lay-skin="switch" lay-text="是|否" value="1" th:checked="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-DLOSDN">诊断</label>
+                            <input id="PC-db-DLOSDN" type="number" data-name="dlosDiagnoseNumber" th:name="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? 'dlosDiagnoseNumber' : _) : _" th:value="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? *{dlosDiagnoseNumber} : _) : _" th:required="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? true : _) : _" th:disabled="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? _ : true) : true">
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-DLOSDT">诊断时间</label>
+                            <input id="PC-db-DLOSDT" type="text" data-name="dlosDiagnoseTime" th:name="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? 'dlosDiagnoseTime' : _) : _" th:value="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? *{dlosDiagnoseTime} : _) : _" th:required="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? true : _) : _" th:disabled="${los} ? (*{diagnosedLateOnsetSepsis eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div id="PC-db-bloodCulture" class="pc-db-item">
+                            <label class="pc-switch-label">血培养</label>
+                            <input type="checkbox" name="bloodCulture" lay-skin="switch" lay-text="是|否" value="1" th:checked="${los} ? (*{bloodCulture eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-BCN">血培养次数</label>
+                            <input id="PC-db-BCN" type="number" name="bloodCultureNumber" th:value="${los} ? *{bloodCultureNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit lg">
+                            <label for="PC-db-PBCN">血培养阳性次数</label>
+                            <input id="PC-db-PBCN" type="number" name="positiveBloodCultureNumber" th:value="${los} ? *{positiveBloodCultureNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit lg">
+                            <label for="PC-db-NBCN">血培养阴性次数</label>
+                            <input id="PC-db-NBCN" type="number" name="negativeBloodCultureNumber" th:value="${los} ? *{negativeBloodCultureNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOST2">
+                    <div class="layui-col-lg8 layui-col-sm10">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>检查时间</th>
+                                    <th>结果时间</th>
+                                    <th>检查结果</th>
+                                    <th>阳性菌</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${losBcList} ? ${losBcList.size()} : _">
+                                <tr th:each="losBc, status : ${losBcList}" th:object="${losBc}" th:class="*{bcInspectionResult eq '阴性'} ? 'negative' : (*{bcInspectionResult eq '阳性'} ? 'positive' : _)">
+                                    <td>
+                                        <input th:id="'PC-db-BCIT' + (${status.index} + 1)" type="text" th:name="'bcInspectionTime' + (${status.index} + 1)" th:value="*{#calendars.format(bcInspectionTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择检查时间" lay-reqText="请选择检查时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-BCRT' + (${status.index} + 1)" type="text" th:name="'bcResultTime' + (${status.index} + 1)" th:value="*{#calendars.format(bcResultTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择结果时间" lay-reqText="请选择结果时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <select th:name="'bcInspectionResult' + (${status.index} + 1)" lay-filter="BCIR" lay-reqText="请选择检查结果！" lay-verify="required">
+                                            <option value="">请选择检查结果</option>
+                                            <option value="阴性" th:selected="*{bcInspectionResult eq '阴性'} ? true : _">阴性</option>
+                                            <option value="阳性" th:selected="*{bcInspectionResult eq '阳性'} ? true : _">阳性</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:id="'PC-db-BCPB' + (${status.index} + 1)" th:name="'bcPositiveBacteria' + (${status.index} + 1)" th:data-value="*{bcPositiveBacteria}" lay-search></select>
+                                    </td>
+                                    <td>
+                                        <button th:id="'PC-db-bcDelete' + (${status.index} + 1)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addLOSBC" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOS2" th:object="${los}">
+                    <div class="layui-col-sm12">
+                        <div id="PC-db-NSI" class="pc-db-item">
+                            <label class="pc-switch-label">非特异性检查</label>
+                            <input type="checkbox" name="nonSpecificInspection" lay-skin="switch" lay-text="是|否" value="1" th:checked="${los} ? (*{nonSpecificInspection eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm12">
+                        <div class="pc-db-head">
+                            <label>>72h/生后</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-RBN">血常规检查次数</label>
+                            <input id="PC-db-RBN" type="number" name="routineBloodTestNumber" th:value="${los} ? *{routineBloodTestNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-CRPIN">CRP检查次数</label>
+                            <input id="PC-db-CRPIN" type="number" name="crpInspectionsNumber" th:value="${los} ? *{crpInspectionsNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-PCTIN">PCT检查次数</label>
+                            <input id="PC-db-PCTIN" type="number" name="pctInspectionsNumber" th:value="${los} ? *{pctInspectionsNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOST3">
+                    <div class="layui-col-lg10 layui-col-sm12">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>检查时间</th>
+                                    <th>WBC（×10<sup>9</sup>/L）</th>
+                                    <th>I/T</th>
+                                    <th>PLT（×10<sup>9</sup>/L）</th>
+                                    <th>CRP（mg/L）</th>
+                                    <th>PCT（ng/mL）</th>
+                                    <th>阳性项数</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${losNsiList} ? ${losNsiList.size()} : _">
+                                <tr th:each="losNsi, status : ${losNsiList}" th:object="${losNsi}">
+                                    <td>
+                                        <input th:id="'PC-db-NSIT' + (${status.index} + 1)" type="text" th:name="'nsiTime' + (${status.index} + 1)" th:value="*{#calendars.format(nsiTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择检查时间" lay-reqText="请选择检查时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input type="number" th:name="'nsiWbc' + (${status.index} + 1)" th:value="*{nsiWbc}" placeholder="请填写WBC">
+                                    </td>
+                                    <td>
+                                        <input type="number" th:name="'nsiIOrT' + (${status.index} + 1)" th:value="*{nsiIOrT}" placeholder="请填写I/T">
+                                    </td>
+                                    <td>
+                                        <input type="number" th:name="'nsiPlt' + (${status.index} + 1)" th:value="*{nsiPlt}" placeholder="请填写PLT">
+                                    </td>
+                                    <td>
+                                        <input type="number" th:name="'nsiCrp' + (${status.index} + 1)" th:value="*{nsiCrp}" placeholder="请填写CRP">
+                                    </td>
+                                    <td>
+                                        <input type="number" th:name="'nsiPct' + (${status.index} + 1)" th:value="*{nsiPct}" placeholder="请填写PCT">
+                                    </td>
+                                    <td>
+                                        <input type="number" th:name="'nsiPositiveItemNumber' + (${status.index} + 1)" th:value="*{nsiPositiveItemNumber}" placeholder="请填写阳性项数">
+                                    </td>
+                                    <td>
+                                        <button th:id="'PC-db-nsiDelete' + (${status.index} + 1)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addLOSNSI" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOS3" th:object="${los}">
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">临床晚发型败血症</label>
+                            <input type="checkbox" name="clinicalLateOnsetSepsis" lay-filter="CLOS" lay-skin="switch" lay-text="是|否" value="1" th:checked="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-CLOSDN">诊断</label>
+                            <input id="PC-db-CLOSDN" type="number" data-name="closDiagnoseNumber" th:name="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? 'closDiagnoseNumber' : _) : _" th:value="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? *{closDiagnoseNumber} : _) : _" th:required="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? true : _) : _" th:disabled="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? _ : true) : true">
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-CLOSDT">诊断时间</label>
+                            <input id="PC-db-CLOSDT" type="text" data-name="closDiagnoseTime" th:name="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? 'closDiagnoseTime' : _) : _" th:value="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? *{closDiagnoseTime} : _) : _" th:required="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? true : _) : _" th:disabled="${los} ? (*{clinicalLateOnsetSepsis eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm12">
+                        <div class="pc-db-head">
+                            <label>>72h/生后</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit lg">
+                            <label for="PC-db-CFCN">脑脊液培养次数</label>
+                            <input id="PC-db-CFCN" type="number" name="cerebrospinalFluidCultureNumber" th:value="${los} ? *{cerebrospinalFluidCultureNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit lg">
+                            <label for="PC-db-PCFCN">脑脊液培养阳性次数</label>
+                            <input id="PC-db-PCFCN" type="number" name="positiveCerebrospinalFluidCultureNumber" th:value="${los} ? *{positiveCerebrospinalFluidCultureNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit lg">
+                            <label for="PC-db-NCFCN">脑脊液培养阴性次数</label>
+                            <input id="PC-db-NCFCN" type="number" name="negativeCerebrospinalFluidCultureNumber" th:value="${los} ? *{negativeCerebrospinalFluidCultureNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOST4">
+                    <div class="layui-col-lg8 layui-col-sm10">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>检查时间</th>
+                                    <th>结果时间</th>
+                                    <th>检查结果</th>
+                                    <th>阳性菌</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${losCfcList} ? ${losCfcList.size()} : _">
+                                <tr th:each="losCfc, status : ${losCfcList}" th:object="${losCfc}" th:class="*{cfcInspectionResult eq '阴性'} ? 'negative' : (*{cfcInspectionResult eq '阳性'} ? 'positive' : _)">
+                                    <td>
+                                        <input th:id="'PC-db-CFCIT' + (${status.index} + 1)" type="text" th:name="'cfcInspectionTime' + (${status.index} + 1)" th:value="*{#calendars.format(cfcInspectionTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择检查时间" lay-reqText="请选择检查时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-CFCRT' + (${status.index} + 1)" type="text" th:name="'cfcResultTime' + (${status.index} + 1)" th:value="*{#calendars.format(cfcResultTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择结果时间" lay-reqText="请选择结果时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <select th:name="'cfcInspectionResult' + (${status.index} + 1)" lay-filter="CFCIR" lay-reqText="请选择检查结果！" lay-verify="required">
+                                            <option value="">请选择检查结果</option>
+                                            <option value="阴性" th:selected="*{cfcInspectionResult eq '阴性'} ? true : _">阴性</option>
+                                            <option value="阳性" th:selected="*{cfcInspectionResult eq '阳性'} ? true : _">阳性</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:id="'PC-db-CFCPB' + (${status.index} + 1)" th:name="'cfcPositiveBacteria' + (${status.index} + 1)" th:data-value="*{cfcPositiveBacteria}" lay-search></select>
+                                    </td>
+                                    <td>
+                                        <button onclick="deleteCfc(this)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addLOSCFC" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDISLOS pc-db-BDISLOS4" th:object="${los}">
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">化脓性脑膜炎</label>
+                            <input type="checkbox" name="purulentMeningitis" lay-skin="switch" lay-filter="PM" lay-text="是|否" value="1" th:checked="${los} ? (*{purulentMeningitis eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-PMDD">确诊日期</label>
+                            <input id="PC-db-PMDD" type="text" data-name="purulentMeningitisDiagnosisDate" th:name="${los} ? (*{purulentMeningitis eq 1} ? 'purulentMeningitisDiagnosisDate' : _) : _" th:value="${los} ? (*{purulentMeningitis eq 1} ? *{#calendars.format(purulentMeningitisDiagnosisDate, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${los} ? (*{purulentMeningitis eq 1} ? 'requiredDB' : _) : _" th:disabled="${los} ? (*{purulentMeningitis eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">病毒性脑膜炎</label>
+                            <input type="checkbox" name="viralMeningitis" lay-skin="switch" lay-filter="VM" lay-text="是|否" value="1" th:checked="${los} ? (*{viralMeningitis eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-VMDD">确诊日期</label>
+                            <input id="PC-db-VMDD" type="text" data-name="viralMeningitisDiagnosisDate" th:name="${los} ? (*{viralMeningitis eq 1} ? 'viralMeningitisDiagnosisDate' : _) : _" th:value="${los} ? (*{viralMeningitis eq 1} ? *{#calendars.format(viralMeningitisDiagnosisDate, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${los} ? (*{viralMeningitis eq 1} ? 'requiredDB' : _) : _" th:disabled="${los} ? (*{viralMeningitis eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="ISLOS" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDISELWrite.min.js}"></script>
+</html>

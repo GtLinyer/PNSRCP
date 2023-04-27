@@ -1,0 +1,174 @@
+.pc-db-item>.pc-db-spanItem {
+    display: inline-block;
+    position: absolute;
+}
+.pc-db-option,
+.pc-db-option>li {
+    display: flex;
+}
+.pc-db-option,
+.pc-db-option>li>a {
+    color: #FFB7C5;
+    cursor: pointer;
+}
+.pc-db-option>li:first-child {
+    border-radius: 14px 0 0 14px;
+    border-width: 1px 0 1px 1px;
+}
+.pc-db-option>li {
+    background-color: white;
+    padding: 2px 8px;
+    border: solid #FFB7C5;
+    border-width: 1px 0 1px 1px;
+}
+.pc-db-option>li:last-child {
+    border-radius: 0 14px 14px 0;
+    border-width: 1px;
+}
+.pc-db-option>li.pc-db-active,
+.pc-db-option>li.pc-db-active>a {
+    color: white;
+}
+.pc-db-option>li.pc-db-active {
+    background-color: #FFB7C5;
+}
+.pc-db-FDGC>div:nth-child(2),
+.pc-db-FDDL>div:nth-child(2),
+.pc-db-FDGP>div:nth-child(2) {
+    margin-top: 20px;
+}
+
+/** 随访信息 **/
+.pc-db-FDFI .pc-db-item>input,
+.pc-db-FDFI .pc-db-item>.pc-db-enter,
+.pc-db-FDFI .pc-db-item>.pc-db-spanItem {
+    left: 116px;
+}
+.pc-db-FDFI .pc-db-item-datetime i {
+    left: 280px;
+}
+.pc-db-FDFI .pc-db-item-unit>span {
+    left: 164px;
+}
+.pc-db-FDFI .pc-db-radioBtn-group>li {
+    background-color: #FFF8DC;
+}
+
+/** 生长曲线 **/
+.pc-db-FDGC .pc-db-item-unit>input {
+    left: 70px;
+}
+.pc-db-FDGC .pc-db-item-unit>span {
+    left: 124px;
+}
+.pc-db-FDGC .pc-db-item-unit-lg>input {
+    left: 100px;
+}
+.pc-db-FDGC .pc-db-item-unit-lg>span {
+    left: 166px;
+}
+.pc-db-FDGC .pc-db-chart-elem {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+/* 体重、身长、头围 */
+.pc-db-FDGCBW>div:first-child,
+.pc-db-FDGCBL>div:first-child,
+.pc-db-FDGCHC>div:first-child {
+    padding-right: 20px;
+}
+/* 喂养、营养 */
+.pc-db-FDGCFD .pc-db-item-table,
+.pc-db-FDGCNT .pc-db-item-table {
+    overflow: scroll;
+}
+.pc-db-FDGCFD .pc-db-item-table>.pc-db-table>thead>tr>th,
+.pc-db-FDGCNT .pc-db-item-table>.pc-db-table>thead>tr>th:not(:last-child) {
+    min-width: 100px;
+}
+/* 生长评估 */
+.pc-db-FDGCGA .pc-db-item-table {
+    overflow-y: unset;
+    overflow-x: scroll;
+}
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>thead>tr>th {
+    width: 72px;
+    min-width: 72px;
+}
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>thead>tr>th:first-child {
+    width: 46px;
+    min-width: 46px;
+}
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>thead>tr>th:nth-child(2),
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>thead>tr>th:nth-child(3),
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>thead>tr>th:nth-last-child(1),
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>thead>tr>th:nth-last-child(3) {
+    width: 96px;
+    min-width: 96px;
+}
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>tbody>tr>td>input {
+    background-color: transparent;
+}
+.pc-db-FDGCGA .pc-db-item-table>.pc-db-table>tbody>tr>td:first-child {
+    padding-left: 5px;
+    color: #FFB7C5;
+}
+/* 营养 */
+.pc-db-FDGCNT .pc-db-item-table>.pc-db-table>thead>tr>th:nth-last-child(2) {
+    min-width: 200px;
+}
+
+/** 发育水平 **/
+.pc-db-FDDL .pc-db-item-unit>input {
+    left: 70px;
+}
+.pc-db-FDDL .pc-db-item-unit>span {
+    left: 124px;
+}
+
+/** 成长历程 **/
+.pc-db-FDGP .pc-db-item-unit>input {
+    left: 70px;
+}
+.pc-db-FDGP .pc-db-item-unit>span {
+    left: 124px;
+}
+/* 随访计划、疾病防治 */
+.pc-db-FDGPFP .pc-db-item-table,
+.pc-db-FDGPDC .pc-db-item-table {
+    overflow-x: scroll;
+    overflow-y: unset;
+}
+.pc-db-FDGPFP .pc-db-table>thead>tr>th:first-child,
+.pc-db-FDGPDC .pc-db-table>thead>tr>th:first-child {
+    width: 124px;
+    min-width: 124px;
+}
+.pc-db-FDGPFP .pc-db-table>thead>tr>th,
+.pc-db-FDGPDC .pc-db-table>thead>tr>th {
+    width: 100px;
+    min-width: 100px;
+}
+.pc-db-FDGPFP .pc-db-table>tbody>tr>td:not(:first-child),
+.pc-db-FDGPDC .pc-db-table>tbody>tr>td:not(:first-child) {
+    background-color: white;
+}
+.pc-db-FDGPFP .pc-db-table>tbody>tr>td:first-child,
+.pc-db-FDGPDC .pc-db-table>tbody>tr>td:first-child {
+    padding: 0 5px;
+    color: #FFB7C5;
+}
+.pc-db-FDGPFP .pc-db-table>tbody>tr>td.pc-db-require,
+.pc-db-FDGPDC .pc-db-table>tbody>tr>td.pc-db-require {
+    background-color: #FFB7C5;
+    cursor: pointer;
+}
+.pc-db-FDGPFP .pc-db-table>tbody>tr>td.pc-db-success,
+.pc-db-FDGPDC .pc-db-table>tbody>tr>td.pc-db-success {
+    background-color: #10A64B;
+}
+.pc-db-FDGPFP .pc-db-table>tbody>tr>td.pc-db-fail,
+.pc-db-FDGPDC .pc-db-table>tbody>tr>td.pc-db-fail {
+    background-color: #999;
+}

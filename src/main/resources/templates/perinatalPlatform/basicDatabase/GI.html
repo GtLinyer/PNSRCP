@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>孕期信息 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,孕期信息"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库孕期信息"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#FAC2C2"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 基础数据库 导航 -->
+                    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_BD')">
+                        <a class="pc-item" href="javascript:void(0);">
+                            <i class="pc-icon iconfont icon-jichushujuku"></i>
+                            <cite>基础数据库</cite>
+                        </a>
+
+                        <dl class="layui-nav-child">
+                            <dd sec:authorize="hasRole('ROLE_BDMI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/MI">
+                                    <i class="pc-icon iconfont icon-mother-nurse"></i>
+                                    <cite>母亲信息</cite>
+                                </a>
+                            </dd>
+                            <dd class="layui-this" sec:authorize="hasRole('ROLE_BDGI')">
+                                <a href="#">
+                                    <i class="pc-icon iconfont icon-yunqi"></i>
+                                    <cite>孕期信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDPI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/PI">
+                                    <i class="pc-icon iconfont icon-huaiyun"></i>
+                                    <cite>围产信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDBS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/BS">
+                                    <i class="pc-icon iconfont icon-baobao"></i>
+                                    <cite>宝宝情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RS">
+                                    <i class="pc-icon iconfont icon-fusu"></i>
+                                    <cite>复苏情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDCA')">
+                                <a href="/perinatalPlatform/basicDatabase/write/CA">
+                                    <i class="pc-icon iconfont icon-weizhong"></i>
+                                    <cite>危重评估</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRST')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">
+                                    <i class="pc-icon iconfont icon-huxixitong"></i>
+                                    <cite>呼吸系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDGS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">
+                                    <i class="pc-icon iconfont icon-xiaohuaxitong"></i>
+                                    <cite>消化系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDIS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/IS/EOS">
+                                    <i class="pc-icon iconfont icon-jiance"></i>
+                                    <cite>感染监测</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDCS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/CS">
+                                    <i class="pc-icon iconfont icon-xunhuanxitong"></i>
+                                    <cite>循环系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDNS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/NS/US">
+                                    <i class="pc-icon iconfont icon-shenjingwaike"></i>
+                                    <cite>神经系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRP')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RP/SS">
+                                    <i class="pc-icon iconfont icon-shiwangmobingbian"></i>
+                                    <cite>视网膜病</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DS">
+                                    <i class="pc-icon iconfont icon-chuyuanjilu"></i>
+                                    <cite>出院情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BD')">
+                                <a href="/perinatalPlatform/basicDatabase/review">
+                                    <i class="pc-icon iconfont icon-shenhe"></i>
+                                    <cite>病例审核</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+                    <!-- 医患交流库 导航 -->
+                    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+                    <!-- 母婴同室库 导航 -->
+                    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+                    <!-- 父母心理库 导航 -->
+                    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+                    <!-- 研究数据库 导航 -->
+                    <li th:replace="include/navMenu::researchDatabase"></li>
+
+                    <!-- 超声影像库 导航 -->
+                    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+                    <!-- 随访数据库 导航 -->
+                    <li th:replace="include/navMenu::followDatabase"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDMI layui-form" th:object="${gestationInformation}" sec:authorize="hasRole('ROLE_BDGI')">
+                <div class="layui-row pc-db-BDGI">
+                    <div class="layui-col-xs12">
+                        <div id="PC-db-moOcc" class="pc-db-item">
+                            <label>母亲职业</label>
+                            <input type="hidden" name="motherOccupation" th:value="${gestationInformation} ? *{motherOccupation} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '国家机关、党群组织、企业、事业单位负责人'} ? 'pc-db-active' : _) : _" data-value="国家机关、党群组织、企业、事业单位负责人">
+                                    <button>国家机关、党群组织、企业、事业单位负责人</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '专业技术人员'} ? 'pc-db-active' : _) : _" data-value="专业技术人员">
+                                    <button>专业技术人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '商业及服务业人员'} ? 'pc-db-active' : _) : _" data-value="商业及服务业人员">
+                                    <button>商业及服务业人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '军人'} ? 'pc-db-active' : _) : _" data-value="军人">
+                                    <button>军人</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '办事人员'} ? 'pc-db-active' : _) : _" data-value="办事人员">
+                                    <button>办事人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '运输设备操作人员'} ? 'pc-db-active' : _) : _" data-value="运输设备操作人员">
+                                    <button>运输设备操作人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '农林牧渔业生产及其他劳动者'} ? 'pc-db-active' : _) : _" data-value="农林牧渔业生产及其他劳动者">
+                                    <button>农林牧渔业生产及其他劳动者</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '无业'} ? 'pc-db-active' : _) : _" data-value="无业">
+                                    <button>无业</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherOccupation eq '退休'} ? 'pc-db-active' : _) : _" data-value="退休">
+                                    <button>退休</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div id="PC-db-moDeg" class="pc-db-item">
+                            <label>母亲学历</label>
+                            <input type="hidden" name="motherDegree" th:value="${gestationInformation} ? *{motherDegree} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${gestationInformation} ? (*{motherDegree eq '大学及以上'} ? 'pc-db-active' : _) : _" data-value="大学及以上">
+                                    <button>大学及以上</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherDegree eq '大专'} ? 'pc-db-active' : _) : _" data-value="大专">
+                                    <button>大专</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherDegree eq '高中'} ? 'pc-db-active' : _) : _" data-value="高中">
+                                    <button>高中</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherDegree eq '中专'} ? 'pc-db-active' : _) : _" data-value="中专">
+                                    <button>中专</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherDegree eq '初中'} ? 'pc-db-active' : _) : _" data-value="初中">
+                                    <button>初中</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherDegree eq '小学'} ? 'pc-db-active' : _) : _" data-value="小学">
+                                    <button>小学</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{motherDegree eq '文盲'} ? 'pc-db-active' : _) : _" data-value="文盲">
+                                    <button>文盲</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div id="PC-db-faOcc" class="pc-db-item">
+                            <label>父亲职业</label>
+                            <input type="hidden" name="fatherOccupation" th:value="${gestationInformation} ? *{fatherOccupation} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '国家机关、党群组织、企业、事业单位负责人'} ? 'pc-db-active' : _) : _" data-value="国家机关、党群组织、企业、事业单位负责人">
+                                    <button>国家机关、党群组织、企业、事业单位负责人</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '专业技术人员'} ? 'pc-db-active' : _) : _" data-value="专业技术人员">
+                                    <button>专业技术人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '商业及服务业人员'} ? 'pc-db-active' : _) : _" data-value="商业及服务业人员">
+                                    <button>商业及服务业人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '军人'} ? 'pc-db-active' : _) : _" data-value="军人">
+                                    <button>军人</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '办事人员'} ? 'pc-db-active' : _) : _" data-value="办事人员">
+                                    <button>办事人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '运输设备操作人员'} ? 'pc-db-active' : _) : _" data-value="运输设备操作人员">
+                                    <button>运输设备操作人员</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '农林牧渔业生产及其他劳动者'} ? 'pc-db-active' : _) : _" data-value="农林牧渔业生产及其他劳动者">
+                                    <button>农林牧渔业生产及其他劳动者</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '无业'} ? 'pc-db-active' : _) : _" data-value="无业">
+                                    <button>无业</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherOccupation eq '退休'} ? 'pc-db-active' : _) : _" data-value="退休">
+                                    <button>退休</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div id="PC-db-faDeg" class="pc-db-item">
+                            <label>父亲学历</label>
+                            <input type="hidden" name="fatherDegree" th:value="${gestationInformation} ? *{fatherDegree} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${gestationInformation} ? (*{fatherDegree eq '大学及以上'} ? 'pc-db-active' : _) : _" data-value="大学及以上">
+                                    <button>大学及以上</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherDegree eq '大专'} ? 'pc-db-active' : _) : _" data-value="大专">
+                                    <button>大专</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherDegree eq '高中'} ? 'pc-db-active' : _) : _" data-value="高中">
+                                    <button>高中</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherDegree eq '中专'} ? 'pc-db-active' : _) : _" data-value="中专">
+                                    <button>中专</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherDegree eq '初中'} ? 'pc-db-active' : _) : _" data-value="初中">
+                                    <button>初中</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherDegree eq '小学'} ? 'pc-db-active' : _) : _" data-value="小学">
+                                    <button>小学</button>
+                                </li>
+                                <li th:class="${gestationInformation} ? (*{fatherDegree eq '文盲'} ? 'pc-db-active' : _) : _" data-value="文盲">
+                                    <button>文盲</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-greenScore">Green评分</label>
+                            <input id="PC-db-greenScore" type="number" name="greenScore" th:value="${gestationInformation} ? *{greenScore} : _" readonly>
+                            <span>分</span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="layui-row pc-db-BDGI">
+                    <div class="layui-col-xs12">
+                        <div class="pc-db-item">
+                            <label>母亲医疗付费方式</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="motherPaymentMethodLocalResidentsMedicalInsurance" value="1" title="本地居民医保" th:checked="${gestationInformation} ? (*{motherPaymentMethodLocalResidentsMedicalInsurance eq 1} ? true : _) : _">
+                                <input type="checkbox" name="motherPaymentMethodOffSiteMedicalInsurance" value="1" title="异地医保" th:checked="${gestationInformation} ? (*{motherPaymentMethodOffSiteMedicalInsurance eq 1} ? true : _) : _">
+                                <input type="checkbox" name="motherPaymentMethodResidentsMinimumLivingGuarantee" value="1" title="低保" th:checked="${gestationInformation} ? (*{motherPaymentMethodResidentsMinimumLivingGuarantee eq 1} ? true : _) : _">
+                                <input type="checkbox" name="motherPaymentMethodSocialAssistance" value="1" title="社会救助" th:checked="${gestationInformation} ? (*{motherPaymentMethodSocialAssistance eq 1} ? true : _) : _">
+                                <input type="checkbox" name="motherPaymentMethodBusinessInsurance" value="1" title="商业保险" th:checked="${gestationInformation} ? (*{motherPaymentMethodBusinessInsurance eq 1} ? true : _) : _">
+                                <input type="checkbox" name="motherPaymentMethodOwnExpense" value="1" title="自费" th:checked="${gestationInformation} ? (*{motherPaymentMethodOwnExpense eq 1} ? true : _) : _">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-motherHeight">母亲身高</label>
+                            <input id="PC-db-motherHeight" type="number" name="motherHeight" th:value="${gestationInformation} ? *{motherHeight} : _">
+                            <span>m</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-WBP">孕前体重</label>
+                            <input id="PC-db-WBP" type="number" name="weightBeforePregnancy" th:value="${gestationInformation} ? *{weightBeforePregnancy} : _">
+                            <span>kg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label for="PC-db-BMIBP">孕前BMI</label>
+                            <input id="PC-db-BMIBP" type="number" name="bmiBeforePregnancy" th:value="${gestationInformation} ? *{bmiBeforePregnancy} : _" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-WBD">分娩前体重</label>
+                            <input id="PC-db-WBD" type="number" name="weightBeforeDelivery" th:value="${gestationInformation} ? *{weightBeforeDelivery} : _">
+                            <span>kg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label for="PC-db-BMIBD">分娩前BMI</label>
+                            <input id="PC-db-BMIBD" type="number" name="bmiBeforeDelivery" th:value="${gestationInformation} ? *{bmiBeforeDelivery} : _" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-WGDP">孕期体重增加</label>
+                            <input id="PC-db-WGDP" type="number" name="weightGainDuringPregnancy" th:value="${gestationInformation} ? *{weightGainDuringPregnancy} : _" readonly>
+                            <span>kg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="GI" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDWrite.min.js}"></script>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>循环系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,循环系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库循环系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#FAC2C2"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 基础数据库 导航 -->
+                    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_BD')">
+                        <a class="pc-item" href="javascript:void(0);">
+                            <i class="pc-icon iconfont icon-jichushujuku"></i>
+                            <cite>基础数据库</cite>
+                        </a>
+
+                        <dl class="layui-nav-child">
+                            <dd sec:authorize="hasRole('ROLE_BDMI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/MI">
+                                    <i class="pc-icon iconfont icon-mother-nurse"></i>
+                                    <cite>母亲信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDGI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/GI">
+                                    <i class="pc-icon iconfont icon-yunqi"></i>
+                                    <cite>孕期信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDPI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/PI">
+                                    <i class="pc-icon iconfont icon-huaiyun"></i>
+                                    <cite>围产信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDBS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/BS">
+                                    <i class="pc-icon iconfont icon-baobao"></i>
+                                    <cite>宝宝情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RS">
+                                    <i class="pc-icon iconfont icon-fusu"></i>
+                                    <cite>复苏情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDCA')">
+                                <a href="/perinatalPlatform/basicDatabase/write/CA">
+                                    <i class="pc-icon iconfont icon-weizhong"></i>
+                                    <cite>危重评估</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRST')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">
+                                    <i class="pc-icon iconfont icon-huxixitong"></i>
+                                    <cite>呼吸系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDGS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">
+                                    <i class="pc-icon iconfont icon-xiaohuaxitong"></i>
+                                    <cite>消化系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDIS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/IS/EOS">
+                                    <i class="pc-icon iconfont icon-jiance"></i>
+                                    <cite>感染监测</cite>
+                                </a>
+                            </dd>
+                            <dd class="layui-this" sec:authorize="hasRole('ROLE_BDCS')">
+                                <a href="#">
+                                    <i class="pc-icon iconfont icon-xunhuanxitong"></i>
+                                    <cite>循环系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDNS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/NS/US">
+                                    <i class="pc-icon iconfont icon-shenjingwaike"></i>
+                                    <cite>神经系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRP')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RP/SS">
+                                    <i class="pc-icon iconfont icon-shiwangmobingbian"></i>
+                                    <cite>视网膜病</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DS">
+                                    <i class="pc-icon iconfont icon-chuyuanjilu"></i>
+                                    <cite>出院情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BD')">
+                                <a href="/perinatalPlatform/basicDatabase/review">
+                                    <i class="pc-icon iconfont icon-shenhe"></i>
+                                    <cite>病例审核</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+                    <!-- 医患交流库 导航 -->
+                    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+                    <!-- 母婴同室库 导航 -->
+                    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+                    <!-- 父母心理库 导航 -->
+                    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+                    <!-- 研究数据库 导航 -->
+                    <li th:replace="include/navMenu::researchDatabase"></li>
+
+                    <!-- 超声影像库 导航 -->
+                    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+                    <!-- 随访数据库 导航 -->
+                    <li th:replace="include/navMenu::followDatabase"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDCS layui-form" lay-filter="BDCS" sec:authorize="hasRole('ROLE_BDCS')">
+                <div class="layui-row pc-db-BDCS1" th:object="${circulatorySystem}">
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">PPHN</label>
+                            <input type="checkbox" name="pphn" lay-filter="PPHN" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{pphn eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-PPHNDD">诊断日期</label>
+                            <input id="PC-db-PPHNDD" type="text" data-name="pphnDiagnosisDate" th:name="${circulatorySystem} ? (*{pphn eq 1} ? 'pphnDiagnosisDate' : _) : _" th:value="${circulatorySystem} ? (*{pphn eq 1} ? *{#calendars.format(pphnDiagnosisDate, 'yyyy-MM-dd')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{pphn eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{pphn eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-HFO2">最高FiO<sub>2</sub></label>
+                            <input id="PC-db-HFO2" type="number" data-name="highestFiO2" th:name="${circulatorySystem} ? (*{pphn eq 1} ? 'highestFiO2' : _) : _" th:value="${circulatorySystem} ? (*{pphn eq 1} ? *{highestFiO2} : _) : _" th:lay-verify="${circulatorySystem} ? (*{pphn eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{pphn eq 1} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">西地那非</label>
+                            <input type="checkbox" name="sildenafil" lay-filter="sildenafil" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{sildenafil eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-SST">开始时间</label>
+                            <input id="PC-db-SST" type="text" data-name="sildenafilStartTime" th:name="${circulatorySystem} ? (*{sildenafil eq 1} ? 'sildenafilStartTime' : _) : _" th:value="${circulatorySystem} ? (*{sildenafil eq 1} ? *{#calendars.format(sildenafilStartTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{sildenafil eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{sildenafil eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-SET">结束时间</label>
+                            <input id="PC-db-SET" type="text" data-name="sildenafilEndTime" th:name="${circulatorySystem} ? (*{sildenafil eq 1} ? 'sildenafilEndTime' : _) : _" th:value="${circulatorySystem} ? (*{sildenafil eq 1} ? *{#calendars.format(sildenafilEndTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{sildenafil eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{sildenafil eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">NO吸入</label>
+                            <input type="checkbox" name="noInhalation" lay-filter="NOI" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{noInhalation eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-NOIST">开始时间</label>
+                            <input id="PC-db-NOIST" type="text" data-name="noInhalationStartTime" th:name="${circulatorySystem} ? (*{noInhalation eq 1} ? 'noInhalationStartTime' : _) : _" th:value="${circulatorySystem} ? (*{noInhalation eq 1} ? *{#calendars.format(noInhalationStartTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{noInhalation eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{noInhalation eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-NOIET">结束时间</label>
+                            <input id="PC-db-NOIET" type="text" data-name="noInhalationEndTime" th:name="${circulatorySystem} ? (*{noInhalation eq 1} ? 'noInhalationEndTime' : _) : _" th:value="${circulatorySystem} ? (*{noInhalation eq 1} ? *{#calendars.format(noInhalationEndTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{noInhalation eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{noInhalation eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-head">
+                            <label>不良反应</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div id="PC-db-ME" class="pc-db-item">
+                            <label class="pc-switch-label">高铁血红蛋白</label>
+                            <input type="checkbox" name="methemoglobin" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{noInhalation eq 1} ? (*{methemoglobin eq 1} ? true : _) : _) : _" th:disabled="${circulatorySystem} ? (*{methemoglobin eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div id="PC-db-ABCF" class="pc-db-item">
+                            <label class="pc-switch-label">凝血功能异常</label>
+                            <input type="checkbox" name="abnormalBloodClottingFunction" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{noInhalation eq 1} ? (*{abnormalBloodClottingFunction eq 1} ? true : _) : _) : _" th:disabled="${circulatorySystem} ? (*{methemoglobin eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-MH">Hb最低值</label>
+                            <input id="PC-db-MH" type="number" data-name="minimumHb" th:name="${circulatorySystem} ? (*{noInhalation eq 1} ? 'minimumHb' : _) : _" th:lay-verify="${circulatorySystem} ? (*{noInhalation eq 1} ? 'requiredDB' : _) : _" th:value="${circulatorySystem} ? (*{noInhalation eq 1} ? *{minimumHb} : _) : _" th:disabled="${circulatorySystem} ? (*{noInhalation eq 1} ? _ : true) : true">
+                            <span>g/L</span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="layui-row pc-db-BDCS1" th:object="${circulatorySystem}">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">动脉导管未闭</label>
+                            <input id="PC-db-PDA" type="checkbox" name="patentDuctusArteriosus" lay-skin="switch" lay-text="有|无" lay-filter="PDAU" value="1" th:checked="${circulatorySystem} ? (*{patentDuctusArteriosus eq 1} ? true : _) : _">
+                            <div class="pc-db-attach">
+                                <label>超声检查</label>
+                                <input id="PC-db-PDAUN" type="number" name="pdaUltrasoundNumber" lay-verify="requiredDB" th:value="${circulatorySystem} ? *{pdaUltrasoundNumber} : '0'" readonly>
+                                <span>次</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-PDAUT" class="pc-db-item-table addList">
+                            <table th:class="'pc-db-table' + (${circulatorySystem} ? (*{patentDuctusArteriosus eq 1} ? '' : ' pc-db-table-off') : ' pc-db-table-off')">
+                                <thead>
+                                <tr>
+                                    <th>超声时间</th>
+                                    <th>超声结果</th>
+                                    <th>动脉导管内径（mm）</th>
+                                    <th>左房内径/主动脉内径</th>
+                                    <th>肺动脉瓣舒张期反流</th>
+                                    <th>以左向右分流为主</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${csPdaUltrasoundList} ? ${csPdaUltrasoundList.size()} : _">
+                                <tr th:each="csPdaUltrasound, status : ${csPdaUltrasoundList}" th:object="${csPdaUltrasound}">
+                                    <td>
+                                        <input th:id="'PC-db-UT' + (${status.index} + 1)" type="text" th:name="'ultrasoundTime' + (${status.index} + 1)" th:value="*{#calendars.format(ultrasoundTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择超声时间" lay-reqText="请选择超声时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-UR' + (${status.index} + 1)" type="text" th:name="'ultrasoundResult' + (${status.index} + 1)" th:value="*{ultrasoundResult}" lay-verify="required" placeholder="请填写超声结果" lay-reqText="请填写超声结果！">
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-ACID' + (${status.index} + 1)" type="number" th:name="'arterialCatheterInnerDiameter' + (${status.index} + 1)" th:value="*{arterialCatheterInnerDiameter}" lay-verify="required" placeholder="请填写动脉导管内径" lay-reqText="请填写动脉导管内径！">
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-LAOAID' + (${status.index} + 1)" type="number" th:name="'leftAtriumOrAortaInnerDiameter' + (${status.index} + 1)" th:value="*{leftAtriumOrAortaInnerDiameter}" lay-verify="required" placeholder="请填写左房内径/主动脉内径" lay-reqText="请填写左房内径/主动脉内径！">
+                                    </td>
+                                    <td>
+                                        <select th:name="'pulmonaryValveDiastolicRegurgitation' + (${status.index} + 1)" lay-reqText="请选择肺动脉瓣舒张期是否反流！" lay-verify="required">
+                                            <option value="">请选择肺动脉瓣舒张期是否反流</option>
+                                            <option value="是" th:selected="*{pulmonaryValveDiastolicRegurgitation eq '是'} ? true : _">是</option>
+                                            <option value="否" th:selected="*{pulmonaryValveDiastolicRegurgitation eq '否'} ? true : _">否</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:name="'mainlyDivertFromLeftToRight' + (${status.index} + 1)" lay-reqText="请选择是否以左向右分流为主！" lay-verify="required">
+                                            <option value="">请选择是否以左向右分流为主</option>
+                                            <option value="是" th:selected="*{mainlyDivertFromLeftToRight eq '是'} ? true : _">是</option>
+                                            <option value="否" th:selected="*{mainlyDivertFromLeftToRight eq '否'} ? true : _">否</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button th:id="'PC-db-pdaUDelete' + (${status.index} + 1)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addPDAU" class="pc-btn" th:disabled="${circulatorySystem} ? (*{patentDuctusArteriosus eq 1} ? _ : true) : true"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">PDA治疗</label>
+                            <input id="PC-db-PDAT" type="checkbox" name="pdaTreatment" lay-skin="switch" lay-text="有|无" lay-filter="PDAT" value="1" th:checked="${circulatorySystem} ? (*{pdaTreatment eq 1} ? true : _) : _">
+                            <div class="pc-db-attach">
+                                <input id="PC-db-PDATN" type="number" name="pdaTreatmentNumber" lay-verify="requiredDB" th:value="${circulatorySystem} ? *{pdaTreatmentNumber} : '0'" readonly>
+                                <span>次</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">手术结扎</label>
+                            <input id="PC-db-PDASL" type="checkbox" name="pdaSurgicalLigation" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{pdaTreatment eq 1} ? (*{pdaSurgicalLigation eq 1} ? true : _) : _) : _" th:disabled="${circulatorySystem} ? (*{pdaTreatment eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">介入封堵</label>
+                            <input id="PC-db-PDAIB" type="checkbox" name="pdaInterventionalBlockage" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{pdaTreatment eq 1} ? (*{pdaInterventionalBlockage eq 1} ? true : _) : _) : _" th:disabled="${circulatorySystem} ? (*{pdaTreatment eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">治疗后PDA关闭</label>
+                            <input id="PC-db-PDACAT" type="checkbox" name="pdaClosesAfterTreatment" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{pdaTreatment eq 1} ? (*{pdaClosesAfterTreatment eq 1} ? true : _) : _) : _" th:disabled="${circulatorySystem} ? (*{pdaTreatment eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-PDATT" class="pc-db-item-table addList">
+                            <table th:class="'pc-db-table' + (${circulatorySystem} ? (*{pdaTreatment eq 1} ? '' : ' pc-db-table-off') : ' pc-db-table-off')">
+                                <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>用药途径</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>疗程</th>
+                                    <th>治疗后PDA是否关闭</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${csPdaTreatmentList} ? ${csPdaTreatmentList.size()} : _">
+                                <tr th:each="csPdaTreatment, status : ${csPdaTreatmentList}" th:object="${csPdaTreatment}">
+                                    <td>
+                                        <select th:name="'pdaName' + (${status.index} + 1)" lay-reqText="请选择名称！" lay-verify="required">
+                                            <option value="">请选择名称</option>
+                                            <option value="布洛芬" th:selected="*{pdaName eq '布洛芬'} ? true : _">布洛芬</option>
+                                            <option value="对乙酰氨基酚" th:selected="*{pdaName eq '对乙酰氨基酚'} ? true : _">对乙酰氨基酚</option>
+                                            <option value="吲哚美辛" th:selected="*{pdaName eq '吲哚美辛'} ? true : _">吲哚美辛</option>
+                                            <option value="手术" th:selected="*{pdaName eq '手术'} ? true : _">手术</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:name="'pdaMedicationRoute' + (${status.index} + 1)" lay-reqText="请选择用药途径！" lay-verify="required">
+                                            <option value="">请选择用药途径</option>
+                                            <option value="静脉" th:selected="*{pdaMedicationRoute eq '静脉'} ? true : _">静脉</option>
+                                            <option value="口服" th:selected="*{pdaMedicationRoute eq '口服'} ? true : _">口服</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-PDAST' + (${status.index} + 1)" type="text" th:name="'pdaStartTime' + (${status.index} + 1)" th:value="*{#calendars.format(pdaStartTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择开始时间" lay-reqText="请选择开始时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-PDAET' + (${status.index} + 1)" type="text" th:name="'pdaEndTime' + (${status.index} + 1)" th:value="*{#calendars.format(pdaEndTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择结束时间" lay-reqText="请选择结束时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input type="text" th:name="'pdaTreatmentCourse' + (${status.index} + 1)" th:value="*{pdaTreatmentCourse}" lay-verify="required" placeholder="请输入疗程" lay-reqText="请输入疗程！">
+                                    </td>
+                                    <td>
+                                        <select th:name="'isPdaClosesAfterTreatment' + (${status.index} + 1)" lay-reqText="请选择治疗后PDA是否关闭！" lay-verify="required">
+                                            <option value="">请选择请选择治疗后PDA是否关闭</option>
+                                            <option value="是" th:selected="*{isPdaClosesAfterTreatment eq '是'} ? true : _">是</option>
+                                            <option value="否" th:selected="*{isPdaClosesAfterTreatment eq '否'} ? true : _">否</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button th:id="'PC-db-pdaTDelete' + (${status.index} + 1)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addPDAT" class="pc-btn" th:disabled="${circulatorySystem} ? (*{pdaTreatment eq 1} ? _ : true) : true"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="layui-row pc-db-BDCS3" th:object="${circulatorySystem}">
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">心律失常</label>
+                            <input type="checkbox" name="arrhythmia" lay-filter="arrhythmia" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{arrhythmia eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-ADD">诊断日期</label>
+                            <input id="PC-db-ADD" type="text" data-name="arrhythmiaDiagnosisDate" th:name="${circulatorySystem} ? (*{arrhythmia eq 1} ? 'arrhythmiaDiagnosisDate' : _) : _" th:value="${circulatorySystem} ? (*{arrhythmia eq 1} ? *{#calendars.format(arrhythmiaDiagnosisDate, 'yyyy-MM-dd')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{arrhythmia eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{arrhythmia eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">休克</label>
+                            <input type="checkbox" name="shock" lay-filter="shock" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{shock eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-SDD">诊断日期</label>
+                            <input id="PC-db-SDD" type="text" data-name="shockDiagnosisDate" th:name="${circulatorySystem} ? (*{shock eq 1} ? 'shockDiagnosisDate' : _) : _" th:value="${circulatorySystem} ? (*{shock eq 1} ? *{#calendars.format(shockDiagnosisDate, 'yyyy-MM-dd')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{shock eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{shock eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">心力衰竭</label>
+                            <input type="checkbox" name="heartFailure" lay-filter="HF" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{heartFailure eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-HFDD">诊断日期</label>
+                            <input id="PC-db-HFDD" type="text" data-name="heartFailureDiagnosisDate" th:name="${circulatorySystem} ? (*{heartFailure eq 1} ? 'heartFailureDiagnosisDate' : _) : _" th:value="${circulatorySystem} ? (*{heartFailure eq 1} ? *{#calendars.format(heartFailureDiagnosisDate, 'yyyy-MM-dd')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{heartFailure eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{heartFailure eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">缺血缺氧性心肌损害</label>
+                            <input type="checkbox" name="ischemicHypoxicMyocardialDamage" lay-filter="IHMD" lay-skin="switch" lay-text="有|无" value="1" th:checked="${circulatorySystem} ? (*{ischemicHypoxicMyocardialDamage eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-IHMDDD">诊断日期</label>
+                            <input id="PC-db-IHMDDD" type="text" data-name="ihmdDiagnosisDate" th:name="${circulatorySystem} ? (*{ischemicHypoxicMyocardialDamage eq 1} ? 'ihmdDiagnosisDate' : _) : _" th:value="${circulatorySystem} ? (*{ischemicHypoxicMyocardialDamage eq 1} ? *{#calendars.format(ihmdDiagnosisDate, 'yyyy-MM-dd')} : _) : _" th:lay-verify="${circulatorySystem} ? (*{ischemicHypoxicMyocardialDamage eq 1} ? 'requiredDB' : _) : _" th:disabled="${circulatorySystem} ? (*{ischemicHypoxicMyocardialDamage eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="CS" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BD2Write.min.js}"></script>
+</html>

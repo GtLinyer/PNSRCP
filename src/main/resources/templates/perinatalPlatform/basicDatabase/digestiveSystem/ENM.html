@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>消化系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,消化系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库消化系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/dgsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDDGS layui-form" sec:authorize="hasRole('ROLE_BDDGS')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">生长指标</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/EN">肠内营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PN">肠外营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FR">禁食原因</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FIN">喂养不耐受与NEC</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ODT">其它诊断与治疗</a>
+                    <a href="#"><cite>肠内营养管理</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PNM">肠外营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/TNM">过渡期营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/NE">营养评价</a>
+                </span>
+                <div class="layui-row pc-db-BDDGSENM" th:data-chd="${birthMsg} ? ${#calendars.format(birthMsg.childHospitalizationDate, 'yyyy-MM-dd')} : _" th:data-weight="${birthMsg} ? ${birthMsg.birthWeight} : _">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item-table">
+                            <table class="pc-db-table tableLeft">
+                                <caption>
+                                    <div>肠内营养管理</div>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>1-7d</th>
+                                    <th>8-14d</th>
+                                    <th>合计</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="4">住院天数</td>
+                                </tr>
+                                <tr>
+                                    <td>亲母母乳（ml/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>捐献母乳（ml/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>深度水解奶（ml/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>部分水解奶（ml/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>氨基酸奶（ml/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>普通配方奶（ml/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>合计每日奶量（ml/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>肠内营养蛋白质（g/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>肠内营养蛋白质（g/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>奶量合计热卡（kcal/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>奶量合计热卡（kcal/kg/d）</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="pc-db-table tableRight">
+                                <caption>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th class="blockTh"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                    <td>10</td>
+                                    <td>11</td>
+                                    <td>12</td>
+                                    <td>13</td>
+                                    <td>14</td>
+                                    <td rowspan="12">
+                                        <button id="PC-db-add" class="pc-btn"><i class="iconfont icon-zengjia"></i> 增加</button>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-BM">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="breastMilkPKg14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-DBM">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="donateBreastMilkPKg14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-DHM">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="deeplyHydrolyzedMilkPKg14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-PHM">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="partiallyHydrolyzedMilkPKg14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-AAM">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="aminoAcidMilkPKg14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-OFM">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="ordinaryFormulaMilkPKg14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-TDMVPK">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalDailyMilkVolumePKg14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-ENPGPD">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPD14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-ENPGPKPD">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="enteralNutritionalProteinGPKgPD14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-TMCKPD">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPD14" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-TMCKPKPD">
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD1" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD2" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD3" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD4" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD5" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD6" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD7" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD8" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD9" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD10" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD11" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD12" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD13" readonly>
+                                    </td>
+                                    <td class="pc-db-table-textInput">
+                                        <input type="number" name="totalMilkCaloriesKcalPKgPD14" readonly>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDDGSENM" th:object="${enm}">
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-MFET">微量喂养结束时间</label>
+                            <input id="PC-db-MFET" type="text" name="microfeedingEndTime" th:value="${enm} ? *{#calendars.format(microfeedingEndTime, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-MD">微量喂养持续时间</label>
+                            <input id="PC-db-MD" type="number" name="microfeedingDuration" th:value="${enm} ? *{microfeedingDuration} : _" readonly>
+                            <span>天</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-date lg">
+                            <label for="PC-db-MVR30MPKPDT">奶量达30ml/kg/d的时间</label>
+                            <input id="PC-db-MVR30MPKPDT" type="text" name="milkVolumeReach30MlPKgPDTime" th:value="${enm} ? *{#calendars.format(milkVolumeReach30MlPKgPDTime, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-date lg">
+                            <label for="PC-db-MVR80MPKPDT">奶量达80ml/kg/d的时间</label>
+                            <input id="PC-db-MVR80MPKPDT" type="text" name="milkVolumeReach80MlPKgPDTime" th:value="${enm} ? *{#calendars.format(milkVolumeReach80MlPKgPDTime, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-date lg">
+                            <label for="PC-db-MVR120MPKPDT">奶量达120ml/kg/d的时间</label>
+                            <input id="PC-db-MVR120MPKPDT" type="text" name="milkVolumeReach120MlPKgPDTime" th:value="${enm} ? *{#calendars.format(milkVolumeReach120MlPKgPDTime, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-date lg">
+                            <label for="PC-db-MVR150MPKPDT">奶量达150ml/kg/d的时间</label>
+                            <input id="PC-db-MVR150MPKPDT" type="text" name="milkVolumeReach150MlPKgPDTime" th:value="${enm} ? *{#calendars.format(milkVolumeReach150MlPKgPDTime, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-FIR">喂养增加速度</label>
+                            <input id="PC-db-FIR" type="number" name="feedingIncreaseRate" th:value="${enm} ? *{feedingIncreaseRate} : _" readonly>
+                            <span>ml/kg/d</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button id="PC-db-save" class="pc-btn pc-btn-save" lay-filter="DGSENM" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDDGSENWrite.min.js}"></script>
+</html>

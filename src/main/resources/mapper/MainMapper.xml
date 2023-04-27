@@ -1,0 +1,1799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.MainMapper">
+    <!-- 获取 数据量 -->
+    <select id="dataAmountQry" resultType="com.pnsrcp.web.entity.DataAmount">
+        select date_format(pbmi.hospitalizationDate, '%Y-%m') month, count(pbbs.cid) sum
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        <where>
+            <if test="hospitalId > 0">
+                pbmi.hospitalId = #{hospitalId}
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    pbmi.hospitalId = #{hid}
+                </foreach>
+            </if>
+        </where>
+        group by month
+        order by month desc
+    </select>
+
+    <!-- 检测 病例是否符合 医院ID -->
+    <select id="motherIdCheck" resultType="int">
+        select mid
+        from pc_bd_mother_information
+        where mid=#{motherId}
+        <if test="hospitalId > -1">
+            and hospitalId=#{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() != 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                hospitalId = #{hid}
+            </foreach>
+        </if>
+        limit 1
+    </select>
+
+    <!-- 获取 总 病例数 -->
+    <select id="casesTotalNumberQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        <where>
+            <if test="hospitalId > 0">
+                hospitalId = #{hospitalId}
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    hospitalId = #{hid}
+                </foreach>
+            </if>
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+            <if test="inHospital == 0">
+                and pbbs.whetherHospitalized=1
+                and (pbds.dischargeDate is null
+                or pbds.dischargeDate='')
+            </if>
+            <if test="inHospital == 1">
+                and pbbs.whetherHospitalized=1
+                and pbds.dischargeDate is not null
+                and pbds.dischargeDate!=''
+            </if>
+            <if test="inHospital == 2">
+                and (pbbs.whetherHospitalized=0
+                or pbbs.whetherHospitalized is null)
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取 胎龄小于32周 病例数 -->
+    <select id="ga32wQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.gestationalAgeWeek &lt; 32
+        and pbbs.gestationalAgeWeek &gt; 0
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 出生体重小于1500g 病例数 -->
+    <select id="bw1500gQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.birthWeight &lt; 1500
+        and pbbs.birthWeight &gt; 0
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 今日新增 病例数 -->
+    <select id="todayAddQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbmi.createTime between #{todayStart} and #{todayNow}
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 填写中 病例数 -->
+    <select id="writingQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where (pbbs.status=0
+        or pbbs.status is null)
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 已完成 病例数 -->
+    <select id="completedQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.status=1
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 审核通过 病例数 -->
+    <select id="reviewPassQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.status=3
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 审核不通过 病例数 -->
+    <select id="reviewRejectQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.status=2
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 胎龄小于26周 病例数 -->
+    <select id="gestationalAgeL26Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.gestationalAgeWeek &lt; 26
+        and pbbs.gestationalAgeWeek &gt; 0
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 胎龄介于26-27周 病例数 -->
+    <select id="gestationalAge26To27Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.gestationalAgeWeek &lt;= 27
+        and pbbs.gestationalAgeWeek &gt;= 26
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 胎龄介于28-31周 病例数 -->
+    <select id="gestationalAge28To31Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.gestationalAgeWeek &lt;= 31
+        and pbbs.gestationalAgeWeek &gt;= 28
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 胎龄介于32-33周 病例数 -->
+    <select id="gestationalAge32To33Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.gestationalAgeWeek &lt;= 33
+        and pbbs.gestationalAgeWeek &gt;= 32
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 胎龄介于34-36周 病例数 -->
+    <select id="gestationalAge34To36Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.gestationalAgeWeek &lt;= 36
+        and pbbs.gestationalAgeWeek &gt;= 34
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 胎龄大于等于37周 病例数 -->
+    <select id="gestationalAgeHE37Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.gestationalAgeWeek &gt;= 37
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 出生体重低于750g 病例数 -->
+    <select id="birthWeightL750Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.birthWeight &lt; 750
+        and pbbs.birthWeight &gt; 0
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 出生体重介于750-999g 病例数 -->
+    <select id="birthWeight750To999Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.birthWeight &lt; 1000
+        and pbbs.birthWeight &gt;= 750
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 出生体重介于1000-1249g 病例数 -->
+    <select id="birthWeight1000To1249Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.birthWeight &lt; 1250
+        and pbbs.birthWeight &gt;= 1000
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 出生体重介于1250-1499g 病例数 -->
+    <select id="birthWeight1250To1499Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.birthWeight &lt; 1500
+        and pbbs.birthWeight &gt;= 1250
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 出生体重介于1500-2499g 病例数 -->
+    <select id="birthWeight1500To2449Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.birthWeight &lt; 2500
+        and pbbs.birthWeight &gt;= 1500
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 出生体重大于等于2500g 病例数 -->
+    <select id="birthWeightHE2500Qry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        where pbbs.birthWeight &gt;= 2500
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症BPD 病例数 -->
+    <select id="complicationBPDQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_rts_bpd pbrb
+        on pbrb.cid = pbbs.cid
+        where pbrb.diagnosticCriteria2001 is not null
+        and pbrb.diagnosticCriteria2001 != ''
+        and pbrb.diagnosticCriteria2001 != '无'
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症NEC 病例数 -->
+    <select id="complicationNECQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_dgs_feeding_intolerance_and_nec pbdfian
+        on pbdfian.cid = pbbs.cid
+        where pbdfian.nec=1
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症ROP 病例数 -->
+    <select id="complicationROPQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_rp_rop_diagnosis pbrrd
+        on pbrrd.cid = pbbs.cid
+        where ((pbrrd.leftEyeStaging is not null
+        and pbrrd.leftEyeStaging != ''
+        and pbrrd.leftEyeStaging != '无')
+        or (pbrrd.rightEyeStaging is not null
+        and pbrrd.rightEyeStaging != ''
+        and pbrrd.rightEyeStaging != '无'))
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症IVH 病例数 -->
+    <select id="complicationIVHQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_ns_td pbnt
+        on pbnt.cid = pbbs.cid
+        where ((pbnt.ventricularHemorrhage is not null
+        and pbnt.ventricularHemorrhage != ''
+        and pbnt.ventricularHemorrhage != '无')
+        or pbnt.otherCerebralHemorrhageCerebellar=1
+        or pbnt.otherCerebralHemorrhageSubdural=1
+        or pbnt.otherCerebralHemorrhageSubarachnoid=1)
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症PVL 病例数 -->
+    <select id="complicationPVLQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_ns_td pbnt
+        on pbnt.cid = pbbs.cid
+        where pbnt.periventricularWhiteMatterSoftening is not null
+        and pbnt.ventricularHemorrhage != ''
+        and pbnt.ventricularHemorrhage != '无'
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症RDS 病例数 -->
+    <select id="complicationRDSQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_rts_rds pbrr
+        on pbrr.cid = pbbs.cid
+        where pbrr.hasRds=1
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症EOS 病例数 -->
+    <select id="complicationEOSQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_is_eos pbie
+        on pbie.cid = pbbs.cid
+        where (pbie.diagnosedEarlyOnsetSepsis=1
+        or pbie.clinicalEarlyOnsetSepsis=1)
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 并发症LOS 病例数 -->
+    <select id="complicationLOSQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbbs.cid = pbds.cid
+        left join pc_bd_is_los pbil
+        on pbil.cid = pbbs.cid
+        where (pbil.diagnosedLateOnsetSepsis=1
+        or pbil.clinicalLateOnsetSepsis=1)
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 预后治愈好转 病例数 -->
+    <select id="prognosisCuredQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbds.cid = pbbs.cid
+        where (pbds.fate=1
+        or pbds.fate=3
+        or pbds.fate=8)
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 预后院内死亡 病例数 -->
+    <select id="prognosisDeathInHospitalQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbds.cid = pbbs.cid
+        where pbds.fate=2
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 预后放弃死亡 病例数 -->
+    <select id="prognosisGiveUpDeathQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbds.cid = pbbs.cid
+        where pbds.fate=4
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 预后救治无效 病例数 -->
+    <select id="prognosisIneffectiveTreatmentQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbds.cid = pbbs.cid
+        where pbds.fate=5
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 获取 预后转院 病例数 -->
+    <select id="prognosisTransferQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_discharge_situation pbds
+        on pbds.cid = pbbs.cid
+        where (pbds.fate=6
+        or pbds.fate=7
+        or pbds.fate=8
+        or pbds.fate=9
+        or pbds.fate=10
+        or pbds.fate=12
+        or pbds.fate=13)
+        <if test="hospitalId > 0">
+            and pbmi.hospitalId = #{hospitalId}
+        </if>
+        <if test="hospitalList != null and hospitalList.size() > 0">
+            and
+            <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                pbmi.hospitalId = #{hid}
+            </foreach>
+        </if>
+        <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+            and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+            and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+        </if>
+        <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+            and pbds.dischargeDate between #{startDate} and #{endDate}
+        </if>
+        <if test="inHospital == 0">
+            and pbbs.whetherHospitalized=1
+            and (pbds.dischargeDate is null
+            or pbds.dischargeDate='')
+        </if>
+        <if test="inHospital == 1">
+            and pbbs.whetherHospitalized=1
+            and pbds.dischargeDate is not null
+            and pbds.dischargeDate!=''
+        </if>
+        <if test="inHospital == 2">
+            and (pbbs.whetherHospitalized=0
+            or pbbs.whetherHospitalized is null)
+        </if>
+    </select>
+
+    <!-- 插入 反馈 -->
+    <insert id="feedbackInsert">
+        insert into pc_feedback (uid, hid, fullName, hospitalAbbr, hospitalName, fid, feedback)
+        value (#{feedback.uid}, #{feedback.hid}, #{feedback.fullName}, #{feedback.hospitalAbbr}, #{feedback.hospitalName}, #{feedback.fid}, #{feedback.feedback})
+    </insert>
+
+    <!-- 获取 反馈 -->
+    <select id="feedbackQry" resultType="com.pnsrcp.web.entity.Feedback">
+        select id, uid, hid, fullName, hospitalAbbr, hospitalName, feedback, fid, createTime
+        from pc_feedback
+        <where>
+            <if test="uid > 0">
+                uid=#{uid}
+            </if>
+            <if test="uid &lt;= 0">
+                and uid &lt;&gt; 1
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取 反馈 回复 -->
+    <select id="feedbackReplyQry" resultType="com.pnsrcp.web.entity.Feedback">
+        select id, uid, fullName, feedback, createTime
+        from pc_feedback
+        where fid=#{fid}
+    </select>
+
+    <!-- 获取 筛选后 病例数 -->
+    <select id="casesFilterNumberQry" resultType="int">
+        select count(pbmi.mid)
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbbs.mid = pbmi.mid
+        left join pc_bd_recovery_situation pbrs
+        on pbrs.cid = pbbs.cid
+        left join pc_bd_circulatory_system pbcs
+        on pbcs.cid = pbbs.cid
+        left join pc_bd_discharge_situation pbds
+        on pbds.cid = pbbs.cid
+        <where>
+            <if test="patientClassification > -1">
+                <if test="patientClassification == 0">
+                    pbbs.gestationalAgeWeek &lt;= 27
+                </if>
+                <if test="patientClassification == 1">
+                    and pbbs.gestationalAgeWeek &gt; 27
+                    and pbbs.gestationalAgeWeek &lt;= 31
+                </if>
+                <if test="patientClassification == 2">
+                    and pbbs.birthWeight &lt;= 999
+                </if>
+                <if test="patientClassification == 3">
+                    and pbbs.birthWeight &gt; 999
+                    and pbbs.birthWeight &lt;= 1499
+                </if>
+            </if>
+            <if test="diagnosisTreatment > -1">
+                <if test="diagnosisTreatment == 0">
+                    and pbrs.apgarScore1Min &lt;= 3
+                </if>
+                <if test="diagnosisTreatment == 1">
+                    and pbcs.pphn=1
+                </if>
+            </if>
+            <if test="outcomeIndicator > -1">
+                <if test="outcomeIndicator == 0">
+                    and pbds.fate=2
+                </if>
+                <if test="outcomeIndicator == 1">
+                    and pbds.fate=11
+                </if>
+                <if test="outcomeIndicator == 2">
+                    and pbds.fate=13
+                </if>
+            </if>
+            <if test="hospitalList and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    hospitalId = #{hid}
+                </foreach>
+            </if>
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pbmi.hospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pbbs.childHospitalizationDate between #{startDate} and #{endDate}
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pbds.dischargeDate between #{startDate} and #{endDate}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取 筛选后 病例导出数据 -->
+    <select id="dataExportQry" resultType="map" statementType="STATEMENT">
+        select pc_bd_mother_information.pcMotherNum, pc_bd_baby_situation.pcNewbornNum, pc_bd_baby_situation.fullName,
+            pc_bd_baby_situation.gender, pc_bd_baby_situation.gestationalAgeWeek, pc_bd_baby_situation.gestationalAgeDay,
+            pc_bd_baby_situation.birthWeight, pc_bd_mother_information.hospitalizationDate, pc_bd_baby_situation.birthday,
+            pc_bd_baby_situation.childHospitalizationDate, pc_bd_baby_situation.childHospitalNum, pc_bd_discharge_situation.dischargeDate,
+            pc_bd_baby_situation.status,
+        <foreach item="field" collection="fieldList" separator=",">
+            ${field}
+        </foreach>
+        from pc_bd_mother_information
+        left join pc_bd_gestation_information
+        on pc_bd_mother_information.mid = pc_bd_gestation_information.mid
+        left join pc_bd_perinatal_information
+        on pc_bd_mother_information.mid = pc_bd_perinatal_information.mid
+        left join pc_bd_baby_situation
+        on pc_bd_mother_information.mid = pc_bd_baby_situation.mid
+        left join pc_bd_recovery_situation
+        on pc_bd_baby_situation.cid = pc_bd_recovery_situation.cid
+        left join pc_bd_circulatory_system
+        on pc_bd_baby_situation.cid = pc_bd_circulatory_system.cid
+        left join pc_bd_discharge_situation
+        on pc_bd_baby_situation.cid = pc_bd_discharge_situation.cid
+        <foreach item="table" collection="tableList">
+            left join ${table}
+            on pc_bd_baby_situation.cid=${table}.cid
+        </foreach>
+        <where>
+            <if test="patientClassification > -1">
+                <if test="patientClassification == 0">
+                    pc_bd_baby_situation.gestationalAgeWeek &lt;= 27
+                </if>
+                <if test="patientClassification == 1">
+                    and pc_bd_baby_situation.gestationalAgeWeek &gt; 27
+                    and pc_bd_baby_situation.gestationalAgeWeek &lt;= 31
+                </if>
+                <if test="patientClassification == 2">
+                    and pc_bd_baby_situation.birthWeight &lt;= 999
+                </if>
+                <if test="patientClassification == 3">
+                    and pc_bd_baby_situation.birthWeight &gt; 999
+                    and pc_bd_baby_situation.birthWeight &lt;= 1499
+                </if>
+            </if>
+            <if test="diagnosisTreatment > -1">
+                <if test="diagnosisTreatment == 0">
+                    and pc_bd_recovery_situation.apgarScore1Min &lt;= 3
+                </if>
+                <if test="diagnosisTreatment == 1">
+                    and pc_bd_circulatory_system.pphn=1
+                </if>
+            </if>
+            <if test="outcomeIndicator > -1">
+                <if test="outcomeIndicator == 0">
+                    and pc_bd_discharge_situation.fate=2
+                </if>
+                <if test="outcomeIndicator == 1">
+                    and pc_bd_discharge_situation.fate=11
+                </if>
+                <if test="outcomeIndicator == 2">
+                    and pc_bd_discharge_situation.fate=13
+                </if>
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    pc_bd_mother_information.hospitalId = ${hid}
+                </foreach>
+            </if>
+            <if test="hospitalList == null or hospitalList.size() == 0">
+                and pc_bd_mother_information.hospitalId = 0
+            </if>
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pc_bd_mother_information.hospitalizationDate between "${startDate}" and "${endDate}"
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pc_bd_baby_situation.childHospitalizationDate between "${startDate}" and "${endDate}"
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pc_bd_discharge_situation.dischargeDate between "${startDate}" and "${endDate}"
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取 筛选后 专题导出数据 -->
+    <select id="topicExportQry" resultType="map" statementType="STATEMENT">
+        select pc_bd_mother_information.pcMotherNum,
+        <if test="hasCid == 1">
+            pc_bd_baby_situation.pcNewbornNum,
+        </if>
+        <foreach item="field" collection="allFields" separator=",">
+            ${table}.${field}
+        </foreach>
+        from pc_bd_mother_information
+        left join pc_bd_gestation_information
+        on pc_bd_mother_information.mid = pc_bd_gestation_information.mid
+        left join pc_bd_baby_situation
+        on pc_bd_mother_information.mid = pc_bd_baby_situation.mid
+        left join pc_bd_recovery_situation
+        on pc_bd_baby_situation.cid = pc_bd_recovery_situation.cid
+        left join pc_bd_circulatory_system
+        on pc_bd_baby_situation.cid = pc_bd_circulatory_system.cid
+        left join pc_bd_discharge_situation
+        on pc_bd_baby_situation.cid = pc_bd_discharge_situation.cid
+        <if test="hasCid == 0 and table != null and table != ''">
+            left join ${table}
+            on pc_bd_mother_information.mid=${table}.mid
+        </if>
+        <if test="hasCid == 1 and table != null and table != ''">
+            left join ${table}
+            on pc_bd_baby_situation.cid=${table}.cid
+        </if>
+        <where>
+            <if test="patientClassification > -1">
+                <if test="patientClassification == 0">
+                    pc_bd_baby_situation.gestationalAgeWeek &lt;= 27
+                </if>
+                <if test="patientClassification == 1">
+                    and pc_bd_baby_situation.gestationalAgeWeek &gt; 27
+                    and pc_bd_baby_situation.gestationalAgeWeek &lt;= 31
+                </if>
+                <if test="patientClassification == 2">
+                    and pc_bd_baby_situation.birthWeight &lt;= 999
+                </if>
+                <if test="patientClassification == 3">
+                    and pc_bd_baby_situation.birthWeight &gt; 999
+                    and pc_bd_baby_situation.birthWeight &lt;= 1499
+                </if>
+            </if>
+            <if test="diagnosisTreatment > -1">
+                <if test="diagnosisTreatment == 0">
+                    and pc_bd_recovery_situation.apgarScore1Min &lt;= 3
+                </if>
+                <if test="diagnosisTreatment == 1">
+                    and pc_bd_circulatory_system.pphn=1
+                </if>
+            </if>
+            <if test="outcomeIndicator > -1">
+                <if test="outcomeIndicator == 0">
+                    and pc_bd_discharge_situation.fate=2
+                </if>
+                <if test="outcomeIndicator == 1">
+                    and pc_bd_discharge_situation.fate=11
+                </if>
+                <if test="outcomeIndicator == 2">
+                    and pc_bd_discharge_situation.fate=13
+                </if>
+            </if>
+            <if test="hospitalList != null and hospitalList.size() > 0">
+                and
+                <foreach item="hid" index="index" collection="hospitalList" open="(" separator=" or " close=")">
+                    pc_bd_mother_information.hospitalId = ${hid}
+                </foreach>
+            </if>
+            <if test="hospitalList == null or hospitalList.size() == 0">
+                and pc_bd_mother_information.hospitalId = 0
+            </if>
+            <if test="selectType == 'motherHospitalizationDate' and startDate != null and endDate != null">
+                and pc_bd_mother_information.hospitalizationDate between "${startDate}" and "${endDate}"
+            </if>
+            <if test="selectType == 'childHospitalizationDate' and startDate != null and endDate != null">
+                and pc_bd_baby_situation.childHospitalizationDate between "${startDate}" and "${endDate}"
+            </if>
+            <if test="selectType == 'dischargeDate' and startDate != null and endDate != null">
+                and pc_bd_discharge_situation.dischargeDate between "${startDate}" and "${endDate}"
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取 专题导出 畸形系统 数据 -->
+    <select id="deformitySystemQry" resultType="string">
+        select deformitySystem
+        from pc_bd_deformity_system
+        where id=#{id}
+        limit 1
+    </select>
+
+    <!-- 获取 专题导出 畸形类型 数据 -->
+    <select id="deformityTypeQry" resultType="string">
+        select deformitySystem
+        from pc_bd_deformity_type
+        where id=#{id}
+        limit 1
+    </select>
+
+    <!-- 获取 专题导出 死因分类 数据 -->
+    <select id="deathCauseClassificationQry" resultType="string">
+        select deathCauseClassification
+        from pc_bd_death_cause_classification
+        where id=#{id}
+        limit 1
+    </select>
+
+    <!-- 获取 专题导出 死因诊断 数据 -->
+    <select id="deathCauseDiagnosisQry" resultType="string">
+        select deathCauseDiagnosis
+        from pc_bd_death_cause_diagnosis
+        where id=#{id}
+        limit 1
+    </select>
+</mapper>

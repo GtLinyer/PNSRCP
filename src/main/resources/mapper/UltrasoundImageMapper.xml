@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.UltrasoundImageMapper">
+    <!-- 插入/更新 超声影像库 颅脑超声 超声检查次数 -->
+    <insert id="uiUltrasonographyNumberInsertUpdate">
+        insert into pc_ui_record (cid, mid, ultrasonographyNumber)
+        value (#{childId}, #{motherId}, #{ultrasonographyNumber})
+        on duplicate key update
+            ultrasonographyNumber=#{ultrasonographyNumber}
+    </insert>
+
+    <!-- 插入 超声影像库 颅脑超声 超声检查 -->
+    <insert id="uiBrainUltrasoundInsert">
+        insert into pc_ui_brain_ultrasound (cid, mid, ultrasonographyTime, lvahUrl, lvtsUrl, rpvsUrl, lpvsUrl, resultInterpretation)
+        value (#{cid}, #{mid}, #{ultrasonographyTime}, #{lvahUrl}, #{lvtsUrl}, #{rpvsUrl}, #{lpvsUrl}, #{resultInterpretation})
+    </insert>
+
+    <!-- 删除 超声影像库 颅脑超声 超声检查 列表 -->
+    <delete id="uiBrainUltrasoundDelete">
+        delete from pc_ui_brain_ultrasound
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 超声影像库 颅脑超声 超声检查次数 -->
+    <select id="uiUltrasonographyNumberQry" resultType="string">
+        select ultrasonographyNumber
+        from pc_ui_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 超声影像库 颅脑超声 超声检查 列表 -->
+    <select id="uiBrainUltrasoundQry" resultType="com.pnsrcp.web.entity.perintalPlatform.ultrasoundImage.UIBrainUltrasound">
+        select id, cid, mid, ultrasonographyTime, lvahUrl, lvtsUrl, rpvsUrl, lpvsUrl, resultInterpretation
+        from pc_ui_brain_ultrasound
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+</mapper>

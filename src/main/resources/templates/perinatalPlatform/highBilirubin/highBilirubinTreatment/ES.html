@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>高胆治疗 - 高胆数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,高胆数据库,高胆治疗"/>
+    <meta name="description" content="围产新生儿科研合作平台高胆数据库高胆治疗"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/highBilirubin.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 围产信息 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBPI')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/PI">
+                            <i class="pc-icon iconfont icon-huaiyun"></i>
+                            <cite>围产信息</cite>
+                        </a>
+                    </li>
+
+                    <!-- 高胆治疗 导航 -->
+                    <li class="layui-nav-item layui-this" sec:authorize="hasRole('ROLE_HBT')">
+                        <a class="pc-item" href="#">
+                            <i class="pc-icon iconfont icon-zhuyuan"></i>
+                            <cite>高胆治疗</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访检查 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUE')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUE/MRIE">
+                            <i class="pc-icon iconfont icon-microscope-full"></i>
+                            <cite>随访检查</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访结论 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUC')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUC">
+                            <i class="pc-icon iconfont icon-pingjiazongjie"></i>
+                            <cite>随访结论</cite>
+                        </a>
+                    </li>
+
+                    <!-- 病例审核 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HB')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/review">
+                            <i class="pc-icon iconfont icon-shenhe"></i>
+                            <cite>病例审核</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-HBT layui-form" sec:authorize="hasRole('ROLE_HBT')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/BI">基本信息</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBC">高胆病因</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/CM">检查指标</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/TS">治疗情况</a>
+                    <a href="#"><cite>脑病评分</cite></a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBR">高胆原因</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/AE">辅助检查</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/DS">出院情况</a>
+                </span>
+                <div class="layui-row pc-db-HBTES" th:data-ad="${#calendars.format(admissionDate, 'yyyy-MM-dd HH:mm:ss')}">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item-table">
+                            <table class="pc-db-table tableLeft">
+                                <thead>
+                                <tr>
+                                    <th>临床体征</th>
+                                    <th>BIND评分</th>
+                                    <th>急性胆红脑病</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <strong>神志状态</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>正常</td>
+                                    <td>0</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>嗜睡但能唤醒喂养减少</td>
+                                    <td>1</td>
+                                    <td>轻微</td>
+                                </tr>
+                                <tr>
+                                    <td>嗜睡、吸奶差或（和）激惹伴强力吸吮</td>
+                                    <td>2</td>
+                                    <td>中度</td>
+                                </tr>
+                                <tr>
+                                    <td>半昏迷、呼吸暂停、不能喂养、抽搐、昏迷</td>
+                                    <td>3</td>
+                                    <td>进展</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <strong>肌张力</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>正常</td>
+                                    <td>0</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>持续性轻-中度肌张力降低</td>
+                                    <td>1</td>
+                                    <td>轻微</td>
+                                </tr>
+                                <tr>
+                                    <td>轻-中度肌张力增高与降低交替、刺激后开始颈部和躯干弓形</td>
+                                    <td>2</td>
+                                    <td>中度</td>
+                                </tr>
+                                <tr>
+                                    <td>持续卷曲或角弓反张、手和脚抽搐或踏车样动作</td>
+                                    <td>3</td>
+                                    <td>进展</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <strong>哭吵形式</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>正常</td>
+                                    <td>0</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>唤醒时尖叫</td>
+                                    <td>1</td>
+                                    <td>轻微</td>
+                                </tr>
+                                <tr>
+                                    <td>尖叫不易被安抚</td>
+                                    <td>2</td>
+                                    <td>中度</td>
+                                </tr>
+                                <tr>
+                                    <td>不能被安抚的哭吵哭声微弱或消失</td>
+                                    <td>3</td>
+                                    <td>进展</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>总积分</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="pc-db-table tableRight">
+                                <thead>
+                                <tr>
+                                    <th class="blockTh"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="pc-db-colBlock" colspan="14"></td>
+                                    <td rowspan="16">
+                                        <button id="PC-db-add" class="pc-btn"><i class="iconfont icon-zengjia"></i> 增加</button>
+                                    </td>
+                                </tr>
+                                <tr class="pc-db-MS0">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-MS1">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-MS2">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-MS3">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr>
+                                    <td class="pc-db-colBlock" colspan="14"></td>
+                                </tr>
+                                <tr class="pc-db-MT0">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-MT1">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-MT2">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-MT3">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr>
+                                    <td class="pc-db-colBlock" colspan="14"></td>
+                                </tr>
+                                <tr class="pc-db-CF0">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-CF1">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-CF2">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-CF3">
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                    <td class="pc-db-table-click"></td>
+                                </tr>
+                                <tr class="pc-db-colSum">
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="HBTES" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/HBWrite.min.js}"></script>
+</html>

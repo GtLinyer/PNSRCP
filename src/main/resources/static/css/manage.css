@@ -1,0 +1,690 @@
+/* 动画 */
+.pc-body-framework>div>a,
+.layui-layer-setwin a,
+.pc-admin-areaPanel *,
+.pc-case-export * {
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+}
+/* 背景绿色 */
+.pc-admin-label,
+.layui-form-select dl dd.layui-this {
+    background-color: #FFB7C5;
+}
+/* 字体绿色　*/
+.pc-body-framework>.pc-admin-title-frame>span,
+.pc-body-framework>.pc-admin-title-frame>a,
+.pc-body-framework>.pc-admin-head>span {
+    color: #FFB7C5;
+}
+.layui-nav-tree>.pc-nav-data-head {
+    top: 10px;
+    margin-bottom: 30px;
+}
+.pc-nav-block-1 {
+    height: 254px;
+}
+.pc-nav-btn-p {
+    padding: 20px 20px 0 20px;
+}
+.pc-nav-block-2 {
+    position: absolute;
+    width: 160px;
+    top: 300px;
+}
+.pc-ci .pc-nav-block-2 {
+    top: 350px;
+}
+.pc-nav-block-2 p {
+    font-size: 12px;
+    padding: 10px 30px 0 30px;
+}
+.pc-side-shrink .pc-nav-block-2 {
+    display: none;
+}
+.pc-nav-data-head i {
+    margin-left: 14px;
+}
+.pc-nav-data-head span {
+    padding-left: 10px;
+}
+.pc-admin-head span {
+    font-size: 18px;
+}
+.pc-admin-head {
+    font-size: 18px;
+}
+.pc-admin-head>span:first-child {
+    font-weight: bold;
+}
+.pc-admin-head>span:last-child {
+    margin-left: 10px;
+}
+.pc-admin-timeFilter {
+    margin-top: 20px;
+    font-size: 16px;
+}
+.pc-admin-timeFilter>span {
+    margin-left: 20px;
+}
+.pc-db-filter>form {
+    display: inline-block;
+}
+.pc-side-shrink .layui-nav-tree>.pc-nav-data-head>span {
+    display: none;
+}
+.pc-admin-timeFilter .layui-form-select {
+    display: inline-block;
+}
+.pc-db-filter .pc-btn-save {
+    margin-top: 20px;
+}
+.pc-admin-dateInput {
+    position: relative;
+}
+.pc-admin-dateInput input {
+    width: 148px;
+    padding: 3px 25px 3px 5px;
+    border-radius: 4px;
+    border: 1px solid #FFB7C5;
+}
+.pc-admin-dateInput i {
+    color: #FFB7C5;
+    position: absolute;
+    top: 0;
+    left: 160px;
+}
+.pc-admin-labelFrame {
+    padding-top: 10px;
+}
+.pc-admin-label {
+    width: 206px;
+    margin-top: 10px;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+.pc-admin-label>span:last-child {
+    float: right;
+}
+.pc-admin-charts {
+    padding-top: 20px;
+}
+.pc-admin-chart {
+    max-width: 512px;
+    margin: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+.pc-admin-chart div {
+    border-radius: 10px 10px 0 0;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.pc-admin-chart div,
+.pc-admin-chart canvas {
+    padding: 10px;
+}
+.pc-admin-charts>div {
+    padding: 10px;
+}
+.pc-body-framework>div:first-child {
+    padding-left: 20px;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+}
+.pc-admin-title {
+    padding-bottom: 12px;
+    border-bottom: 3px solid;
+}
+.pc-body-framework>div>a:last-child {
+    float: right;
+    margin-right: 180px;
+}
+.pc-body-framework>div>a:hover {
+    color: rgba(255, 183, 197, 0.6);
+}
+.pc-admin-table-warp {
+    margin-top: 20px;
+    border-radius: 10px 10px 2px 2px;
+    overflow: hidden;
+}
+.pc-body-framework .layui-table-click {
+    background-color: rgba(255, 183, 197, 0.4);
+}
+.pc-body-framework .layui-table-box {
+    border: 4px solid #FFB7C5;
+    margin: -2px;
+}
+.pc-body-framework .layui-table,
+.pc-body-framework .layui-table-view {
+    margin: 0;
+}
+.pc-body-framework .layui-table tbody {
+    color: black;
+}
+.pc-body-framework .layui-table th,
+.pc-body-framework .layui-table td {
+    text-align: center;
+}
+.pc-body-framework .layui-table thead {
+    color: white;
+}
+.pc-body-framework .layui-table-page {
+    margin-top: 2px;
+}
+.pc-side-shrink .pc-body-framework {
+    margin-right: 60px;
+}
+.pc-admin-locationInput .layui-form-select {
+    width: 130px;
+    display: inline-block;
+}
+#PC-admin-edit .layui-row .layui-form-select,
+#PC-admin-edit .layui-row .layui-input {
+    width: 150px;
+}
+#PC-admin-edit .layui-row .layui-form-select {
+    margin-right: 10px;
+}
+#PC-admin-edit .layui-row:after,
+#PC-admin-edit .layui-row:before {
+    display: unset;
+}
+.layui-form-select dl {
+    max-height: 200px;
+}
+.pc-admin-areaPanel {
+    padding: 10px 20px;
+    width: 250px;
+    background-color: #E3E3E3;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px 15px;
+    display: inline-block;
+}
+.pc-admin-areaPanel * {
+    color: #FFB7C5;
+    font-size: 14px;
+}
+.pc-admin-areaPanel>div:first-child>div {
+    font-size: 16px;
+}
+.pc-admin-areaPanel>div:first-child i {
+    font-size: 18px;
+}
+.pc-admin-areaPanel.pc-admin-active {
+    background-color: #FFB7C5;
+    color: white;
+}
+.pc-admin-areaPanel.pc-admin-active * {
+    color: white;
+}
+.pc-admin-areaPanel a:hover,
+.pc-admin-areaPanel a:hover i {
+    color: #83CBAC;
+}
+.pc-admin-areaPanel>div {
+    padding: 10px 0;
+}
+.pc-admin-lgItem {
+    padding-top: 100px;
+}
+.pc-admin-nameTitle {
+    color: white;
+    background-color: #FFB7C5;
+    font-size: 16px;
+    font-weight: bold;
+    display: inline-block;
+    padding: 1px 10px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 4px gray;
+}
+.pc-admin-numberTip {
+    font-weight: bold;
+}
+.pc-admin-authority-item {
+    padding-top: 8px;
+}
+.pc-admin-panel-title-name {
+    color: white;
+    background-color: #FFB7C5;
+    padding: 2px 4px;
+    border-radius: 8px;
+}
+.pc-admin-title-frame {
+    padding-bottom: 11px;
+}
+.pc-admin-areaPanel .layui-input {
+    background-color: transparent;
+    border: 0;
+    width: 80px;
+    padding: 0;
+    height: auto;
+}
+.pc-admin-areaPanel .layui-form-select:hover .layui-input {
+    color: #83CBAC;
+}
+.pc-admin-areaPanel .layui-form-select:hover .layui-edge {
+    border-top-color: #83CBAC;
+}
+.pc-admin-areaPanel .layui-edge {
+    border-top-color: #FFB7C5;
+}
+.pc-admin-areaPanel.pc-admin-active .layui-edge {
+    border-top-color: white;
+}
+.pc-admin-areaPanel .layui-form-select dl dd {
+    color: #FFB7C5;
+}
+.pc-admin-areaPanel .layui-form-select dl dd.layui-this {
+    color: white;
+}
+#PC-admin-setHospital .layui-row>div {
+    padding-bottom: 8px;
+}
+.pc-admin-hospitalCheckbox {
+    display: inline-block;
+    padding: 2px 0;
+}
+
+.pc-db-table-title {
+    padding-top: 30px;
+}
+.pc-db-table-title .pc-btn-save {
+    margin: 0 !important;
+}
+.pc-db-table-title .pc-btn-save {
+    color: white !important;
+}
+.pc-case-export .layui-select-title>input,
+.pc-admin-timeFilter .layui-select-title>input {
+    height: 27px;
+    border-radius: 4px;
+    border-color: #FFB7C5;
+    width: 156px;
+}
+.pc-case-export .pc-inline-block .layui-select-title>input,
+.pc-admin-timeFilter .pc-inline-block .layui-select-title>input {
+    width: 120px;
+}
+.pc-case-export .pc-btn-save {
+    margin: 0 20px;
+}
+.layui-select-title>input:hover {
+    border-color: rgba(255, 183, 197, 0.6) !important;
+}
+.layui-body input:focus {
+    border-color: #FFB7C5;
+    box-shadow: 0 0 4px #FFB7C5;
+}
+.layui-form-select dl {
+    top: 30px
+}
+.pc-admin-timeFilter>label {
+    color: #FFB7C5;
+}
+.pc-db-filter .pc-btn {
+    margin-left: 20px;
+}
+.pc-db-table-title>.pc-btn {
+    color: white !important;
+    margin: 0 !important;
+}
+#PC-db-date {
+    display: inline-block;
+    padding-left: 10px;
+}
+.pc-admin-lgItem {
+    padding-top: 0;
+}
+#PC-main-date {
+    display: inline-block;
+}
+.pc-main-edit .pc-db-item>input {
+    left: 86px;
+}
+.pc-main-edit #PC-main-edit .w-e-text-container {
+    cursor: text;
+}
+
+.pc-admin-wxmp>h1 {
+    font-size: 24px;
+    color: #FFB7C5;
+    padding: 20px;
+}
+.pc-admin-wxmp .pc-admin-wxmp-adImages {
+    height: 200px;
+    margin: 20px 0;
+    overflow-x: scroll;
+    display: flex;
+}
+.pc-admin-wxmp .pc-admin-wxmp-adImages>div {
+    height: 100%;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    position: relative;
+}
+.pc-admin-wxmp .pc-admin-wxmp-adImages>div>img {
+    height: 100%;
+}
+.pc-admin-wxmp .pc-admin-wxmp-adImages .pc-admin-shade {
+    position: absolute;
+    top: 5px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease-in-out;
+    transform: scale(0);
+}
+.pc-admin-wxmp .pc-admin-wxmp-adImages .pc-admin-shade>button {
+    border: 1px solid white;
+    padding: 5px;
+    margin: 5px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    transition: color,border 0.2s ease-in-out;
+}
+.pc-admin-wxmp .pc-admin-wxmp-adImages .pc-admin-shade>button:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.6);
+}
+.pc-admin-wxmp .pc-admin-wxmp-adImages .pc-admin-shade.pc-active {
+    transform: scale(1);
+}
+
+.pc-feedback-head {
+    padding-bottom: 10px;
+}
+.pc-feedback-head>a {
+    float: unset !important;
+    margin: unset !important;
+}
+.pc-feedback>div {
+    background-color: white;
+    overflow: hidden;
+    margin: 16px auto;
+    width: 100%;
+    max-width: 880px;
+    border-radius: 10px;
+    box-shadow: 0 0 2px 2px #CFCFCF;
+}
+.pc-feedback>div>div:first-child {
+    background-color: #FFB7C5;
+    color: white;
+    padding: 12px;
+}
+.pc-feedback>div>.pc-feedback-text {
+    padding: 10px;
+}
+.pc-feedback>div>.pc-feedback-reply {
+    padding: 10px;
+    background: #EFEFEF;
+    text-align: right;
+}
+#PC-feedback-reply textarea {
+    width: 300px;
+    padding: 10px;
+    max-width: 320px;
+    max-height: 200px;
+    border: 1px solid #FFB7C5;
+    border-radius: 4px;
+    transition: box-shadow 0.3s ease-in-out;
+    -webkit-transition: box-shadow 0.3s ease-in-out;
+    -moz-transition: box-shadow 0.3s ease-in-out;
+    -o-transition: box-shadow 0.3s ease-in-out;
+}
+.pc-feedback>div>.pc-feedback-reply-text {
+    color: white;
+    margin: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 2px 2px #CFCFCF;
+}
+.pc-feedback>div>.pc-feedback-reply-text>div>div:first-child {
+    background-color: #FFB7C5;
+}
+.pc-feedback>div>.pc-feedback-reply-text>div>div:last-child {
+    color: black;
+    background-color: #EFEFEF;
+}
+.pc-feedback>div>.pc-feedback-reply-text>div>div {
+    padding: 10px;
+}
+.pc-case-export>div {
+    padding: 10px 0;
+}
+.pc-case-export>div:first-child,
+.pc-case-export>div>label,
+.pc-case-export>div>div>span>span {
+    color: #FFB7C5;
+}
+.pc-case-export>div>div>span>span {
+    position: absolute;
+    left: 52px;
+}
+.pc-case-export>div:first-child>span:last-child {
+    margin-left: 42px;
+}
+.pc-case-export>div>.pc-db-spanItem,
+.pc-case-export>div>.layui-form-select {
+    display: inline-block;
+    margin-left: 10px;
+}
+.pc-case-export>div>div>span>input[type=number] {
+    width: 40px;
+}
+.pc-case-export .pc-select-board {
+    outline: 4px solid #FFB7C5;
+    width: 95%;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgba(16, 166, 180, 0.1);
+}
+.pc-case-export .pc-select-board.board1 {
+    height: 36px;
+}
+.pc-case-export .pc-select-board.board2 {
+    height: auto;
+}
+.pc-case-export>div>label {
+    font-weight: bold;
+}
+.pc-case-export .pc-select-board-title {
+    height: 36px;
+    background-color: #FFB7C5;
+}
+.pc-case-export .pc-select-board-title>div {
+    display: inline-block;
+    color: white;
+}
+.pc-case-export .pc-select-board.board1>.pc-select-board-title>div {
+    cursor: pointer;
+    padding: 6px 20px;
+}
+.pc-case-export .pc-select-board-context {
+    transform: scale(0);
+    padding: 10px 19px;
+    position: relative;
+    top: -50%;
+    left: -50%;
+}
+.pc-case-export .pc-select-board.lg>.pc-select-board-context {
+    transform: scale(1);
+    top: 0;
+    left: 0;
+}
+.pc-case-export .pc-select-board-context>div {
+    padding: 10px 0;
+}
+.pc-case-export .pc-select-board-title>div>i {
+    top: 20px;
+    left: 90px;
+    position: absolute;
+}
+.pc-case-export .pc-select-board.lg>.pc-select-board-title>div>i {
+    transform: rotate(180deg);
+}
+.pc-case-export .pc-select-board-context-model {
+    height: 520px;
+}
+.pc-case-export .pc-select-board.board2 {
+    background-color: white;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title>div:last-child {
+    display: inline-flex;
+    margin-top: -3px;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title>div:last-child>div:last-child {
+    padding: 4px 10px;
+}
+.pc-case-export .pc-select-board.board2 .pc-select-board-title>div:last-child>div:first-child>button {
+    background-color: white;
+    border: 1px solid transparent;
+    padding: 4px 18px;
+    color: #FFB7C5;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.pc-case-export .pc-select-board.board2 .layui-transfer-active {
+    position: relative;
+    z-index: 5;
+    margin: 0 -25px !important;
+}
+.pc-case-export .pc-select-board.board2 .layui-transfer-box {
+    width: 50%;
+}
+.pc-case-export .pc-select-board.board2 .layui-transfer-box:first-child {
+    padding-right: 25px;
+}
+.pc-case-export .pc-select-board.board2 .layui-transfer-box:last-child {
+    padding-left: 25px;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title>div:first-child {
+    display: inline-flex;
+    padding: 2px 20px;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title>div:last-child {
+    float: right;
+    padding: 4px 20px;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title>div>label {
+    padding: 2px 10px 0 0;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title .layui-form-select .layui-edge {
+    border-top-color: white;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title .layui-form-select input {
+    background-color: transparent;
+    width: 124px;
+    color: white;
+    border: none;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title .layui-form-select {
+    color: black;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title .layui-form-select input::-webkit-input-placeholder {
+    color: white;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title .layui-form-select input:-moz-placeholder {
+    color: white;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title .layui-form-select input::-moz-placeholder {
+    color: white;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-title .layui-form-select input:-ms-input-placeholder {
+    color: white;
+}
+.pc-case-export .pc-select-board.board2>.pc-select-board-context-model .pc-model-box {
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid #FFB7C5;
+    vertical-align: top;
+}
+.pc-case-export .pc-select-board.board2 #PC-select-list,
+.pc-case-export .pc-select-board.board2 #PC-selected-list {
+    overflow-y: scroll;
+    height: 100%;
+}
+.pc-case-export .pc-select-board.board2 #PC-select-list * {
+    transition: unset;
+    -webkit-transition: unset;
+    -moz-transition: unset;
+    -o-transition: unset;
+}
+.pc-case-export .pc-select-board.board2 #PC-case-model {
+    width: 200px;
+}
+.pc-case-export .pc-select-board.board2 #PC-case-model>xm-select {
+    background-color: transparent;
+    border: none;
+}
+.pc-case-export .pc-select-board.board2 #PC-case-model .xm-tips {
+    color: white;
+}
+.pc-case-export .pc-select-board.board2 #PC-case-model .xm-icon {
+    border-top-color: white;
+}
+
+
+/* 移动模式 */
+@media screen and (max-width: 768px) {
+    .layui-layer-title {
+        padding: 0 40px 0 10px !important;
+    }
+    .pc-body-framework>div>a:last-child {
+        margin-right: 16px;
+    }
+    .pc-admin-locationInput .layui-form-select {
+        width: unset;
+    }
+    .pc-admin-head {
+        text-align: center;
+    }
+    .pc-admin-timeFilter {
+        line-height: 2;
+        text-align: center;
+    }
+    .pc-admin-label {
+        margin: 10px auto 0 auto;
+    }
+    .pc-admin-chart {
+        width: auto;
+    }
+    .layui-form-label {
+        width: 60px;
+        padding: 9px 5px;
+    }
+    .layui-input-block {
+        margin-left: 70px
+    }
+    .pc-admin-labelFrame {
+        text-align: center;
+    }
+    .pc-admin-areaPanel {
+        text-align: left;
+    }
+    .pc-inline-block.pc-sm-block {
+        margin-top: 10px;
+        text-align: center;
+    }
+    .pc-inline-block.pc-sm-block>button {
+        margin: 0;
+    }
+    .pc-admin-dateInput i {
+        top: -6px;
+    }
+}
+/* 时间选择器 适应 */
+@media screen and (max-width: 548px) {
+    .layui-laydate.layui-laydate-range {
+        width: 283px;
+        overflow: scroll;
+    }
+}

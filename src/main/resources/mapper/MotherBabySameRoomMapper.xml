@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.MotherBabySameRoomMapper">
+    <!-- 查询 基础数据库 孕期信息 数据 -->
+    <select id="mbsrBloodOxygenMonitorQry" resultType="com.pnsrcp.web.entity.perintalPlatform.motherBabySameRoom.MBSRBloodOxygenMonitor">
+        select cid, mid, measuringTime, measuringTimeAfterBirth, measuringChildrenCondition, rightHandTranscutaneousOxygenSaturation,
+            anyFootTranscutaneousOxygenSaturation, heartRate, breathe, systolicBloodPressure, diastolicBloodPressure, meanArterialPressure,
+            congenitalScreeningResults, oxygenSaturationScreeningResults, heartMurmurTestResults, heartUltrasoundExamination,
+            heartUltrasoundExaminationTime, heartUltrasoundExaminationResult
+        from pc_mbsr_blood_oxygen_monitor
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 插入/更新 母婴同室库 血氧监测 数据 -->
+    <insert id="mbsrBloodOxygenMonitorInsertUpdate">
+        insert into pc_mbsr_blood_oxygen_monitor (cid, mid, measuringTime, measuringTimeAfterBirth, measuringChildrenCondition,
+            rightHandTranscutaneousOxygenSaturation, anyFootTranscutaneousOxygenSaturation, heartRate, breathe, systolicBloodPressure,
+            diastolicBloodPressure, meanArterialPressure, congenitalScreeningResults, oxygenSaturationScreeningResults, heartMurmurTestResults,
+            heartUltrasoundExamination, heartUltrasoundExaminationTime, heartUltrasoundExaminationResult, writerId
+            <if test="hospitalId > 0">, hospitalId</if>)
+        value (#{mbsrBloodOxygenMonitor.cid}, #{mbsrBloodOxygenMonitor.mid}, #{mbsrBloodOxygenMonitor.measuringTime},
+            #{mbsrBloodOxygenMonitor.measuringTimeAfterBirth}, #{mbsrBloodOxygenMonitor.measuringChildrenCondition},
+            #{mbsrBloodOxygenMonitor.rightHandTranscutaneousOxygenSaturation}, #{mbsrBloodOxygenMonitor.anyFootTranscutaneousOxygenSaturation},
+            #{mbsrBloodOxygenMonitor.heartRate}, #{mbsrBloodOxygenMonitor.breathe}, #{mbsrBloodOxygenMonitor.systolicBloodPressure},
+            #{mbsrBloodOxygenMonitor.diastolicBloodPressure}, #{mbsrBloodOxygenMonitor.meanArterialPressure},
+            #{mbsrBloodOxygenMonitor.congenitalScreeningResults}, #{mbsrBloodOxygenMonitor.oxygenSaturationScreeningResults},
+            #{mbsrBloodOxygenMonitor.heartMurmurTestResults}, #{mbsrBloodOxygenMonitor.heartUltrasoundExamination},
+            #{mbsrBloodOxygenMonitor.heartUltrasoundExaminationTime}, #{mbsrBloodOxygenMonitor.heartUltrasoundExaminationResult}, #{writerId}
+            <if test="hospitalId > 0">, #{hospitalId}</if>)
+        on duplicate key update
+            cid=#{mbsrBloodOxygenMonitor.cid},
+            mid=#{mbsrBloodOxygenMonitor.mid},
+            measuringTime=#{mbsrBloodOxygenMonitor.measuringTime},
+            measuringTimeAfterBirth=#{mbsrBloodOxygenMonitor.measuringTimeAfterBirth},
+            measuringChildrenCondition=#{mbsrBloodOxygenMonitor.measuringChildrenCondition},
+            rightHandTranscutaneousOxygenSaturation=#{mbsrBloodOxygenMonitor.rightHandTranscutaneousOxygenSaturation},
+            anyFootTranscutaneousOxygenSaturation=#{mbsrBloodOxygenMonitor.anyFootTranscutaneousOxygenSaturation},
+            heartRate=#{mbsrBloodOxygenMonitor.heartRate},
+            breathe=#{mbsrBloodOxygenMonitor.breathe},
+            systolicBloodPressure=#{mbsrBloodOxygenMonitor.systolicBloodPressure},
+            diastolicBloodPressure=#{mbsrBloodOxygenMonitor.diastolicBloodPressure},
+            meanArterialPressure=#{mbsrBloodOxygenMonitor.meanArterialPressure},
+            congenitalScreeningResults=#{mbsrBloodOxygenMonitor.congenitalScreeningResults},
+            oxygenSaturationScreeningResults=#{mbsrBloodOxygenMonitor.oxygenSaturationScreeningResults},
+            heartMurmurTestResults=#{mbsrBloodOxygenMonitor.heartMurmurTestResults},
+            heartUltrasoundExamination=#{mbsrBloodOxygenMonitor.heartUltrasoundExamination},
+            heartUltrasoundExaminationTime=#{mbsrBloodOxygenMonitor.heartUltrasoundExaminationTime},
+            heartUltrasoundExaminationResult=#{mbsrBloodOxygenMonitor.heartUltrasoundExaminationResult}
+    </insert>
+
+    <!-- 更新 母婴同室库 填写状态 -->
+    <update id="mbsrStatusUpdate">
+        update pc_mbsr_blood_oxygen_monitor
+        set status=#{status}
+        where cid=#{childId}
+        and mid=#{motherId}
+    </update>
+
+    <!-- 查询 母婴同室库 填写情况 -->
+    <select id="mbsrCaseStatusQry" resultType="com.pnsrcp.web.entity.perintalPlatform.CaseStatus">
+        select status
+        from pc_mbsr_blood_oxygen_monitor
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 母婴同室库 审核次数 -->
+    <select id="mbsrReviewCount" resultType="int">
+        select count(id)
+        from pc_mbsr_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 母婴同室库 审核情况 -->
+    <select id="mbsrReviewQry" resultType="com.pnsrcp.web.entity.perintalPlatform.Review">
+        select id, cid, mid, status, problem, reviewerName, createTime
+        from pc_mbsr_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 母婴同室库 审核信息 -->
+    <insert id="mbsrReviewInsert">
+        insert into pc_mbsr_review (cid, mid, status, problem, reviewerName)
+        value (#{mbsrReview.cid}, #{mbsrReview.mid}, #{mbsrReview.status}, #{mbsrReview.problem}, #{mbsrReview.reviewerName})
+    </insert>
+</mapper>

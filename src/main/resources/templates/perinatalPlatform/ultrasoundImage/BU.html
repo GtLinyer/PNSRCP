@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>颅脑超声 - 超声影像库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,超声影像库,颅脑超声"/>
+    <meta name="description" content="围产新生儿科研合作平台超声影像库颅脑超声"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/ultrasoundImage.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 基础数据库 导航 -->
+                    <li th:replace="include/navMenu::basicDatabase"></li>
+
+                    <!-- 医患交流库 导航 -->
+                    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+                    <!-- 母婴同室库 导航 -->
+                    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+                    <!-- 父母心理库 导航 -->
+                    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+                    <!-- 研究数据库 导航 -->
+                    <li th:replace="include/navMenu::researchDatabase"></li>
+
+                    <!-- 超声影像库 导航 -->
+                    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_UI')">
+                        <a class="pc-item" href="javascript:void(0);">
+                            <i class="pc-icon iconfont icon-chaoshengzhenduanyi"></i>
+                            <cite>超声影像库</cite>
+                        </a>
+
+                        <dl class="layui-nav-child">
+                            <dd class="layui-this" sec:authorize="hasRole('ROLE_UIBU')">
+                                <a href="#">
+                                    <i class="pc-icon iconfont icon-Brain"></i>
+                                    <cite>颅脑超声</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_UI')">
+                                <a href="/perinatalPlatform/followDatabase/review">
+                                    <i class="pc-icon iconfont icon-shenhe"></i>
+                                    <cite>病例审核</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+                    <!-- 随访数据库 导航 -->
+                    <li th:replace="include/navMenu::followDatabase"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-UIBU layui-form" sec:authorize="hasRole('ROLE_UIBU')">
+                <div class="layui-row" th:object="${treatmentDiagnosis}">
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-VH" class="pc-db-item">
+                            <label>脑室出血</label>
+                            <input type="hidden" name="ventricularHemorrhage" th:value="${treatmentDiagnosis} ? *{ventricularHemorrhage} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${treatmentDiagnosis} ? (*{ventricularHemorrhage eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{ventricularHemorrhage eq 'Ⅰ级'} ? 'pc-db-active' : _) : _" data-value="Ⅰ级">
+                                    <button>Ⅰ级</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{ventricularHemorrhage eq 'Ⅱ级'} ? 'pc-db-active' : _) : _" data-value="Ⅱ级">
+                                    <button>Ⅱ级</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{ventricularHemorrhage eq 'Ⅲ级'} ? 'pc-db-active' : _) : _" data-value="Ⅲ级">
+                                    <button>Ⅲ级</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{ventricularHemorrhage eq 'Ⅳ级'} ? 'pc-db-active' : _) : _" data-value="Ⅳ级">
+                                    <button>Ⅳ级</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-VHDD">诊断日期</label>
+                            <input id="PC-db-VHDD" type="text" data-name="vhDiagnosisDate" th:name="${treatmentDiagnosis} ? (*{(vhDiagnosisDate ne '') and (vhDiagnosisDate ne null)} ? 'vhDiagnosisDate' : _) : _" th:value="${treatmentDiagnosis} ? (*{(vhDiagnosisDate ne '') and (vhDiagnosisDate ne null)} ? *{#calendars.format(vhDiagnosisDate, 'yyy-MM-dd')} : _) : _" th:lay-verify="${treatmentDiagnosis} ? (*{(vhDiagnosisDate ne '') and (vhDiagnosisDate ne null)} ? 'requiredDB' : _) : _" th:disabled="${treatmentDiagnosis} ? (*{(vhDiagnosisDate ne '') and (vhDiagnosisDate ne null)} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <label>其他脑出血</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="otherCerebralHemorrhageCerebellar" lay-filter="OCH" value="1" title="小脑出血" th:checked="${treatmentDiagnosis} ? (*{otherCerebralHemorrhageCerebellar eq 1} ? true : _) : _">
+                                <input type="checkbox" name="otherCerebralHemorrhageSubdural" lay-filter="OCH" value="1" title="硬膜下出血" th:checked="${treatmentDiagnosis} ? (*{otherCerebralHemorrhageSubdural eq 1} ? true : _) : _">
+                                <input type="checkbox" name="otherCerebralHemorrhageSubarachnoid" lay-filter="OCH" value="1" title="蛛网膜下腔出血" th:checked="${treatmentDiagnosis} ? (*{otherCerebralHemorrhageSubarachnoid eq 1} ? true : _) : _">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-OCHDD">诊断日期</label>
+                            <input id="PC-db-OCHDD" type="text" data-name="ochDiagnosisDate" th:name="${treatmentDiagnosis} ? (*{(ochDiagnosisDate ne '') and (ochDiagnosisDate ne null)} ? 'ochDiagnosisDate' : _) : _" th:value="${treatmentDiagnosis} ? (*{(ochDiagnosisDate ne '') and (ochDiagnosisDate ne null)} ? *{#calendars.format(ochDiagnosisDate, 'yyy-MM-dd')} : _) : _" th:lay-verify="${treatmentDiagnosis} ? (*{(ochDiagnosisDate ne '') and (ochDiagnosisDate ne null)} ? 'requiredDB' : _) : _" th:disabled="${treatmentDiagnosis} ? (*{(ochDiagnosisDate ne '') and (ochDiagnosisDate ne null)} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>治疗</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="treatmentObserve" value="1" title="观察" th:checked="${treatmentDiagnosis} ? (*{treatmentObserve eq 1} ? true : _) : _">
+                                <input type="checkbox" name="treatmentRepeatedWaistWear" value="1" title="反复腰穿" th:checked="${treatmentDiagnosis} ? (*{treatmentRepeatedWaistWear eq 1} ? true : _) : _">
+                                <input type="checkbox" name="treatmentReservoir" value="1" title="储液囊" th:checked="${treatmentDiagnosis} ? (*{treatmentReservoir eq 1} ? true : _) : _">
+                                <input type="checkbox" name="treatmentVentricularDrainage" value="1" title="脑室外引流" th:checked="${treatmentDiagnosis} ? (*{treatmentVentricularDrainage eq 1} ? true : _) : _">
+                                <input type="checkbox" name="treatmentVpShunt" value="1" title="VP分流" th:checked="${treatmentDiagnosis} ? (*{treatmentVpShunt eq 1} ? true : _) : _">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-PWMS" class="pc-db-item lg">
+                            <label>脑室周围白质软化</label>
+                            <input type="hidden" name="periventricularWhiteMatterSoftening" th:value="${treatmentDiagnosis} ? *{periventricularWhiteMatterSoftening} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${treatmentDiagnosis} ? (*{periventricularWhiteMatterSoftening eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{periventricularWhiteMatterSoftening eq 'Ⅰ级'} ? 'pc-db-active' : _) : _" data-value="Ⅰ级">
+                                    <button>Ⅰ级</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{periventricularWhiteMatterSoftening eq 'Ⅱ级'} ? 'pc-db-active' : _) : _" data-value="Ⅱ级">
+                                    <button>Ⅱ级</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{periventricularWhiteMatterSoftening eq 'Ⅲ级'} ? 'pc-db-active' : _) : _" data-value="Ⅲ级">
+                                    <button>Ⅲ级</button>
+                                </li>
+                                <li th:class="${treatmentDiagnosis} ? (*{periventricularWhiteMatterSoftening eq 'Ⅳ级'} ? 'pc-db-active' : _) : _" data-value="Ⅳ级">
+                                    <button>Ⅳ级</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-PWMSDD">诊断日期</label>
+                            <input id="PC-db-PWMSDD" type="text" data-name="pwmsDiagnosisDate" th:name="${treatmentDiagnosis} ? (*{(pwmsDiagnosisDate ne '') and (pwmsDiagnosisDate ne null)} ? 'pwmsDiagnosisDate' : _) : _" th:value="${treatmentDiagnosis} ? (*{(pwmsDiagnosisDate ne '') and (pwmsDiagnosisDate ne null)} ? *{#calendars.format(pwmsDiagnosisDate, 'yyy-MM-dd')} : _) : _" th:lay-verify="${treatmentDiagnosis} ? (*{(pwmsDiagnosisDate ne '') and (pwmsDiagnosisDate ne null)} ? 'requiredDB' : _) : _" th:disabled="${treatmentDiagnosis} ? (*{(pwmsDiagnosisDate ne '') and (pwmsDiagnosisDate ne null)} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit lg">
+                            <label for="PC-db-UN">超声检查次数</label>
+                            <input id="PC-db-UN" type="number" name="ultrasonographyNumber" th:value="${ultrasonographyNumber} ? ${ultrasonographyNumber} : '0'" lay-verify="requiredDB" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                    <div class="pc-db-item-table addList">
+                        <table class="pc-db-table">
+                            <thead>
+                            <tr>
+                                <th>检查时间</th>
+                                <th>侧脑室前角切面</th>
+                                <th>侧脑室三角区切面</th>
+                                <th>右侧脑室旁矢状切面</th>
+                                <th>左侧脑室旁矢状切面</th>
+                                <th>结果解释</th>
+                                <th>删除</th>
+                            </tr>
+                            </thead>
+                            <tbody th:data-num="${buList} ? ${buList.size()} : _">
+                            <tr th:each="bu, status : ${buList}" th:object="${bu}">
+                                <td>
+                                    <input th:id="'PC-db-UT' + (${status.index} + 1)" type="text" th:name="'ultrasonographyTime' + (${status.index} + 1)" th:value="*{#calendars.format(ultrasonographyTime, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择超声检查时间" lay-reqText="请选择超声检查时间！" readonly>
+                                </td>
+                                <td>
+                                    <div th:id="'PC-db-LVAH' + (${status.index} + 1)" class="pc-db-upload">
+                                        <button  class="pc-btn">点击上传图片</button>
+                                        <img th:src="*{lvahUrl}" th:layer-src="*{lvahUrl}">
+                                    </div>
+                                    <input th:id="'PC-db-LVAHURL' + (${status.index} + 1)" type="hidden" th:name="'lvahUrl' + (${status.index} + 1)" th:value="*{lvahUrl}">
+                                </td>
+                                <td>
+                                    <div th:id="'PC-db-LVTS' + (${status.index} + 1)" class="pc-db-upload">
+                                        <button class="pc-btn">点击上传图片</button>
+                                        <img th:src="*{lvtsUrl}" th:layer-src="*{lvtsUrl}">
+                                    </div>
+                                    <input th:id="'PC-db-LVTSURL' + (${status.index} + 1)" type="hidden" th:name="'lvtsUrl' + (${status.index} + 1)" th:value="*{lvtsUrl}">
+                                </td>
+                                <td>
+                                    <div th:id="'PC-db-RPVS' + (${status.index} + 1)" class="pc-db-upload">
+                                        <button class="pc-btn">点击上传图片</button>
+                                        <img th:src="*{rpvsUrl}" th:layer-src="*{rpvsUrl}">
+                                    </div>
+                                    <input th:id="'PC-db-RPVSURL' + (${status.index} + 1)" type="hidden" th:name="'rpvsUrl' + (${status.index} + 1)" th:value="*{rpvsUrl}">
+                                </td>
+                                <td>
+                                    <div th:id="'PC-db-LPVS' + (${status.index} + 1)" class="pc-db-upload">
+                                        <button class="pc-btn">点击上传图片</button>
+                                        <img th:src="*{lpvsUrl}" th:layer-src="*{lpvsUrl}">
+                                    </div>
+                                    <input th:id="'PC-db-LPVSURL' + (${status.index} + 1)" type="hidden" th:name="'lpvsUrl' + (${status.index} + 1)" th:value="*{lpvsUrl}">
+                                </td>
+                                <td>
+                                    <textarea th:name="'resultInterpretation' + (${status.index} + 1)" th:text="*{resultInterpretation}" placeholder="请填写结果解释" rows='12'></textarea>
+                                </td>
+                                <td>
+                                    <button th:id="'PC-db-buDelete' + (${status.index} + 1)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button id="PC-db-addBU" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="BU" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/js/UIWrite.js}"></script>
+</html>

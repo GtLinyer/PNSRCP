@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.ResearchDatabaseMapper">
+    <!-- 查询 研究数据库 低体温QI 初始数据 -->
+    <select id="rdHqiMsgQry" resultType="com.pnsrcp.web.entity.perintalPlatform.researchDatabase.RDHqiMsg">
+        select cid, mid, birthday, newbornEnterRoomDate, bodyTemperatureWithin1hAfterBirth
+        from pc_bd_baby_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 研究数据库 低体温QI -->
+    <insert id="rdHypothermiaQIInsertUpdate">
+        insert into pc_rd_hypothermia_qi (cid, mid, birthday, newbornEnterRoomTimeAge, newbornEnterRoomDate,
+            newbornEnterRoomBodyTemperature, afterBirth10MinTime, afterBirth10MinBodyTemperature,
+            afterEnterRoom30MinBodyTemperature, afterEnterRoom60MinBodyTemperature, afterEnterRoom90MinBodyTemperature,
+            afterEnterRoom120MinBodyTemperature, minimumBodyTemperatureTime, minimumBodyTemperature,
+            bodyTemperatureReturnsNormalTime, returnsNormalBodyTemperature, writerId
+            <if test="hospitalId > 0">, hospitalId</if>)
+        value (#{rdHypothermiaQI.cid}, #{rdHypothermiaQI.mid}, #{rdHypothermiaQI.birthday},
+            #{rdHypothermiaQI.newbornEnterRoomTimeAge}, #{rdHypothermiaQI.newbornEnterRoomDate},
+            #{rdHypothermiaQI.newbornEnterRoomBodyTemperature}, #{rdHypothermiaQI.afterBirth10MinTime},
+            #{rdHypothermiaQI.afterBirth10MinBodyTemperature}, #{rdHypothermiaQI.afterEnterRoom30MinBodyTemperature},
+            #{rdHypothermiaQI.afterEnterRoom60MinBodyTemperature}, #{rdHypothermiaQI.afterEnterRoom90MinBodyTemperature},
+            #{rdHypothermiaQI.afterEnterRoom120MinBodyTemperature}, #{rdHypothermiaQI.minimumBodyTemperatureTime},
+            #{rdHypothermiaQI.minimumBodyTemperature}, #{rdHypothermiaQI.bodyTemperatureReturnsNormalTime},
+            #{rdHypothermiaQI.returnsNormalBodyTemperature}, #{writerId} <if test="hospitalId > 0">, #{hospitalId}</if>)
+        on duplicate key update
+            birthday=#{rdHypothermiaQI.birthday},
+            newbornEnterRoomTimeAge=#{rdHypothermiaQI.newbornEnterRoomTimeAge},
+            newbornEnterRoomDate=#{rdHypothermiaQI.newbornEnterRoomDate},
+            newbornEnterRoomBodyTemperature=#{rdHypothermiaQI.newbornEnterRoomBodyTemperature},
+            afterBirth10MinTime=#{rdHypothermiaQI.afterBirth10MinTime},
+            afterBirth10MinBodyTemperature=#{rdHypothermiaQI.afterBirth10MinBodyTemperature},
+            afterEnterRoom30MinBodyTemperature=#{rdHypothermiaQI.afterEnterRoom30MinBodyTemperature},
+            afterEnterRoom60MinBodyTemperature=#{rdHypothermiaQI.afterEnterRoom60MinBodyTemperature},
+            afterEnterRoom90MinBodyTemperature=#{rdHypothermiaQI.afterEnterRoom90MinBodyTemperature},
+            afterEnterRoom120MinBodyTemperature=#{rdHypothermiaQI.afterEnterRoom120MinBodyTemperature},
+            minimumBodyTemperatureTime=#{rdHypothermiaQI.minimumBodyTemperatureTime},
+            minimumBodyTemperature=#{rdHypothermiaQI.minimumBodyTemperature},
+            bodyTemperatureReturnsNormalTime=#{rdHypothermiaQI.bodyTemperatureReturnsNormalTime},
+            returnsNormalBodyTemperature=#{rdHypothermiaQI.returnsNormalBodyTemperature}
+    </insert>
+
+    <!-- 查询 研究数据库 感染监测 低体温QI -->
+    <select id="rdHypothermiaQIQry" resultType="com.pnsrcp.web.entity.perintalPlatform.researchDatabase.RDHypothermiaQI">
+        select cid, mid, birthday, newbornEnterRoomTimeAge, newbornEnterRoomDate, newbornEnterRoomBodyTemperature,
+            afterBirth10MinTime, afterBirth10MinBodyTemperature, afterEnterRoom30MinBodyTemperature,
+            afterEnterRoom60MinBodyTemperature, afterEnterRoom90MinBodyTemperature, afterEnterRoom120MinBodyTemperature,
+            minimumBodyTemperatureTime, minimumBodyTemperature, bodyTemperatureReturnsNormalTime, returnsNormalBodyTemperature
+        from pc_rd_hypothermia_qi
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 更新 研究数据库 填写状态 -->
+    <update id="rdStatusUpdate">
+        update pc_rd_hypothermia_qi
+        set status=#{status}
+        where cid=#{childId}
+        and mid=#{motherId}
+    </update>
+
+    <!-- 查询 研究数据库 填写情况 -->
+    <select id="rdCaseStatusQry" resultType="com.pnsrcp.web.entity.perintalPlatform.CaseStatus">
+        select status
+        from pc_rd_hypothermia_qi
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 研究数据库 审核次数 -->
+    <select id="rdReviewCount" resultType="int">
+        select count(id)
+        from pc_rd_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 研究数据库 审核情况 -->
+    <select id="rdReviewQry" resultType="com.pnsrcp.web.entity.perintalPlatform.Review">
+        select id, cid, mid, status, problem, reviewerName, createTime
+        from pc_rd_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 研究数据库 审核信息 -->
+    <insert id="rdReviewInsert">
+        insert into pc_rd_review (cid, mid, status, problem, reviewerName)
+        value (#{rdReview.cid}, #{rdReview.mid}, #{rdReview.status}, #{rdReview.problem}, #{rdReview.reviewerName})
+    </insert>
+</mapper>

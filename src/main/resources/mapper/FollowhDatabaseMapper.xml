@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.FollowDatabaseMapper">
+    <!-- 查询 随访数据库 随访信息 初始数据 -->
+    <select id="fdFiMsgQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDFollowInformation">
+        select pbmi.mid, pbbs.cid, pbbs.fullName childFullName, pbmi.motherPhone, pbbs.childHospitalNum, pbbs.birthday,
+               pbbs.multicellularNumber, pbbs.gender, pbbs.gestationalAgeWeek, pbbs.gestationalAgeDay,
+               pbbs.birthWeight, pbbs.birthHeadCircumference, pbbs.birthLength birthBodyLength
+        from pc_bd_mother_information pbmi
+        left join pc_bd_baby_situation pbbs
+        on pbmi.mid = pbbs.mid
+        where cid=#{childId}
+        and pbmi.mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 随访信息 宝宝身份证姓名 -->
+    <select id="fdFiChildIdCardNameQry" resultType="string">
+        select childIdCardName
+        from pc_fd_follow_information
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 随访信息 -->
+    <insert id="fdFollowInformationInsertUpdate">
+        insert into pc_fd_follow_information (cid, mid, childFullName, childIdCardName, motherPhone, childHospitalNum,
+            birthday, multicellularNumber, gender, gestationalAgeWeek, gestationalAgeDay, birthWeight, birthHeadCircumference,
+            birthBodyLength, writerId<if test="hospitalId > 0">, hospitalId</if>)
+        value (#{fdFollowInformation.cid}, #{fdFollowInformation.mid}, #{fdFollowInformation.childFullName},
+            #{fdFollowInformation.childIdCardName}, #{fdFollowInformation.motherPhone}, #{fdFollowInformation.childHospitalNum},
+            #{fdFollowInformation.birthday}, #{fdFollowInformation.multicellularNumber}, #{fdFollowInformation.gender},
+            #{fdFollowInformation.gestationalAgeWeek}, #{fdFollowInformation.gestationalAgeDay}, #{fdFollowInformation.birthWeight},
+            #{fdFollowInformation.birthHeadCircumference}, #{fdFollowInformation.birthBodyLength}, #{writerId}
+            <if test="hospitalId > 0">, #{hospitalId}</if>)
+        on duplicate key update
+            childFullName=#{fdFollowInformation.childFullName},
+            childIdCardName=#{fdFollowInformation.childIdCardName},
+            motherPhone=#{fdFollowInformation.motherPhone},
+            childHospitalNum=#{fdFollowInformation.childHospitalNum},
+            birthday=#{fdFollowInformation.birthday},
+            multicellularNumber=#{fdFollowInformation.multicellularNumber},
+            gender=#{fdFollowInformation.gender},
+            gestationalAgeWeek=#{fdFollowInformation.gestationalAgeWeek},
+            gestationalAgeDay=#{fdFollowInformation.gestationalAgeDay},
+            birthWeight=#{fdFollowInformation.birthWeight},
+            birthHeadCircumference=#{fdFollowInformation.birthHeadCircumference},
+            birthBodyLength=#{fdFollowInformation.birthBodyLength}
+    </insert>
+
+    <!-- 插入/更新 随访数据库 生长曲线 体重检查 汇总 -->
+    <insert id="fdGcBwSummaryInsertUpdate">
+        insert into pc_fd_gc_record (cid, mid, weightCheckNumber, weightGainRate)
+        value (#{cid}, #{mid}, #{weightCheckNumber}, #{weightGainRate})
+        on duplicate key update
+            weightCheckNumber=#{weightCheckNumber},
+            weightGainRate=#{weightGainRate}
+    </insert>
+
+    <!-- 插入 随访数据库 生长曲线 体重检查 -->
+    <insert id="fdGcBodyWeightInsert">
+        insert into pc_fd_gc_body_weight (cid, mid, weightCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            bodyWeight)
+        value (#{cid}, #{mid}, #{weightCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{bodyWeight})
+    </insert>
+
+    <!-- 删除 随访数据库 生长曲线 体重检查 列表 -->
+    <delete id="fdGcBodyWeightDelete">
+        delete from pc_fd_gc_body_weight
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 生长曲线 体重检查 次数 -->
+    <select id="fdGcBwSummaryQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGcBwSummary">
+        select weightCheckNumber
+        from pc_fd_gc_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 生长曲线 体重检查 列表 -->
+    <select id="fdGcBodyWeightQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGcBodyWeight">
+        select id, cid, mid, cgaWeek, cgaDay, weightCheckDate, correctedAgeMonth, correctedAgeDay, bodyWeight
+        from pc_fd_gc_body_weight
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 生长曲线 身长检查 汇总 -->
+    <insert id="fdGcBlSummaryInsertUpdate">
+        insert into pc_fd_gc_record (cid, mid, lengthCheckNumber, lengthGainRate)
+        value (#{cid}, #{mid}, #{lengthCheckNumber}, #{lengthGainRate})
+        on duplicate key update
+            lengthCheckNumber=#{lengthCheckNumber},
+            lengthGainRate=#{lengthGainRate}
+    </insert>
+
+    <!-- 插入 随访数据库 生长曲线 身长检查 -->
+    <insert id="fdGcBodyLengthInsert">
+        insert into pc_fd_gc_body_length (cid, mid, lengthCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, bodyLength)
+        value (#{cid}, #{mid}, #{lengthCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay}, #{bodyLength})
+    </insert>
+
+    <!-- 删除 随访数据库 生长曲线 身长检查 列表 -->
+    <delete id="fdGcBodyLengthDelete">
+        delete from pc_fd_gc_body_length
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 生长曲线 身长检查 汇总 -->
+    <select id="fdGcBlSummaryQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGcBlSummary">
+        select lengthCheckNumber, lengthGainRate
+        from pc_fd_gc_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 生长曲线 身长检查 列表 -->
+    <select id="fdGcBodyLengthQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGcBodyLength">
+        select id, cid, mid, lengthCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, bodyLength
+        from pc_fd_gc_body_length
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 生长曲线 头围检查 汇总 -->
+    <insert id="fdGcHcSummaryInsertUpdate">
+        insert into pc_fd_gc_record (cid, mid, headCircumferenceCheckNumber, headCircumferenceGainRate)
+        value (#{cid}, #{mid}, #{headCircumferenceCheckNumber}, #{headCircumferenceGainRate})
+        on duplicate key update
+            headCircumferenceCheckNumber=#{headCircumferenceCheckNumber},
+            headCircumferenceGainRate=#{headCircumferenceGainRate}
+    </insert>
+
+    <!-- 插入 随访数据库 生长曲线 头围检查 -->
+    <insert id="fdGcHeadCircumferenceInsert">
+        insert into pc_fd_gc_head_circumference (cid, mid, headCircumferenceCheckDate, cgaWeek, cgaDay, correctedAgeMonth,
+            correctedAgeDay, headCircumference)
+        value (#{cid}, #{mid}, #{headCircumferenceCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth},
+            #{correctedAgeDay}, #{headCircumference})
+    </insert>
+
+    <!-- 删除 随访数据库 生长曲线 头围检查 列表 -->
+    <delete id="fdGcHeadCircumferenceDelete">
+        delete from pc_fd_gc_head_circumference
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 生长曲线 头围检查 汇总 -->
+    <select id="fdGcHcSummaryQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGcHcSummary">
+        select headCircumferenceCheckNumber, headCircumferenceGainRate
+        from pc_fd_gc_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 生长曲线 头围检查 列表 -->
+    <select id="fdGcHeadCircumferenceQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGcHeadCircumference">
+        select id, cid, mid, headCircumferenceCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, headCircumference
+        from pc_fd_gc_head_circumference
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 生长曲线 喂养记录 -->
+    <insert id="fdGcFdFeedingRecordNumberInsertUpdate">
+        insert into pc_fd_gc_record (cid, mid, feedingRecordNumber)
+        value (#{childId}, #{motherId}, #{feedingRecordNumber})
+        on duplicate key update
+            feedingRecordNumber=#{feedingRecordNumber}
+    </insert>
+
+    <!-- 查询 随访数据库 生长曲线 喂养记录 -->
+    <select id="fdGcFeedingRecordNumberQry" resultType="string">
+        select feedingRecordNumber
+        from pc_fd_gc_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 随访数据库 生长曲线 生长评估 0到12月 -->
+    <insert id="fdGcGrowthAssessment1Insert">
+        insert into pc_fd_gc_growth_assessment_0mto12m (cid, mid, correctedAge, caDate, caActualAgeMonth, caActualAgeDay,
+            caBodyWeight, caBodyLength, caHeadCircumference, caBodyWeightPercentile, caBodyLengthPercentile, caHeadCircumferencePercentile,
+            caBodyWeightZScore, caBodyLengthZScore, caHeadCircumferenceZScore, caBodyWeightGainRate, caBodyLengthGainRate,
+            caHeadCircumferenceGainRate, caFeedingMethod, caCalories, caBreastMilkFortifier)
+        value (#{cid}, #{mid}, #{correctedAge}, #{caDate}, #{caActualAgeMonth}, #{caActualAgeDay}, #{caBodyWeight}, #{caBodyLength},
+            #{caHeadCircumference}, #{caBodyWeightPercentile}, #{caBodyLengthPercentile}, #{caHeadCircumferencePercentile},
+            #{caBodyWeightZScore}, #{caBodyLengthZScore}, #{caHeadCircumferenceZScore}, #{caBodyWeightGainRate},
+            #{caBodyLengthGainRate}, #{caHeadCircumferenceGainRate}, #{caFeedingMethod}, #{caCalories}, #{caBreastMilkFortifier})
+    </insert>
+
+    <!-- 删除 随访数据库 生长曲线 生长评估 0到12月 -->
+    <delete id="fdGcGrowthAssessment1Delete">
+        delete from pc_fd_gc_growth_assessment_0mto12m
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 插入 随访数据库 生长曲线 生长评估 13月到6岁 -->
+    <insert id="fdGcGrowthAssessment2Insert">
+        insert into pc_fd_gc_growth_assessment_13mto6y (cid, mid, correctedAge, caDate, caActualAgeMonth, caActualAgeDay,
+        caBodyWeight, caBodyLength, caHeadCircumference, caBodyWeightPercentile, caBodyLengthPercentile, caHeadCircumferencePercentile,
+        caBodyWeightZScore, caBodyLengthZScore, caHeadCircumferenceZScore, caBodyWeightGainRate, caBodyLengthGainRate,
+        caHeadCircumferenceGainRate, caFeedingMethod, caCalories, caBreastMilkFortifier)
+        value (#{cid}, #{mid}, #{correctedAge}, #{caDate}, #{caActualAgeMonth}, #{caActualAgeDay}, #{caBodyWeight}, #{caBodyLength},
+        #{caHeadCircumference}, #{caBodyWeightPercentile}, #{caBodyLengthPercentile}, #{caHeadCircumferencePercentile},
+        #{caBodyWeightZScore}, #{caBodyLengthZScore}, #{caHeadCircumferenceZScore}, #{caBodyWeightGainRate},
+        #{caBodyLengthGainRate}, #{caHeadCircumferenceGainRate}, #{caFeedingMethod}, #{caCalories}, #{caBreastMilkFortifier})
+    </insert>
+
+    <!-- 删除 随访数据库 生长曲线 生长评估 13月到6岁 -->
+    <delete id="fdGcGrowthAssessment2Delete">
+        delete from pc_fd_gc_growth_assessment_13mto6y
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 插入/更新 随访数据库 生长曲线 营养记录 -->
+    <insert id="fdGcNutritionRecordNumberInsertUpdate">
+        insert into pc_fd_gc_record (cid, mid, nutritionRecordNumber)
+        value (#{childId}, #{motherId}, #{nutritionRecordNumber})
+        on duplicate key update
+            nutritionRecordNumber=#{nutritionRecordNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 生长曲线 营养记录 -->
+    <insert id="fdGcNutritionRecordInsert">
+        insert into pc_fd_gc_nutrition_record (cid, mid, nutritionRecordDate, cgaWeek, cgaDay, correctedAgeMonth,
+            correctedAgeDay, hgb, ironTherapy, oh25D3, vitaminAd, vitaminD3, diarrhea, rash, bloodyStools, respite, doctorAdvice)
+        value (#{cid}, #{mid}, #{nutritionRecordDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{hgb}, #{ironTherapy}, #{oh25D3}, #{vitaminAd}, #{vitaminD3}, #{diarrhea}, #{rash}, #{bloodyStools},
+            #{respite}, #{doctorAdvice})
+    </insert>
+
+    <!-- 删除 随访数据库 生长曲线 营养记录 列表 -->
+    <delete id="fdGcNutritionRecordDelete">
+        delete from pc_fd_gc_nutrition_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 生长曲线 营养记录 -->
+    <select id="fdGcNutritionRecordNumberQry" resultType="string">
+        select nutritionRecordNumber
+        from pc_fd_gc_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 生长曲线 营养记录 列表 -->
+    <select id="fdGcNutritionRecordQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGcNutritionRecord">
+        select id, cid, mid, nutritionRecordDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, hgb, ironTherapy,
+            oh25D3, vitaminAd, vitaminD3, diarrhea, rash, bloodyStools, respite, doctorAdvice
+        from pc_fd_gc_nutrition_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 发育水平 视力检查 -->
+    <insert id="fdDlVisionCheckNumberInsertUpdate">
+        insert into pc_fd_dl_record (cid, mid, visionCheckNumber)
+        value (#{childId}, #{motherId}, #{visionCheckNumber})
+        on duplicate key update
+            visionCheckNumber=#{visionCheckNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 发育水平 视力检查 -->
+    <insert id="fdDlVisionCheckInsert">
+        insert into pc_fd_dl_vision (cid, mid, visionCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            leftEyeScreening, leftEyePlus, leftEyeTreatment, leftEyeVisualEvokedPotential, rightEyeScreening,
+            rightEyePlus, rightEyeTreatment, rightEyeVisualEvokedPotential)
+        value (#{cid}, #{mid}, #{visionCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{leftEyeScreening}, #{leftEyePlus}, #{leftEyeTreatment}, #{leftEyeVisualEvokedPotential}, #{rightEyeScreening},
+            #{rightEyePlus}, #{rightEyeTreatment}, #{rightEyeVisualEvokedPotential})
+    </insert>
+
+    <!-- 删除 随访数据库 发育水平 视力检查 列表 -->
+    <delete id="fdDlVisionCheckDelete">
+        delete from pc_fd_dl_vision
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 发育水平 视力检查 -->
+    <select id="fdDlVisionCheckNumberQry" resultType="string">
+        select visionCheckNumber
+        from pc_fd_dl_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 发育水平 视力检查 列表 -->
+    <select id="fdDlVisionCheckQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDDlVisionCheck">
+        select id, cid, mid, visionCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, leftEyeScreening,
+            leftEyePlus, leftEyeTreatment, leftEyeVisualEvokedPotential, rightEyeScreening, rightEyePlus,
+            rightEyeTreatment, rightEyeVisualEvokedPotential
+        from pc_fd_dl_vision
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 发育水平 听力检查 -->
+    <insert id="fdDlHearingCheckNumberInsertUpdate">
+        insert into pc_fd_dl_record (cid, mid, hearingCheckNumber)
+        value (#{childId}, #{motherId}, #{hearingCheckNumber})
+        on duplicate key update
+            hearingCheckNumber=#{hearingCheckNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 发育水平 听力检查 -->
+    <insert id="fdDlHearingCheckInsert">
+        insert into pc_fd_dl_hearing (cid, mid, hearingCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            leftEarAabr, leftEarDiagnosis, rightEarAabr, rightEarDiagnosis)
+        value (#{cid}, #{mid}, #{hearingCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{leftEarAabr}, #{leftEarDiagnosis}, #{rightEarAabr}, #{rightEarDiagnosis})
+    </insert>
+
+    <!-- 删除 随访数据库 发育水平 听力检查 列表 -->
+    <delete id="fdDlHearingCheckDelete">
+        delete from pc_fd_dl_hearing
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 发育水平 听力检查 -->
+    <select id="fdDlHearingCheckNumberQry" resultType="string">
+        select hearingCheckNumber
+        from pc_fd_dl_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 发育水平 听力检查 列表 -->
+    <select id="fdDlHearingCheckQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDDlHearingCheck">
+        select id, cid, mid, hearingCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, leftEarAabr,
+            leftEarDiagnosis, rightEarAabr, rightEarDiagnosis
+        from pc_fd_dl_hearing
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 发育水平 Gesell量表 -->
+    <insert id="fdDlGesellCheckNumberInsertUpdate">
+        insert into pc_fd_dl_record (cid, mid, gesellCheckNumber)
+        value (#{childId}, #{motherId}, #{gesellCheckNumber})
+        on duplicate key update
+            gesellCheckNumber=#{gesellCheckNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 发育水平 Gesell量表 -->
+    <insert id="fdDlGesellCheckInsert">
+        insert into pc_fd_dl_gesell (cid, mid, gesellCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            adaptability, bigMovement, fineMotor, language, personalSocial)
+        value (#{cid}, #{mid}, #{gesellCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{adaptability}, #{bigMovement}, #{fineMotor}, #{language}, #{personalSocial})
+    </insert>
+
+    <!-- 删除 随访数据库 发育水平 Gesell量表 列表 -->
+    <delete id="fdDlGesellCheckDelete">
+        delete from pc_fd_dl_gesell
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 发育水平 Gesell量表 -->
+    <select id="fdDlGesellCheckNumberQry" resultType="string">
+        select gesellCheckNumber
+        from pc_fd_dl_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 发育水平 Gesell量表 列表 -->
+    <select id="fdDlGesellCheckQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDDlGesellCheck">
+        select id, cid, mid, gesellCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, adaptability,
+            bigMovement, fineMotor, language, personalSocial
+        from pc_fd_dl_gesell
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 发育水平 Griffiths量表 -->
+    <insert id="fdDlGriffithsCheckNumberInsertUpdate">
+        insert into pc_fd_dl_record (cid, mid, griffithsCheckNumber)
+        value (#{childId}, #{motherId}, #{griffithsCheckNumber})
+        on duplicate key update
+            griffithsCheckNumber=#{griffithsCheckNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 发育水平 Griffiths量表 -->
+    <insert id="fdDlGriffithsCheckInsert">
+        insert into pc_fd_dl_griffiths (cid, mid, griffithsCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            sport, individualSociety, listeningSpeakingAbility, handEyeCoordination, visualManipulationAbility, totalScore)
+        value (#{cid}, #{mid}, #{griffithsCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{sport}, #{individualSociety}, #{listeningSpeakingAbility}, #{handEyeCoordination},
+            #{visualManipulationAbility}, #{totalScore})
+    </insert>
+
+    <!-- 删除 随访数据库 发育水平 Griffiths量表 列表 -->
+    <delete id="fdDlGriffithsCheckDelete">
+        delete from pc_fd_dl_griffiths
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 发育水平 Griffiths量表 -->
+    <select id="fdDlGriffithsCheckNumberQry" resultType="string">
+        select griffithsCheckNumber
+        from pc_fd_dl_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 发育水平 Griffiths量表 列表 -->
+    <select id="fdDlGriffithsCheckQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDDlGriffithsCheck">
+        select id, cid, mid, griffithsCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, sport,
+            individualSociety, listeningSpeakingAbility, handEyeCoordination, visualManipulationAbility, totalScore
+        from pc_fd_dl_griffiths
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 发育水平 GMFCS -->
+    <insert id="fdDlGmfcsCheckNumberInsertUpdate">
+        insert into pc_fd_dl_record (cid, mid, gmfcsCheckNumber)
+        value (#{childId}, #{motherId}, #{gmfcsCheckNumber})
+        on duplicate key update
+            gmfcsCheckNumber=#{gmfcsCheckNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 发育水平 GMFCS -->
+    <insert id="fdDlGmfcsCheckInsert">
+        insert into pc_fd_dl_gmfcs (cid, mid, gmfcsCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            gmfcsResult, sitAlone, tenStepsAlone, cerebralPalsy, cerebralPalsyTendency)
+        value (#{cid}, #{mid}, #{gmfcsCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{gmfcsResult}, #{sitAlone}, #{tenStepsAlone}, #{cerebralPalsy}, #{cerebralPalsyTendency})
+    </insert>
+
+    <!-- 删除 随访数据库 发育水平 GMFCS 列表 -->
+    <delete id="fdDlGmfcsCheckDelete">
+        delete from pc_fd_dl_gmfcs
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 发育水平 GMFCS -->
+    <select id="fdDlGmfcsCheckNumberQry" resultType="string">
+        select gmfcsCheckNumber
+        from pc_fd_dl_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 发育水平 GMFCS 列表 -->
+    <select id="fdDlGmfcsCheckQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDDlGmfcsCheck">
+        select id, cid, mid, gmfcsCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, gmfcsResult, sitAlone,
+            tenStepsAlone, cerebralPalsy, cerebralPalsyTendency
+        from pc_fd_dl_gmfcs
+    </select>
+
+    <!-- 插入/更新 随访数据库 发育水平 CBCL量表 -->
+    <insert id="fdDlCbclCheckNumberInsertUpdate">
+        insert into pc_fd_dl_record (cid, mid, cbclCheckNumber)
+        value (#{childId}, #{motherId}, #{cbclCheckNumber})
+        on duplicate key update
+            cbclCheckNumber=#{cbclCheckNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 发育水平 CBCL量表 -->
+    <insert id="fdDlCbclCheckInsert">
+        insert into pc_fd_dl_cbcl (cid, mid, cbclCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            emotionalResponse, anxietyDepression, somaticComplaints, backOff, sleepProblems, aggressiveBehavior,
+            attentionProblem, internalizationProblem, externalAssimilationProblem, generalProblem)
+        value (#{cid}, #{mid}, #{cbclCheckDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{emotionalResponse}, #{anxietyDepression}, #{somaticComplaints}, #{backOff}, #{sleepProblems}, #{aggressiveBehavior},
+            #{attentionProblem}, #{internalizationProblem}, #{externalAssimilationProblem}, #{generalProblem})
+    </insert>
+
+    <!-- 删除 随访数据库 发育水平 CBCL量表 列表 -->
+    <delete id="fdDlCbclCheckDelete">
+        delete from pc_fd_dl_cbcl
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 发育水平 CBCL量表 -->
+    <select id="fdDlCbclCheckNumberQry" resultType="string">
+        select cbclCheckNumber
+        from pc_fd_dl_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 发育水平 CBCL量表 列表 -->
+    <select id="fdDlCbclCheckQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDDlCbclCheck">
+        select id, cid, mid, cbclCheckDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, emotionalResponse,
+            anxietyDepression, somaticComplaints, backOff, sleepProblems, aggressiveBehavior, attentionProblem,
+            internalizationProblem, externalAssimilationProblem, generalProblem
+        from pc_fd_dl_cbcl
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 成长历程 门诊就诊次数 -->
+    <insert id="fdGpVisitNumberInsertUpdate">
+        insert into pc_fd_gp_record (cid, mid, visitNumber)
+        value (#{childId}, #{motherId}, #{visitNumber})
+        on duplicate key update
+            visitNumber=#{visitNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 成长历程 门诊就诊 -->
+    <insert id="fdGpOutpatientVisitInsert">
+        insert into pc_fd_gp_outpatient_visit (cid, mid, visitDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay,
+            visitReason, otherReasons, doctorAdvice)
+        value (#{cid}, #{mid}, #{visitDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{visitReason}, #{otherReasons}, #{doctorAdvice})
+    </insert>
+
+    <!-- 删除 随访数据库 成长历程 门诊就诊 列表 -->
+    <delete id="fdGpOutpatientVisitDelete">
+        delete from pc_fd_gp_outpatient_visit
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 成长历程 门诊就诊次数 -->
+    <select id="fdGpVisitNumberQry" resultType="string">
+        select visitNumber
+        from pc_fd_gp_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 成长历程 门诊就诊 列表 -->
+    <select id="fdGpOutpatientVisitQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGpOutpatientVisit">
+        select id, cid, mid, visitDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, visitReason, otherReasons, doctorAdvice
+        from pc_fd_gp_outpatient_visit
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 随访数据库 成长历程 住院治疗次数 -->
+    <insert id="fdGpHospitalizationNumberInsertUpdate">
+        insert into pc_fd_gp_record (cid, mid, hospitalizationNumber)
+        value (#{childId}, #{motherId}, #{hospitalizationNumber})
+        on duplicate key update
+            hospitalizationNumber=#{hospitalizationNumber}
+    </insert>
+
+    <!-- 插入 随访数据库 成长历程 住院治疗 -->
+    <insert id="fdGpHospitalizationTreatmentInsert">
+        insert into pc_fd_gp_hospitalization_treatment (cid, mid, hospitalizationDate, cgaWeek, cgaDay, correctedAgeMonth,
+            correctedAgeDay, hospitalizationReason, otherReasons, doctorAdvice)
+        value (#{cid}, #{mid}, #{hospitalizationDate}, #{cgaWeek}, #{cgaDay}, #{correctedAgeMonth}, #{correctedAgeDay},
+            #{hospitalizationReason}, #{otherReasons}, #{doctorAdvice})
+    </insert>
+
+    <!-- 删除 随访数据库 成长历程 住院治疗 列表 -->
+    <delete id="fdGpHospitalizationTreatmentDelete">
+        delete from pc_fd_gp_hospitalization_treatment
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 成长历程 住院治疗次数 -->
+    <select id="fdGpHospitalizationNumberQry" resultType="string">
+        select hospitalizationNumber
+        from pc_fd_gp_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 成长历程 住院治疗 列表 -->
+    <select id="fdGpHospitalizationTreatmentQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGpHospitalizationTreatment">
+        select id, cid, mid, hospitalizationDate, cgaWeek, cgaDay, correctedAgeMonth, correctedAgeDay, hospitalizationReason, otherReasons, doctorAdvice
+        from pc_fd_gp_hospitalization_treatment
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 随访数据库 成长历程 随访计划 -->
+    <insert id="fdGpFollowUpPlanInsert">
+        insert into pc_fd_gp_follow_up_plan (cid, mid, correctedAge, physicalExamination, feedingGuidance, motorDevelopment,
+            rop, hearing, vision, bloodHgb, bloodChemistry, bloodThyroidFunction, lungFunction, cranialMri,
+            cognitiveDevelopmentAssessment, grandSportGrading, readmission, iron, vitaminD3, vitaminAd)
+        value (#{cid}, #{mid}, #{correctedAge}, #{physicalExamination}, #{feedingGuidance}, #{motorDevelopment}, #{rop},
+            #{hearing}, #{vision}, #{bloodHgb}, #{bloodChemistry}, #{bloodThyroidFunction}, #{lungFunction}, #{cranialMri},
+            #{cognitiveDevelopmentAssessment}, #{grandSportGrading}, #{readmission}, #{iron}, #{vitaminD3}, #{vitaminAd})
+    </insert>
+
+    <!-- 删除 随访数据库 成长历程 随访计划 列表 -->
+    <delete id="fdGpFollowUpPlanDelete">
+        delete from pc_fd_gp_follow_up_plan
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 成长历程 随访计划 列表 -->
+    <select id="fdGpFollowUpPlanQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGpFollowUpPlan">
+        select id, cid, mid, correctedAge, physicalExamination, feedingGuidance, motorDevelopment, rop, hearing, vision,
+            bloodHgb, bloodChemistry, bloodThyroidFunction, lungFunction, cranialMri, cognitiveDevelopmentAssessment,
+            grandSportGrading, readmission, iron, vitaminD3, vitaminAd
+        from pc_fd_gp_follow_up_plan
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 随访数据库 成长历程 疾病防治 -->
+    <insert id="fdGpDiseaseControlInsert">
+        insert into pc_fd_gp_disease_control (cid, mid, correctedAge, anemia, malnutrition, rickets, metabolicBoneDisease,
+            lungFunction, leukomalacia, hearingImpairment, visualImpairment, cerebralPalsy, motorDevelopmentalDelay,
+            languageDelay, cognitiveDelay, psychobehavioralProblems)
+        value (#{cid}, #{mid}, #{correctedAge}, #{anemia}, #{malnutrition}, #{rickets}, #{metabolicBoneDisease}, #{lungFunction},
+            #{leukomalacia}, #{hearingImpairment}, #{visualImpairment}, #{cerebralPalsy}, #{motorDevelopmentalDelay},
+            #{languageDelay}, #{cognitiveDelay}, #{psychobehavioralProblems})
+    </insert>
+
+    <!-- 删除 随访数据库 成长历程 疾病防治 列表 -->
+    <delete id="fdGpDiseaseControlDelete">
+        delete from pc_fd_gp_disease_control
+        where cid=#{childId}
+        and mid=#{motherId}
+    </delete>
+
+    <!-- 查询 随访数据库 成长历程 疾病防治 列表 -->
+    <select id="fdGpDiseaseControlQry" resultType="com.pnsrcp.web.entity.perintalPlatform.followDatabase.FDGpDiseaseControl">
+        select id, cid, mid, correctedAge, anemia, malnutrition, rickets, metabolicBoneDisease, lungFunction, leukomalacia,
+            hearingImpairment, visualImpairment, cerebralPalsy, motorDevelopmentalDelay, languageDelay, cognitiveDelay, psychobehavioralProblems
+        from pc_fd_gp_disease_control
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 更新 随访数据库 填写状态 -->
+    <update id="fdStatusUpdate">
+        update pc_fd_follow_information
+        set status=#{status}
+        where cid=#{childId}
+        and mid=#{motherId}
+    </update>
+
+    <!-- 查询 随访数据库 填写情况 -->
+    <select id="fdCaseStatusQry" resultType="com.pnsrcp.web.entity.perintalPlatform.CaseStatus">
+        select status
+        from pc_fd_follow_information
+        where cid=#{childId}
+        and mid=#{motherId}
+        limit 1
+    </select>
+
+    <!-- 查询 随访数据库 审核次数 -->
+    <select id="fdReviewCount" resultType="int">
+        select count(id)
+        from pc_fd_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 随访数据库 审核情况 -->
+    <select id="fdReviewQry" resultType="com.pnsrcp.web.entity.perintalPlatform.Review">
+        select id, cid, mid, status, problem, reviewerName, createTime
+        from pc_fd_review
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入 随访数据库 审核信息 -->
+    <insert id="fdReviewInsert">
+        insert into pc_fd_review (cid, mid, status, problem, reviewerName)
+        value (#{cid}, #{mid}, #{status}, #{problem}, #{reviewerName})
+    </insert>
+</mapper>

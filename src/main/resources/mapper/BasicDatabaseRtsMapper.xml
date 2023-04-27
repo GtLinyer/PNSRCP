@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.BasicDatabaseRTS.BasicDatabaseRtsMapper">
+    <!-- 插入/更新 基础数据库 呼吸系统 HFNC失败 初始HFNC -->
+    <insert id="bdRtsHfInitialHfncInsertUpdate">
+        insert into pc_bd_rts_hfnc_failed (cid, mid, initialHFNC, initialHfncFailed)
+        value (#{childId}, #{motherId}, #{initialHFNC}, #{initialHfncFailed})
+        on duplicate key update
+            initialHFNC=#{initialHFNC},
+            initialHfncFailed=#{initialHfncFailed}
+    </insert>
+
+    <!-- 更新 基础数据库 呼吸系统 HFNC失败 初值更新 -->
+    <update id="bdRtsHfncFailedInitialUpdate">
+        update pc_bd_rts_hfnc_failed
+        set initialHfncFailed=#{bdRtsHfncFailedInitial.initialHfncFailed},
+            startHfncTime=#{bdRtsHfncFailedInitial.startHfncTime},
+            endHfncTime=#{bdRtsHfncFailedInitial.endHfncTime},
+            hfncUseTimeDay=#{bdRtsHfncFailedInitial.hfncUseTimeDay},
+            hfncUseTimeHour=#{bdRtsHfncFailedInitial.hfncUseTimeHour},
+            respiratorySupportMethodAfterHFNC=#{bdRtsHfncFailedInitial.respiratorySupportMethodAfterHFNC}
+        where cid=#{bdRtsHfncFailedInitial.cid}
+        and mid=#{bdRtsHfncFailedInitial.mid}
+    </update>
+
+    <!-- 插入/更新 基础数据库 呼吸系统 无创通气失败 初始无创通气 -->
+    <insert id="bdRtsNvfInitialNivInsertUpdate">
+        insert into pc_bd_rts_niv_failed (cid, mid, initialNIV, initialNivFailed)
+        value (#{childId}, #{motherId}, #{initialNIV}, #{initialNivFailed})
+        on duplicate key update
+            initialNIV=#{initialNIV},
+            initialNivFailed=#{initialNivFailed}
+    </insert>
+
+    <!-- 更新 基础数据库 呼吸系统 无创通气失败 初值更新 -->
+    <update id="bdRtsNivFailedInitialUpdate">
+        update pc_bd_rts_niv_failed
+        set initialNivFailed=#{bdRtsNivFailedInitial.initialNivFailed},
+            startNivMethod=#{bdRtsNivFailedInitial.startNivMethod},
+            startNivTime=#{bdRtsNivFailedInitial.startNivTime},
+            endNivTime=#{bdRtsNivFailedInitial.endNivTime},
+            nivUseTimeDay=#{bdRtsNivFailedInitial.nivUseTimeDay},
+            nivUseTimeHour=#{bdRtsNivFailedInitial.nivUseTimeHour},
+            stopAfterHour=#{bdRtsNivFailedInitial.stopAfterHour},
+            respiratorySupportMethodAfterNIV=#{bdRtsNivFailedInitial.respiratorySupportMethodAfterNIV}
+        where cid=#{bdRtsNivFailedInitial.cid}
+        and mid=#{bdRtsNivFailedInitial.mid}
+    </update>
+
+    <!-- 插入/更新 基础数据库 呼吸系统 撤机情况 是否有创通气 -->
+    <insert id="bdRtsWfInvasiveVentilationInsertUpdate">
+        insert into pc_bd_rts_ws_invasive_ventilation (cid, mid, invasiveVentilation, invasiveVentilationTimes)
+        value (#{childId}, #{motherId}, #{invasiveVentilation}, #{invasiveVentilationTimes})
+        on duplicate key update
+            invasiveVentilation=#{invasiveVentilation},
+            invasiveVentilationTimes=#{invasiveVentilationTimes}
+    </insert>
+
+    <!-- 查询 基础数据库 呼吸系统 撤机情况 是否有创通气 -->
+    <select id="bdRtsWfInvasiveVentilationQry" resultType="map">
+        select invasiveVentilation, invasiveVentilationTimes
+        from pc_bd_rts_ws_invasive_ventilation
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 查询 基础数据库 呼吸系统 撤机失败 数量 -->
+    <select id="bdRtsWfNumQry" resultType="int">
+        select count(id)
+        from pc_bd_rts_weaning_situation
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+</mapper>

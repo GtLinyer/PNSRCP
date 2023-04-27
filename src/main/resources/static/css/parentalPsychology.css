@@ -1,0 +1,108 @@
+.pc-db-PP {
+    padding-top: 20px;
+}
+.pc-db-PPPR .pc-db-item.pc-db-item-date>input {
+    left: 58px;
+}
+.pc-db-PPPO .pc-db-item.pc-db-item-date>input {
+    left: 70px;
+}
+.pc-db-PPPR .pc-db-item.pc-db-item-date>i {
+    left: 160px;
+}
+.pc-db-PPPO .pc-db-item.pc-db-item-date>i {
+    left: 172px;
+}
+.pc-db-PP .pc-db-item.pc-db-item-unit>input {
+    left: 322px;
+}
+.pc-db-PP .pc-db-item.pc-db-item-unit>span {
+    left: 374px;
+}
+.pc-db-PP .pc-db-item.sasOrSds>input {
+    left: 234px;
+}
+.pc-db-PP .pc-db-item.sasOrSds>span {
+    left: 286px;
+}
+.pc-db-PP .pc-db-saveEDD,
+.pc-db-PP .pc-db-saveBirthday {
+    padding: 15px 0;
+}
+.pc-db-PP .pc-db-saveEDD>span,
+.pc-db-PP .pc-db-saveBirthday>span {
+    display: none;
+    color: green;
+    background-color: #FCF3CF;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+.pc-db-PP .pc-db-table {
+    margin-top: 20px;
+}
+.pc-db-PP .pc-db-table>thead>tr>th:first-child {
+    text-align: center;
+}
+.pc-db-PP .pc-db-table>tbody>tr>td {
+    padding: 10px 0;
+    text-align: center;
+}
+.pc-db-PP .pc-db-table>tbody>tr>td>span {
+    color: #FFB7C5;
+}
+.pc-db-PP .pc-db-table td {
+    border: 0.01em solid rgba(0, 0, 0, 0.2) !important;
+}
+.pc-db-PP .pc-db-table .pc-db-table-edit,
+.pc-db-PP .pc-db-table .pc-db-table-delete {
+    background-color: #FFB7C5;
+}
+.pc-db-PP .pc-db-table .pc-db-table-edit>button,
+.pc-db-PP .pc-db-table .pc-db-table-delete>button {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+}
+.pc-db-PP .pc-db-table .pc-db-table-edit>button:hover {
+    color: #FFB800;
+}
+.pc-db-PP .pc-db-table .pc-db-table-delete>button:hover {
+    color: #FF5722;
+}
+.layui-layer-content .pc-db-item .pc-db-enter {
+    left: 222px;
+}
+.layui-layer-content input {
+    width: 90px;
+}
+.layui-layer-content .pc-db-item>input,
+.layui-layer-content .pc-db-item>.pc-db-enter,
+.layui-layer-content .pc-db-item>.pc-db-spanItem {
+    left: 76px;
+}
+.layui-layer-content .pc-db-item.pc-db-item-date>i {
+    left: 178px;
+}
+.layui-layer-content .pc-db-item.pc-db-item-unit>span {
+    left: 130px;
+}
+.layui-layer-content .pc-db-item>.pc-db-spanItem {
+    display: inline-block;
+    position: absolute;
+}
+
+/* 移动模式 */
+@media screen and (max-width: 768px) {
+    .pc-db-PP .pc-db-item.pc-db-item-unit>input {
+        position: unset;
+        margin-top: 10px;
+    }
+    .pc-db-PP .pc-db-item.pc-db-item-unit>span {
+        position: unset;
+    }
+}

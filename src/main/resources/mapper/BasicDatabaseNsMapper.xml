@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.basicDatabaseNS.BasicDatabaseNsMapper">
+    <!-- 插入/更新 基础数据库 神经系统 超声检查（异常）次数 -->
+    <insert id="bdNsUltrasonographyNumberInsertUpdate">
+        insert into pc_bd_ns_record (cid, mid, ultrasonographyNumber, ultrasonographyAbnormalNumber)
+        value (#{cid}, #{mid}, #{checkNumber}, #{checkAbnormalNumber})
+        on duplicate key update
+            ultrasonographyNumber=#{checkNumber},
+            ultrasonographyAbnormalNumber=#{checkAbnormalNumber}
+    </insert>
+
+    <!-- 查询 基础数据库 神经系统 超声检查次数 -->
+    <select id="bdNsUltrasonographyNumberQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabaseNS.BDNervousSystemNumber">
+        select cid, mid, ultrasonographyNumber checkNumber, ultrasonographyAbnormalNumber checkAbnormalNumber
+        from pc_bd_ns_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 基础数据库 神经系统 MRI检查（异常）次数 -->
+    <insert id="bdNsMriNumberInsertUpdate">
+        insert into pc_bd_ns_record (cid, mid, mriNumber, mriAbnormalNumber)
+        value (#{cid}, #{mid}, #{checkNumber}, #{checkAbnormalNumber})
+        on duplicate key update
+            mriNumber=#{checkNumber},
+            mriAbnormalNumber=#{checkAbnormalNumber}
+    </insert>
+
+    <!-- 查询 基础数据库 神经系统 MRI检查次数 -->
+    <select id="bdNsMriNumberQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabaseNS.BDNervousSystemNumber">
+        select cid, mid, mriNumber checkNumber, mriAbnormalNumber checkAbnormalNumber
+        from pc_bd_ns_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 基础数据库 神经系统 CT检查（异常）次数 -->
+    <insert id="bdNsCtNumberInsertUpdate">
+        insert into pc_bd_ns_record (cid, mid, ctNumber, ctAbnormalNumber)
+        value (#{cid}, #{mid}, #{checkNumber}, #{checkAbnormalNumber})
+        on duplicate key update
+            ctNumber=#{checkNumber},
+            ctAbnormalNumber=#{checkAbnormalNumber}
+    </insert>
+
+    <!-- 查询 基础数据库 神经系统 CT检查次数 -->
+    <select id="bdNsCtNumberQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabaseNS.BDNervousSystemNumber">
+        select cid, mid, ctNumber checkNumber, ctAbnormalNumber checkAbnormalNumber
+        from pc_bd_ns_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 基础数据库 神经系统 脑电图检查（异常）次数 -->
+    <insert id="bdNsEegNumberInsertUpdate">
+        insert into pc_bd_ns_record (cid, mid, eegNumber, eegAbnormalNumber)
+        value (#{cid}, #{mid}, #{checkNumber}, #{checkAbnormalNumber})
+        on duplicate key update
+            eegNumber=#{checkNumber},
+            eegAbnormalNumber=#{checkAbnormalNumber}
+    </insert>
+
+    <!-- 查询 基础数据库 神经系统 脑电图检查次数 -->
+    <select id="bdNsEegNumberQry" resultType="com.pnsrcp.web.entity.perintalPlatform.basicDatabaseNS.BDNervousSystemNumber">
+        select cid, mid, eegNumber checkNumber, eegAbnormalNumber checkAbnormalNumber
+        from pc_bd_ns_record
+        where cid=#{childId}
+        and mid=#{motherId}
+    </select>
+</mapper>

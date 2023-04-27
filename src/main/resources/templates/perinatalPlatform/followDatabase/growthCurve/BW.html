@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>生长曲线 - 随访数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,随访数据库,生长曲线"/>
+    <meta name="description" content="围产新生儿科研合作平台随访数据库生长曲线"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/followDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/gcNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-FDGC layui-form" sec:authorize="hasRole('ROLE_FDGC')">
+                <span class="layui-breadcrumb">
+                    <a href="#"><cite>体重</cite></a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/BL">身长</a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/HC">头围</a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/FD">喂养</a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/GA/0mTo12m">生长评估</a>
+                    <a href="/perinatalPlatform/followDatabase/write/GC/NT">营养</a>
+                </span>
+                <div class="layui-row pc-db-FDGCBW" th:data-birthday="${#calendars.format(birthMsg.birthday, 'yyyy-MM-dd')}" th:data-chd="${#calendars.format(birthMsg.childHospitalizationDate, 'yyyy-MM-dd')}" th:data-gaw="${birthMsg.gestationalAgeWeek}" th:data-gad="${birthMsg.gestationalAgeDay}" th:data-gender="${birthMsg.gender}">
+                    <div class="layui-col-lg6 layui-row" th:object="${bwSummary}">
+                        <div class="layui-col-sm6">
+                            <div class="pc-db-item pc-db-item-unit">
+                                <label for="PC-db-WCN">体重检查</label>
+                                <input id="PC-db-WCN" type="number" name="weightCheckNumber" th:value="${bwSummary} ? *{weightCheckNumber} : '0'" lay-verify="requiredDB" readonly>
+                                <span>次</span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="pc-db-item pc-db-item-unit-lg">
+                                <label for="PC-db-WGR">体重增长速度</label>
+                                <input id="PC-db-WGR" type="number" name="weightGainRate" th:value="${bwSummary} ? (*{weightGainRate} ? *{weightGainRate} : _)" readonly>
+                                <span>g/w</span>
+                            </div>
+                        </div>
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>检查日期</th>
+                                    <th>矫正年龄</th>
+                                    <th>体重（kg）</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${wcList} ? ${wcList.size()} : _">
+                                <tr th:each="wc, status : ${wcList}" th:object="${wc}">
+                                    <td>
+                                        <input th:id="'PC-db-WCD' + (${status.index} + 1)" type="text" th:name="'weightCheckDate' + (${status.index} + 1)" th:value="*{#calendars.format(weightCheckDate, 'yyyy-MM-dd')}" lay-verify="required" placeholder="请选择检查时间" lay-reqText="请选择检查时间！" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-CA' + (${status.index} + 1)" type="text" readonly>
+                                        <input th:id="'PC-db-CGAW' + (${status.index} + 1)" type="hidden" th:name="'cgaWeek' + (${status.index} + 1)" th:value="*{cgaWeek}">
+                                        <input th:id="'PC-db-CGAD' + (${status.index} + 1)" type="hidden" th:name="'cgaDay' + (${status.index} + 1)" th:value="*{cgaDay}">
+                                        <input th:id="'PC-db-CAM' + (${status.index} + 1)" type="hidden" th:name="'correctedAgeMonth' + (${status.index} + 1)" th:value="*{correctedAgeMonth}">
+                                        <input th:id="'PC-db-CAD' + (${status.index} + 1)" type="hidden" th:name="'correctedAgeDay' + (${status.index} + 1)" th:value="*{correctedAgeDay}">
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-BW' + (${status.index} + 1)" type="number" th:name="'bodyWeight' + (${status.index} + 1)" th:value="*{bodyWeight}" lay-verify="required" placeholder="请填写体重" lay-reqText="请填写体重！">
+                                    </td>
+                                    <td>
+                                        <button th:id="'PC-db-wcDelete' + (${status.index} + 1)" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addWC" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pc-db-save">
+                            <button class="pc-btn pc-btn-save" lay-filter="GCBW" lay-submit>保存信息</button>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <div class="pc-db-item">
+                            <ul class="pc-db-option">
+                                <li data-value="Fenton" class="pc-db-active">Fenton曲线</li>
+                                <li data-value="WHO">WHO曲线</li>
+                            </ul>
+                        </div>
+                        <div class="pc-db-chart-elem">
+                            <canvas id="PC-chart-weight"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/FDWrite.min.js}"></script>
+</html>

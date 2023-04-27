@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>呼吸系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,呼吸系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库呼吸系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/rsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDRTS layui-form" th:object="${nivFailed}" sec:authorize="hasRole('ROLE_BDRST')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">呼吸支持</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/HF">HFNC失败</a>
+                    <a href="#"><cite>无创通气失败</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/WS">撤机情况</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/BPD">BPD</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/RDS">RDS</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/AP">呼吸暂停</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/ODT">其他诊断与治疗</a>
+                </span>
+                <div class="layui-row pc-db-BDRTSNVFH">
+                    <div class="layui-col-sm4">
+                        <div id="PC-db-initialNIV" class="pc-db-item">
+                            <label class="pc-switch-label">初始无创通气</label>
+                            <input type="checkbox" name="initialNIV" lay-skin="switch" lay-text="是|否" value="1" th:checked="*{initialNIV eq 1} ? true : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm8">
+                        <div id="PC-db-INIVF" class="pc-db-item">
+                            <label class="pc-switch-label">初始无创通气失败</label>
+                            <input type="checkbox" name="initialNivFailed" lay-skin="switch" lay-text="是|否" value="1" th:checked="*{initialNivFailed eq 1} ? true : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm8">
+                        <div id="PC-db-SNIVM" class="pc-db-item rbg-lg">
+                            <label for="PC-db-SNIVM">开始无创通气的呼吸支持方式</label>
+                            <input type="hidden" th:name="*{initialNIV eq 1} ? 'startNivMethod' : _" th:value="*{initialNIV eq 1} ? *{startNivMethod} : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (*{initialNIV eq 1} ? '' : ' rbgOff')">
+                                <li th:class="*{startNivMethod eq '无创高频'} ? 'pc-db-active' : _" data-value="无创高频">
+                                    <button>无创高频</button>
+                                </li>
+                                <li th:class="*{startNivMethod eq 'NIPPV'} ? 'pc-db-active' :  _" data-value="NIPPV">
+                                    <button>NIPPV</button>
+                                </li>
+                                <li th:class="*{startNivMethod eq 'BIPAP'} ? 'pc-db-active' :  _" data-value="BIPAP">
+                                    <button>BIPAP</button>
+                                </li>
+                                <li th:class="*{startNivMethod eq 'NCPAP'} ? 'pc-db-active' :  _" data-value="NCPAP">
+                                    <button>NCPAP</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-stopAfterHour">无创通气停止于生后</label>
+                            <input id="PC-db-stopAfterHour" type="text" th:name="*{initialNIV eq 1} ? 'stopAfterHour' : _" th:value="*{initialNIV eq 1} ? *{stopAfterHour} : _" th:lay-verify="*{initialNIV eq 1} ? 'requiredDB' : _" th:disabled="*{initialNIV eq 1} ? _ : true" readonly>
+                            <span>h</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-SNIVT">开始无创通气时间</label>
+                            <input id="PC-db-SNIVT" type="text" th:name="*{initialNIV eq 1} ? 'startNivTime' : _" th:value="*{initialNIV eq 1} ? *{#calendars.format(startNivTime, 'yyyy-MM-dd HH:mm:ss')} : _" th:lay-verify="*{initialNIV eq 1} ? 'requiredDB' : _" th:disabled="*{initialNIV eq 1} ? _ : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-ENIVT">停止无创通气时间</label>
+                            <input id="PC-db-ENIVT" type="text" th:name="*{initialNIV eq 1} ? 'endNivTime' : _" th:value="*{initialNIV eq 1} ? *{#calendars.format(endNivTime, 'yyyy-MM-dd HH:mm:ss')} : _" th:lay-verify="*{initialNIV eq 1} ? 'requiredDB' : _" th:disabled="*{initialNIV eq 1} ? _ : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label for="PC-db-NIVUTD">无创通气持续时间</label>
+                            <div class="pc-db-spanItem">
+                                <input id="PC-db-NIVUTD" type="number" th:name="*{initialNIV eq 1} ? 'nivUseTimeDay' : _" th:value="*{initialNIV eq 1} ? *{nivUseTimeDay} : _" th:lay-verify="*{initialNIV eq 1} ? 'requiredDB' : _" th:disabled="*{initialNIV eq 1} ? _ : true" readonly>
+                                <span>天</span>
+                                <input type="number" th:name="*{initialNIV eq 1} ? 'nivUseTimeHour' : _" th:value="*{initialNIV eq 1} ? *{nivUseTimeHour} : _" th:lay-verify="*{initialNIV eq 1} ? 'requiredDB' : _" th:disabled="*{initialNIV eq 1} ? _ : true" readonly>
+                                <span>h</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div id="PC-db-RSMANIV" class="pc-db-item rbg-lg">
+                            <label>无创通气停止后呼吸支持方式</label>
+                            <input type="hidden" th:name="*{initialNIV eq 1} ? 'respiratorySupportMethodAfterNIV' : _" th:value="*{initialNIV eq 1} ? (*{respiratorySupportMethodAfterNIV} ? *{respiratorySupportMethodAfterNIV} : '无吸氧') : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (*{initialNIV eq 1} ? '' : ' rbgOff')">
+                                <li th:class="*{initialNIV eq 1} ? (*{respiratorySupportMethodAfterNIV} ? _ : 'pc-db-active') : _" data-value="无吸氧">
+                                    <button>无吸氧</button>
+                                </li>
+                                <li th:class="*{respiratorySupportMethodAfterNIV eq '有创高频'} ? 'pc-db-active' : _" data-value="有创高频">
+                                    <button>有创高频</button>
+                                </li>
+                                <li th:class="*{respiratorySupportMethodAfterNIV eq '有创常频'} ? 'pc-db-active' : _" data-value="有创常频">
+                                    <button>有创常频</button>
+                                </li>
+                                <li th:class="*{respiratorySupportMethodAfterNIV eq 'HFNC'} ? 'pc-db-active' : _" data-value="HFNC">
+                                    <button>HFNC</button>
+                                </li>
+                                <li th:class="*{respiratorySupportMethodAfterNIV eq '鼻导管'} ? 'pc-db-active' : _" data-value="鼻导管">
+                                    <button>鼻导管</button>
+                                </li>
+                                <li th:class="*{respiratorySupportMethodAfterNIV eq '头罩'} ? 'pc-db-active' : _" data-value="头罩">
+                                    <button>头罩</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label for="PC-db-NIVSR">无创通气停止的原因</label>
+                            <input id="PC-db-NIVSR" type="text" th:name="*{initialNIV eq 1} ? 'nivStopReason' : _" th:value="*{initialNIV eq 1} ? (*{nivStopReason} ? *{nivStopReason} : _) : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRTSNVF">
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">开始无创通气时的血气分析</label>
+                            <input type="checkbox" name="beginNonInvasiveVentilationBloodGasAnalysis" lay-skin="switch" lay-text="有|无" lay-filter="BNIVBGA" value="1" th:checked="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? true : _) : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item">
+                            <label for="PC-db-BGABNIVPH">PH</label>
+                            <input id="PC-db-BGABNIVPH" type="number" data-name="bgaBeginNivPh" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivPh' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivPh} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-BGABNIVBOS">血氧饱和度</label>
+                            <input id="PC-db-BGABNIVBOS" type="number" data-name="bgaBeginNivBloodOxygenSaturation" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivBloodOxygenSaturation' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivBloodOxygenSaturation} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGABNIVLA">乳酸</label>
+                            <input id="PC-db-BGABNIVLA" type="number" data-name="bgaBeginNivLacticAcid" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivLacticAcid' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivLacticAcid} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGABNIVPO2">PaO<sub>2</sub></label>
+                            <input id="PC-db-BGABNIVPO2" type="number" data-name="bgaBeginNivPaO2" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivPaO2' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivPaO2} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGABNIVPCO2">PaCO<sub>2</sub></label>
+                            <input id="PC-db-BGABNIVPCO2" type="number" data-name="bgaBeginNivPaCO2" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivPaCO2' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivPaCO2} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGABNIVBE">BE</label>
+                            <input id="PC-db-BGABNIVBE" type="number" data-name="bgaBeginNivBE" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivBE' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivBE} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGABNIVHCO3">HCO<sub>3</sub></label>
+                            <input id="PC-db-BGABNIVHCO3" type="number" data-name="bgaBeginNivHCO3" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivHCO3' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivHCO3} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-BGABNIVH">Hgb</label>
+                            <input id="PC-db-BGABNIVH" type="number" data-name="bgaBeginNivHgb" th:name="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaBeginNivHgb' : _) : _" th:value="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaBeginNivHgb} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{beginNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>g/L</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-db-head">
+                    <label>开始无创通气时的参数</label>
+                </div>
+                <div class="layui-row pc-db-BDRTSNVF">
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-SNIVPFO2">FiO<sub>2</sub></label>
+                            <input id="PC-db-SNIVPFO2" type="number" th:name="*{initialNIV eq 1} ? 'startNivParamFiO2' : _" th:value="*{initialNIV eq 1} ? *{startNivParamFiO2} : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-SNIVPPEEP">PEEP</label>
+                            <input id="PC-db-SNIVPPEEP" type="number" th:name="*{initialNIV eq 1} ? 'startNivParamPeep' : _" th:value="*{initialNIV eq 1} ? *{startNivParamPeep} : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                            <span>cmH<sub>2</sub>O</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-SNIVPOI">OI</label>
+                            <input id="PC-db-SNIVPOI" type="number" th:name="*{initialNIV eq 1} ? 'startNivParamOI' : _" th:value="*{initialNIV eq 1} ? *{startNivParamOI} : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRTSNVF">
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">停止无创通气时的血气分析</label>
+                            <input type="checkbox" name="stopNonInvasiveVentilationBloodGasAnalysis" lay-skin="switch" lay-text="有|无" lay-filter="SNIVBGA" value="1" th:checked="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? true : _) : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item">
+                            <label for="PC-db-BGASNIVPH">PH</label>
+                            <input id="PC-db-BGASNIVPH" type="number" data-name="bgaStopNivPh" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivPh' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivPh} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-BGASNIVBOS">血氧饱和度</label>
+                            <input id="PC-db-BGASNIVBOS" type="number" data-name="bgaStopNivBloodOxygenSaturation" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivBloodOxygenSaturation' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivBloodOxygenSaturation} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGASNIVLA">乳酸</label>
+                            <input id="PC-db-BGASNIVLA" type="number" data-name="bgaStopNivLacticAcid" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivLacticAcid' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivLacticAcid} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGASNIVPO2">PaO<sub>2</sub></label>
+                            <input id="PC-db-BGASNIVPO2" type="number" data-name="bgaStopNivPaO2" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivPaO2' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivPaO2} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGASNIVPCO2">PaCO<sub>2</sub></label>
+                            <input id="PC-db-BGASNIVPCO2" type="number" data-name="bgaStopNivPaCO2" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivPaCO2' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivPaCO2} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGASNIVBE">BE</label>
+                            <input id="PC-db-BGASNIVBE" type="number" data-name="bgaStopNivBE" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivBE' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivBE} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BGASNIVHCO3">HCO<sub>3</sub></label>
+                            <input id="PC-db-BGASNIVHCO3" type="number" data-name="bgaStopNivHCO3" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivHCO3' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivHCO3} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-BGASNIVH">Hgb</label>
+                            <input id="PC-db-BGASNIVH" type="number" data-name="bgaStopNivHgb" th:name="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'bgaStopNivHgb' : _) : _" th:value="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? *{bgaStopNivHgb} : _) : _" th:lay-verify="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? 'requiredDB' : _) : _" th:disabled="*{initialNIV eq 1} ? (*{stopNonInvasiveVentilationBloodGasAnalysis eq 1} ? _ : true) : true">
+                            <span>g/L</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-db-head">
+                    <label>停止无创通气时的参数</label>
+                </div>
+                <div class="layui-row pc-db-BDRTSNVF">
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-ENIVPFO2">FiO<sub>2</sub></label>
+                            <input id="PC-db-ENIVPFO2" type="number" th:name="*{initialNIV eq 1} ? 'endNivParamFiO2' : _" th:value="*{initialNIV eq 1} ? *{endNivParamFiO2} : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm3">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-ENIVPPEEP">PEEP</label>
+                            <input id="PC-db-ENIVPPEEP" type="number" th:name="*{initialNIV eq 1} ? 'endNivParamPeep' : _" th:value="*{initialNIV eq 1} ? *{endNivParamPeep} : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                            <span>cmH<sub>2</sub>O</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-ENIVPOI">OI</label>
+                            <input id="PC-db-ENIVPOI" type="number" th:name="*{initialNIV eq 1} ? 'endNivParamOI' : _" th:value="*{initialNIV eq 1} ? *{endNivParamOI} : _" th:disabled="*{initialNIV eq 1} ? _ : true">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="RTSNVF" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDRTSWrite.min.js}"></script>
+</html>

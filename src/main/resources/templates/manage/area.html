@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>区域管理 - 围产新生儿科研合作平台</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,区域,管理"/>
+    <meta name="description" content="围产新生儿科研合作平台区域管理"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/manage.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/head::adminHead"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <i class="iconfont icon-home"></i>
+                            <cite>首页</cite>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree">
+                    <!-- 系统管理 导航 -->
+                    <li class="layui-nav-item">
+                        <a href="/manage/hospital">
+                            <i class="pc-icon iconfont icon-yiyuanguanli1"></i>
+                            <cite>医院管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="/manage/user">
+                            <i class="pc-icon iconfont icon-users"></i>
+                            <cite>用户管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item layui-this">
+                        <a href="#">
+                            <i class="pc-icon iconfont icon-quyuguanli"></i>
+                            <cite>区域管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="/manage/wxmp">
+                            <i class="pc-icon iconfont icon-xiaochengxu"></i>
+                            <cite>小程序管理</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="/manage/feedback">
+                            <i class="pc-icon iconfont icon-fankui"></i>
+                            <cite>反馈处理</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework">
+                <div class="pc-admin-title-frame">
+                    <span class="pc-admin-title"><i class="iconfont icon-DVLINK_quyutese"></i> 区域管理</span>
+                    <a class="pc-link" href="javascript:addArea();"><i class="iconfont icon-zengjia"></i> 新增区域</a>
+                </div>
+                <div class="pc-admin-labelFrame">
+                    <div class="pc-admin-areaPanel" th:each="area : ${areaList}" th:areaId="${area.aid}">
+                        <div class="layui-row">
+                            <div class="layui-col-xs8" th:text="${area.areaName}"></div>
+                            <div class="layui-col-xs4">
+                                <a th:href="${'javascript:setAuthority(' + area.aid + ',''' + area.areaName + ''');'}" title="权限管理"><i class="iconfont icon-quanxian"></i></a>
+                                <a th:href="${'javascript:setHospital(' + area.aid + ',''' + area.areaName + ''');'}" title="医院管理"><i class="iconfont icon-yiyuanguanli"></i></a>
+                                <a th:href="${'javascript:editArea(' + area.aid + ');'}" title="查看编辑"><i class="iconfont icon-bianji"></i></a>
+                            </div>
+                        </div>
+                        <div class="layui-row">
+                            <div class="layui-col-xs4">区域管理</div>
+                            <div class="layui-col-xs8" th:text="${area.fullName}"></div>
+                        </div>
+                        <div class="layui-row">
+                            <div class="layui-col-xs4">下属医院</div>
+                            <div class="layui-col-xs4"><a th:href="@{/manage/hospital(aid=${area.aid})}" th:text="${area.hospitalNum} + '家'"></a></div>
+                            <div class="layui-form layui-col-xs4">
+                                <select name="status" lay-verify="required" lay-filter="PC-admin-area-status">
+                                    <option value="1" th:selected="${area.status} eq 1 ? true : false">正常使用</option>
+                                    <option value="0" th:selected="${area.status} eq 0 ? true : false">停用</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+
+<!-- 新增/修改 区域信息 -->
+<div id="PC-admin-edit" class="pc-layer-panel">
+    <form class="layui-form" lay-filter="editArea" action="javascript:void(0);">
+        <input id="PC-admin-aid" type="hidden">
+        <input id="PC-admin-chargeId" type="hidden">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-name">名称</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-name" name="areaName" class="layui-input" type="text" title="名称" lay-verify="required" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-abbreviation">编号</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-abbreviation" name="abbreviation" class="layui-input" type="text" title="编号" lay-verify="required" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <select name="status" lay-verify="required">
+                    <option value="1">正常使用</option>
+                    <option value="0">停用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-fullName">负责人姓名</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-fullName" name="fullName" class="layui-input" type="text" title="负责人姓名">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-phone">联系方式</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-phone" name="phone" class="layui-input" type="number" title="联系方式">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-username">登录账号</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-username" name="username" class="layui-input" type="text" title="登录账号" lay-verify="required" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-pwd">登录密码</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-pwd" name="password" class="layui-input" type="password" title="登录密码">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="PC-admin-rePwd">确认密码</label>
+            <div class="layui-input-block">
+                <input id="PC-admin-rePwd" name="rePwd" class="layui-input" type="password" title="确认密码">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="pc-btn pc-btn-save" lay-filter="editArea" lay-submit>保存</button>
+        </div>
+    </form>
+</div>
+
+<!-- 权限管理 -->
+<div id="PC-admin-authority" class="pc-layer-panel">
+    <form class="layui-form" lay-filter="setAreaAuthority" action="javascript:void(0);">
+        <div id="ABDA" class="pc-admin-authority">
+            <input type="checkbox" name="basicDatabase" title="基础数据库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="bdMotherInformation" title="母亲信息" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdGestationInformation" title="孕期信息" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdPerinatalInformation" title="围产信息" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdBabySituation" title="宝宝情况" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdRecoverySituation" title="复苏情况" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdCriticalAssessment" title="危重评估" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdRespiratorySystem" title="呼吸系统" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdDigestiveSystem" title="消化系统" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdInfectionSurveillance" title="感染监测" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdCirculatorySystem" title="循环系统" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdNervousSystem" title="神经系统" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdRetinopathy" title="视网膜病" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="bdDischargeSituation" title="出院情况" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+        <hr/>
+        <div id="ADPCA" class="pc-admin-authority">
+            <input type="checkbox" name="doctorPatientCommunication" title="医患交流库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="dpcBreastMilkDiary" title="母乳日志" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="dpcGrowthCurve" title="生长曲线" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="dpcFeedingSituation" title="喂养情况" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="dpcDoctorPatientCommunication" title="医患沟通" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+        <hr/>
+        <div id="AMBSRA" class="pc-admin-authority">
+            <input type="checkbox" name="motherBabySameRoom" title="母婴同室库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="mbsrBloodOxygenMonitor" title="血氧监测" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+        <hr/>
+        <div id="APPA" class="pc-admin-authority">
+            <input type="checkbox" name="parentalPsychology" title="父母心理库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="ppPrenatalPsychology" title="产前心理" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="ppPostpartumPsychology" title="产后心理" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+        <hr/>
+        <div id="ARDA" class="pc-admin-authority">
+            <input type="checkbox" name="researchDatabase" title="研究数据库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="rdHypothermiaQI" title="低体温QI" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+        <hr/>
+        <div id="AUIA" class="pc-admin-authority">
+            <input type="checkbox" name="ultrasoundImage" title="超声影像库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="uiBrainUltrasound" title="颅脑超声" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+        <hr/>
+        <div id="AFDA" class="pc-admin-authority">
+            <input type="checkbox" name="followDatabase" title="随访数据库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="fdFollowInformation" title="随访信息" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="fdGrowthCurve" title="生长曲线" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="fdDevelopmentalLevel" title="发育水平" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="fdGrowthProcess" title="成长历程" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="fdGrowthExchange" title="成长交流" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="fdSpecialDisease" title="专病随访" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+        <hr/>
+        <div id="AHBA" class="pc-admin-authority">
+            <input type="checkbox" name="highBilirubin" title="高胆数据库" value="1" lay-filter="authCheckboxAll">
+            <div class="layui-form-item pc-admin-authority-item">
+                <input type="checkbox" name="hbPerinatalInformation" title="围产信息" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="hbTreatment" title="高胆治疗" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="hbFollowUpExamination" title="随访检查" value="1" lay-filter="authCheckbox">
+                <input type="checkbox" name="hbFollowUpConclusion" title="随访结论" value="1" lay-filter="authCheckbox">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="pc-btn pc-btn-save" lay-filter="setAreaAuthority" lay-submit>保存</button>
+        </div>
+    </form>
+</div>
+
+<!-- 设置医院 -->
+<div id="PC-admin-setHospital" class="pc-layer-panel">
+    <form class="layui-form" lay-filter="setHospital" action="javascript:void(0);">
+        <div>
+            <div class="layui-row" th:each="areaHospital : ${areaHospitalList}">
+                <div class="layui-col-xs4 layui-col-sm3">
+                    <input type="checkbox" th:title="${areaHospital.province}" lay-filter="hospitalCheckboxAll">
+                </div>
+                <div class="layui-col-xs8 layui-col-sm9">
+                    <div class="pc-admin-hospitalCheckbox" th:each="hospital,iterStat : ${areaHospital.hospitalList}">
+                        <input type="checkbox" name="hospitalId[]" th:title="${hospital.hospitalName}" th:value="${hospital.hid}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="pc-btn pc-btn-save" lay-filter="setHospital" lay-submit>保存</button>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/manage.min.js}"></script>
+</html>

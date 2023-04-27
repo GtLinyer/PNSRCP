@@ -1,0 +1,49 @@
+.pc-db-item>.layui-form-switch {
+    margin: 0;
+    position: absolute;
+}
+
+.pc-db-MBSRBOM .pc-db-item>input,
+.pc-db-MBSRBOM .pc-db-item>.pc-db-enter,
+.pc-db-MBSRBOM .pc-db-item>.layui-form-switch{
+    left: 136px;
+}
+.pc-db-MBSRBOM .pc-db-item-datetime i {
+    left: 300px;
+}
+.pc-db-MBSRBOM .pc-db-item-unit>span {
+    left: 190px;
+}
+.pc-db-MBSRBOM .pc-db-item-unit-lg>span {
+    left: 192px;
+}
+.pc-db-MBSRBOM .pc-db-item.mtab>input {
+    left: 54px;
+}
+.pc-db-MBSRBOM .pc-db-item-unit.mtab>span {
+    left: 112px;
+}
+.pc-db-MBSRBOM .pc-db-item-unit-lg.mtab>span {
+    left: 110px;
+}
+.pc-db-MBSRBOM .pc-db-item.aftos>input {
+    left: 168px;
+}
+.pc-db-MBSRBOM .pc-db-item.aftos>span {
+    left: 220px;
+}
+
+/* 移动模式 */
+@media screen and (max-width: 768px) {
+    .pc-db-MBSRBOM .pc-db-item.mtab > input {
+        left: 136px;
+    }
+
+    .pc-db-MBSRBOM .pc-db-item-unit.mtab > span {
+        left: 190px;
+    }
+
+    .pc-db-MBSRBOM .pc-db-item-unit-lg.mtab > span {
+        left: 192px;
+    }
+}

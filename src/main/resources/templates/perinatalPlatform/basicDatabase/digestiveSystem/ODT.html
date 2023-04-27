@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>消化系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,消化系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库消化系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/dgsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDDGS layui-form" sec:authorize="hasRole('ROLE_BDDGS')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">生长指标</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/EN">肠内营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PN">肠外营养</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FR">禁食原因</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/FIN">喂养不耐受与NEC</a>
+                    <a href="#"><cite>其它诊断与治疗</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/ENM">肠内营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/PNM">肠外营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/TNM">过渡期营养管理</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/DGS/NE">营养评价</a>
+                </span>
+                <div class="layui-row pc-db-BDDGSODT" th:object="${odt}">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">新生儿咽下综合征</label>
+                            <input type="checkbox" name="neonatalSwallowingSyndrome" lay-skin="switch" lay-text="是|否" value="1" th:checked="${odt} ? (*{neonatalSwallowingSyndrome} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">新生儿胃食管反流</label>
+                            <input type="checkbox" name="neonatalGastroesophagealReflux" lay-skin="switch" lay-text="是|否" value="1" th:checked="${odt} ? (*{neonatalGastroesophagealReflux} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">新生儿腹泻</label>
+                            <input type="checkbox" name="neonatalDiarrhea" lay-skin="switch" lay-text="是|否" value="1" th:checked="${odt} ? (*{neonatalDiarrhea} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">感染性肠炎</label>
+                            <input type="checkbox" name="infectiousEnteritis" lay-skin="switch" lay-text="是|否" value="1" th:checked="${odt} ? (*{infectiousEnteritis} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">过敏性肠炎</label>
+                            <input type="checkbox" name="allergicEnteritis" lay-skin="switch" lay-text="是|否" value="1" th:checked="${odt} ? (*{allergicEnteritis} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脐静脉置管</label>
+                            <input type="checkbox" name="umbilicalVeinCatheter" lay-skin="switch" lay-text="是|否" value="1" th:checked="${odt} ? (*{umbilicalVeinCatheter} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div id="PC-db-DTP" class="pc-db-item">
+                            <label>消化道穿孔</label>
+                            <input type="hidden" name="digestiveTractPerforation" th:value="${odt} ? *{digestiveTractPerforation} : _" lay-verify="requiredRadioGroup">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${odt} ? (*{digestiveTractPerforation eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${odt} ? (*{digestiveTractPerforation eq 'NEC相关'} ? 'pc-db-active' : _) : _" data-value="NEC相关">
+                                    <button>NEC相关</button>
+                                </li>
+                                <li th:class="${odt} ? (*{digestiveTractPerforation eq '自发性穿孔'} ? 'pc-db-active' : _) : _" data-value="自发性穿孔">
+                                    <button>自发性穿孔</button>
+                                </li>
+                                <li th:class="${odt} ? (*{digestiveTractPerforation eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime lg">
+                            <label for="PC-db-NECRDTPDT">NEC相关消化道穿孔诊断时间</label>
+                            <input id="PC-db-NECRDTPDT" type="text" data-name="necRelatedDigestiveTractPerforationDiagnosisTime" th:name="${odt} ? (*{digestiveTractPerforation eq 'NEC相关'} ? 'necRelatedDigestiveTractPerforationDiagnosisTime' : _) : _" th:value="${odt} ? (*{digestiveTractPerforation eq 'NEC相关'} ? *{#calendars.format(necRelatedDigestiveTractPerforationDiagnosisTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${odt} ? (*{digestiveTractPerforation eq 'NEC相关'} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{digestiveTractPerforation eq 'NEC相关'} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime lg">
+                            <label for="PC-db-FSPT">首次自发性穿孔发生时间</label>
+                            <input id="PC-db-FSPT" type="text" data-name="firstSpontaneousPerforationTime" th:name="${odt} ? (*{digestiveTractPerforation eq '自发性穿孔'} ? 'firstSpontaneousPerforationTime' : _) : _" th:value="${odt} ? (*{digestiveTractPerforation eq '自发性穿孔'} ? *{#calendars.format(firstSpontaneousPerforationTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${odt} ? (*{digestiveTractPerforation eq '自发性穿孔'} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{digestiveTractPerforation eq '自发性穿孔'} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-DTPT" class="pc-db-item">
+                            <label>治疗</label>
+                            <input type="hidden" data-name="digestiveTractPerforationTreatment" th:name="${odt} ? (*{(digestiveTractPerforation eq '自发性穿孔') or (digestiveTractPerforation eq 'NEC相关')} ? 'digestiveTractPerforationTreatment' : _) : _" th:value="${odt} ? (*{(digestiveTractPerforation eq '自发性穿孔') or (digestiveTractPerforation eq 'NEC相关')} ? *{digestiveTractPerforationTreatment} : _) : _" th:lay-verify="${odt} ? (*{(digestiveTractPerforation eq '自发性穿孔') or (digestiveTractPerforation eq 'NEC相关')} ? 'requiredRadioGroup' : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${odt ne null} ? (*{(digestiveTractPerforation eq '自发性穿孔') or (digestiveTractPerforation eq 'NEC相关')} ? '' : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${odt} ? (*{(digestiveTractPerforation eq '自发性穿孔') or (digestiveTractPerforation eq 'NEC相关')} ? (*{digestiveTractPerforationTreatment eq '观察'} ? 'pc-db-active' : _) : _) : _" data-value="观察">
+                                    <button>观察</button>
+                                </li>
+                                <li th:class="${odt} ? (*{(digestiveTractPerforation eq '自发性穿孔') or (digestiveTractPerforation eq 'NEC相关')} ? (*{digestiveTractPerforationTreatment eq '手术'} ? 'pc-db-active' : _) : _) : _" data-value="手术">
+                                    <button>手术</button>
+                                </li>
+                                <li th:class="${odt} ? (*{(digestiveTractPerforation eq '自发性穿孔') or (digestiveTractPerforation eq 'NEC相关')} ? (*{digestiveTractPerforationTreatment eq '腹腔引流'} ? 'pc-db-active' : _) : _) : _" data-value="腹腔引流">
+                                    <button>腹腔引流</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">消化道出血</label>
+                            <input type="checkbox" name="gastrointestinalBleeding" lay-skin="switch" lay-text="是|否" value="1" th:checked="${odt} ? (*{gastrointestinalBleeding} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">新生儿胆汁淤积综合征</label>
+                            <input type="checkbox" name="neonatalCholestasisSyndrome" lay-skin="switch" lay-text="是|否" lay-filter="NCS" value="1" th:checked="${odt} ? (*{neonatalCholestasisSyndrome} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-NCSDT">诊断时间</label>
+                            <input id="PC-db-NCSDT" type="text" data-name="neonatalCholestasisSyndromeDiagnosisTime" th:name="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'neonatalCholestasisSyndromeDiagnosisTime' : _) : _" th:value="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? *{#calendars.format(neonatalCholestasisSyndromeDiagnosisTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-TB">总胆红素</label>
+                            <input id="PC-db-TB" type="number" data-name="totalBilirubin" th:name="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'totalBilirubin' : _) : _" th:value="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? *{totalBilirubin} : _) : _" th:lay-verify="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? _ : true) : true">
+                            <span>μmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-DB">直接胆红素</label>
+                            <input id="PC-db-DB" type="number" data-name="directBilirubin" th:name="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'directBilirubin' : _) : _" th:value="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? *{directBilirubin} : _) : _" th:lay-verify="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? _ : true) : true">
+                            <span>μmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-AST">AST</label>
+                            <input id="PC-db-AST" type="number" data-name="ast" th:name="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'ast' : _) : _" th:value="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? *{ast} : _) : _" th:lay-verify="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? _ : true) : true">
+                            <span>U/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-ALT">ALT</label>
+                            <input id="PC-db-ALT" type="number" data-name="alt" th:name="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'alt' : _) : _" th:value="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? *{alt} : _) : _" th:lay-verify="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? _ : true) : true">
+                            <span>U/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-TBA">TBA</label>
+                            <input id="PC-db-TBA" type="number" data-name="tba" th:name="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'tba' : _) : _" th:value="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? *{tba} : _) : _" th:lay-verify="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? 'requiredDB' : _) : _" th:disabled="${odt} ? (*{neonatalCholestasisSyndrome eq 1} ? _ : true) : true">
+                            <span>μmol/L</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="DGSODT" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDDGSWrite.min.js}"></script>
+</html>

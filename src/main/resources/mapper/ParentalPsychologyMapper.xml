@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pnsrcp.web.dao.ParentalPsychologyMapper">
+
+    <!-- 插入/更新 父母心理库 预产期 -->
+    <insert id="ppExpectedDeliveryDateInsertUpdate">
+        insert into pc_pp_edd_birthday (mid, expectedDeliveryDate)
+        value (#{motherId}, #{expectedDeliveryDate})
+        on duplicate key update
+            expectedDeliveryDate=#{expectedDeliveryDate}
+    </insert>
+
+    <!-- 查询 父母心理库 预产期 -->
+    <select id="ppExpectedDeliveryDateQry" resultType="date">
+        select expectedDeliveryDate
+        from pc_pp_edd_birthday
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产前心理 EPDS评估 数据 -->
+    <select id="ppPrEpdsQry" resultType="com.pnsrcp.web.entity.perintalPlatform.parentalPsychology.PPPrEpds">
+        select id, mid, evaluationDate, gestationalAgeWeek, gestationalAgeDay, evaluationMethod, epdsScore
+        from pc_pp_pr_epds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产前心理 EPDS评估 次数 -->
+    <select id="ppPrEpdsEvaluationsNumberQry" resultType="int">
+        select count(id)
+        from pc_pp_pr_epds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 父母心理库 产前心理 EPDS评估 -->
+    <insert id="ppPrEpdsInsertUpdate">
+        insert into pc_pp_pr_epds (id, mid, evaluationDate, gestationalAgeWeek, gestationalAgeDay, evaluationMethod, epdsScore)
+        value (#{ppPrEpds.id}, #{ppPrEpds.mid}, #{ppPrEpds.evaluationDate}, #{ppPrEpds.gestationalAgeWeek}, #{ppPrEpds.gestationalAgeDay},
+            #{ppPrEpds.evaluationMethod}, #{ppPrEpds.epdsScore})
+        on duplicate key update
+            mid=#{ppPrEpds.mid},
+            evaluationDate=#{ppPrEpds.evaluationDate},
+            gestationalAgeWeek=#{ppPrEpds.gestationalAgeWeek},
+            gestationalAgeDay=#{ppPrEpds.gestationalAgeDay},
+            evaluationMethod=#{ppPrEpds.evaluationMethod},
+            epdsScore=#{ppPrEpds.epdsScore}
+    </insert>
+
+    <!-- 删除 父母心理库 产前心理 EPDS评估 -->
+    <delete id="ppPrEpdsDelete">
+        delete from pc_pp_pr_epds
+        where id=#{id}
+    </delete>
+
+    <!-- 查询 父母心理库 产前心理 SAS评估 数据 -->
+    <select id="ppPrSasQry" resultType="com.pnsrcp.web.entity.perintalPlatform.parentalPsychology.PPPrSasOrSds">
+        select id, mid, evaluationDate, gestationalAgeWeek, gestationalAgeDay, evaluationMethod, totalRoughScore, standardScore
+        from pc_pp_pr_sas
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产前心理 SAS评估 次数 -->
+    <select id="ppPrSasEvaluationsNumberQry" resultType="int">
+        select count(id)
+        from pc_pp_pr_sas
+        where mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 父母心理库 产前心理 SAS评估 -->
+    <insert id="ppPrSasInsertUpdate">
+        insert into pc_pp_pr_sas (id, mid, evaluationDate, gestationalAgeWeek, gestationalAgeDay, evaluationMethod, totalRoughScore, standardScore)
+        value (#{ppPrSas.id}, #{ppPrSas.mid}, #{ppPrSas.evaluationDate}, #{ppPrSas.gestationalAgeWeek}, #{ppPrSas.gestationalAgeDay},
+            #{ppPrSas.evaluationMethod}, #{ppPrSas.totalRoughScore}, #{ppPrSas.standardScore})
+        on duplicate key update
+            mid=#{ppPrSas.mid},
+            evaluationDate=#{ppPrSas.evaluationDate},
+            gestationalAgeWeek=#{ppPrSas.gestationalAgeWeek},
+            gestationalAgeDay=#{ppPrSas.gestationalAgeDay},
+            evaluationMethod=#{ppPrSas.evaluationMethod},
+            totalRoughScore=#{ppPrSas.totalRoughScore},
+            standardScore=#{ppPrSas.standardScore}
+    </insert>
+
+    <!-- 删除 父母心理库 产前心理 SAS评估 -->
+    <delete id="ppPrSasDelete">
+        delete from pc_pp_pr_sas
+        where id=#{id}
+    </delete>
+
+    <!-- 查询 父母心理库 产前心理 SDS评估 数据 -->
+    <select id="ppPrSdsQry" resultType="com.pnsrcp.web.entity.perintalPlatform.parentalPsychology.PPPrSasOrSds">
+        select id, mid, evaluationDate, gestationalAgeWeek, gestationalAgeDay, evaluationMethod, totalRoughScore, standardScore
+        from pc_pp_pr_sds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产前心理 SDS评估 次数 -->
+    <select id="ppPrSdsEvaluationsNumberQry" resultType="int">
+        select count(id)
+        from pc_pp_pr_sds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 父母心理库 产前心理 SDS评估 -->
+    <insert id="ppPrSdsInsertUpdate">
+        insert into pc_pp_pr_sds (id, mid, evaluationDate, gestationalAgeWeek, gestationalAgeDay, evaluationMethod, totalRoughScore, standardScore)
+        value (#{ppPrSds.id}, #{ppPrSds.mid}, #{ppPrSds.evaluationDate}, #{ppPrSds.gestationalAgeWeek}, #{ppPrSds.gestationalAgeDay},
+            #{ppPrSds.evaluationMethod}, #{ppPrSds.totalRoughScore}, #{ppPrSds.standardScore})
+        on duplicate key update
+            mid=#{ppPrSds.mid},
+            evaluationDate=#{ppPrSds.evaluationDate},
+            gestationalAgeWeek=#{ppPrSds.gestationalAgeWeek},
+            gestationalAgeDay=#{ppPrSds.gestationalAgeDay},
+            evaluationMethod=#{ppPrSds.evaluationMethod},
+            totalRoughScore=#{ppPrSds.totalRoughScore},
+            standardScore=#{ppPrSds.standardScore}
+    </insert>
+
+    <!-- 删除 父母心理库 产前心理 SDS评估 -->
+    <delete id="ppPrSdsDelete">
+        delete from pc_pp_pr_sds
+        where id=#{id}
+    </delete>
+
+    <!-- 插入/更新 父母心理库 出生日期 -->
+    <insert id="poBirthdayInsertUpdate">
+        insert into pc_pp_edd_birthday (mid, birthday)
+        value (#{motherId}, #{birthday})
+        on duplicate key update
+            birthday=#{birthday}
+    </insert>
+
+    <!-- 查询 父母心理库 出生日期 -->
+    <select id="poBirthdayQry" resultType="date">
+        select birthday
+        from pc_pp_edd_birthday
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产后心理 EPDS评估 数据 -->
+    <select id="ppPoEpdsQry" resultType="com.pnsrcp.web.entity.perintalPlatform.parentalPsychology.PPPoEpds">
+        select id, mid, evaluationDate, daysAfterBirth, evaluationMethod, epdsScore
+        from pc_pp_po_epds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产后心理 EPDS评估 次数 -->
+    <select id="ppPoEpdsEvaluationsNumberQry" resultType="int">
+        select count(id)
+        from pc_pp_po_epds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 父母心理库 产后心理 EPDS评估 -->
+    <insert id="ppPoEpdsInsertUpdate">
+        insert into pc_pp_po_epds (id, mid, evaluationDate, daysAfterBirth, evaluationMethod, epdsScore)
+        value (#{ppPoEpds.id}, #{ppPoEpds.mid}, #{ppPoEpds.evaluationDate}, #{ppPoEpds.daysAfterBirth}, #{ppPoEpds.evaluationMethod},
+            #{ppPoEpds.epdsScore})
+        on duplicate key update
+            mid=#{ppPoEpds.mid},
+            evaluationDate=#{ppPoEpds.evaluationDate},
+            daysAfterBirth=#{ppPoEpds.daysAfterBirth},
+            evaluationMethod=#{ppPoEpds.evaluationMethod},
+            epdsScore=#{ppPoEpds.epdsScore}
+    </insert>
+
+    <!-- 删除 父母心理库 产后心理 EPDS评估 -->
+    <delete id="ppPoEpdsDelete">
+        delete from pc_pp_po_epds
+        where id=#{id}
+    </delete>
+
+    <!-- 查询 父母心理库 产后心理 SAS评估 数据 -->
+    <select id="ppPoSasQry" resultType="com.pnsrcp.web.entity.perintalPlatform.parentalPsychology.PPPoSasOrSds">
+        select id, mid, evaluationDate, daysAfterBirth, evaluationMethod, totalRoughScore, standardScore
+        from pc_pp_po_sas
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产后心理 SAS评估 次数 -->
+    <select id="ppPoSasEvaluationsNumberQry" resultType="int">
+        select count(id)
+        from pc_pp_po_sas
+        where mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 父母心理库 产后心理 SAS评估 -->
+    <insert id="ppPoSasInsertUpdate">
+        insert into pc_pp_po_sas (id, mid, evaluationDate, daysAfterBirth, evaluationMethod, totalRoughScore, standardScore)
+        value (#{ppPoSas.id}, #{ppPoSas.mid}, #{ppPoSas.evaluationDate}, #{ppPoSas.daysAfterBirth}, #{ppPoSas.evaluationMethod},
+            #{ppPoSas.totalRoughScore}, #{ppPoSas.standardScore})
+        on duplicate key update
+            mid=#{ppPoSas.mid},
+            evaluationDate=#{ppPoSas.evaluationDate},
+            daysAfterBirth=#{ppPoSas.daysAfterBirth},
+            evaluationMethod=#{ppPoSas.evaluationMethod},
+            totalRoughScore=#{ppPoSas.totalRoughScore},
+            standardScore=#{ppPoSas.standardScore}
+    </insert>
+
+    <!-- 删除 父母心理库 产后心理 SAS评估 -->
+    <delete id="ppPoSasDelete">
+        delete from pc_pp_po_sas
+        where id=#{id}
+    </delete>
+
+    <!-- 查询 父母心理库 产后心理 SDS评估 数据 -->
+    <select id="ppPoSdsQry" resultType="com.pnsrcp.web.entity.perintalPlatform.parentalPsychology.PPPoSasOrSds">
+        select id, mid, evaluationDate, daysAfterBirth, evaluationMethod, totalRoughScore, standardScore
+        from pc_pp_po_sds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 产后心理 SDS评估 次数 -->
+    <select id="ppPoSdsEvaluationsNumberQry" resultType="int">
+        select count(id)
+        from pc_pp_po_sds
+        where mid=#{motherId}
+    </select>
+
+    <!-- 插入/更新 父母心理库 产后心理 SDS评估 -->
+    <insert id="ppPoSdsInsertUpdate">
+        insert into pc_pp_po_sds (id, mid, evaluationDate, daysAfterBirth, evaluationMethod, totalRoughScore, standardScore)
+        value (#{ppPoSds.id}, #{ppPoSds.mid}, #{ppPoSds.evaluationDate}, #{ppPoSds.daysAfterBirth}, #{ppPoSds.evaluationMethod},
+            #{ppPoSds.totalRoughScore}, #{ppPoSds.standardScore})
+        on duplicate key update
+            mid=#{ppPoSds.mid},
+            evaluationDate=#{ppPoSds.evaluationDate},
+            daysAfterBirth=#{ppPoSds.daysAfterBirth},
+            evaluationMethod=#{ppPoSds.evaluationMethod},
+            totalRoughScore=#{ppPoSds.totalRoughScore},
+            standardScore=#{ppPoSds.standardScore}
+    </insert>
+
+    <!-- 删除 父母心理库 产后心理 SDS评估 -->
+    <delete id="ppPoSdsDelete">
+        delete from pc_pp_po_sds
+        where id=#{id}
+    </delete>
+
+    <!-- 查询 父母心理库 病例填写状态 -->
+    <select id="ppCaseStatusQry" resultType="com.pnsrcp.web.entity.perintalPlatform.CaseStatus">
+        select status
+        from pc_pp_edd_birthday
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 审核次数 -->
+    <select id="ppReviewCount" resultType="int">
+        select count(id)
+        from pc_pp_review
+        where mid=#{motherId}
+    </select>
+
+    <!-- 查询 父母心理库 审核情况 -->
+    <select id="ppReviewQry" resultType="com.pnsrcp.web.entity.perintalPlatform.Review">
+        select id, mid, status, problem, reviewerName, createTime
+        from pc_pp_review
+        where mid=#{motherId}
+    </select>
+
+    <!-- 插入 父母心理库 审核情况 -->
+    <insert id="ppReviewInsert">
+        insert into pc_pp_review (mid, status, problem, reviewerName)
+        value (#{ppReview.mid}, #{ppReview.status}, #{ppReview.problem}, #{ppReview.reviewerName})
+    </insert>
+
+    <!-- 更新 父母心理库 填写状态 -->
+    <update id="ppStatusUpdate">
+        update pc_pp_edd_birthday
+        set status=#{status}
+        where mid=#{motherId}
+    </update>
+</mapper>

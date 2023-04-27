@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>复苏情况 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,复苏情况"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库复苏情况"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#FAC2C2"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 基础数据库 导航 -->
+                    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_BD')">
+                        <a class="pc-item" href="javascript:void(0);">
+                            <i class="pc-icon iconfont icon-jichushujuku"></i>
+                            <cite>基础数据库</cite>
+                        </a>
+
+                        <dl class="layui-nav-child">
+                            <dd sec:authorize="hasRole('ROLE_BDMI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/MI">
+                                    <i class="pc-icon iconfont icon-mother-nurse"></i>
+                                    <cite>母亲信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDGI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/GI">
+                                    <i class="pc-icon iconfont icon-yunqi"></i>
+                                    <cite>孕期信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDPI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/PI">
+                                    <i class="pc-icon iconfont icon-huaiyun"></i>
+                                    <cite>围产信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDBS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/BS">
+                                    <i class="pc-icon iconfont icon-baobao"></i>
+                                    <cite>宝宝情况</cite>
+                                </a>
+                            </dd>
+                            <dd class="layui-this" sec:authorize="hasRole('ROLE_BDRS')">
+                                <a href="#">
+                                    <i class="pc-icon iconfont icon-fusu"></i>
+                                    <cite>复苏情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDCA')">
+                                <a href="/perinatalPlatform/basicDatabase/write/CA">
+                                    <i class="pc-icon iconfont icon-weizhong"></i>
+                                    <cite>危重评估</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRST')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">
+                                    <i class="pc-icon iconfont icon-huxixitong"></i>
+                                    <cite>呼吸系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDGS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">
+                                    <i class="pc-icon iconfont icon-xiaohuaxitong"></i>
+                                    <cite>消化系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDIS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/IS/EOS">
+                                    <i class="pc-icon iconfont icon-jiance"></i>
+                                    <cite>感染监测</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDCS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/CS">
+                                    <i class="pc-icon iconfont icon-xunhuanxitong"></i>
+                                    <cite>循环系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDNS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/NS/US">
+                                    <i class="pc-icon iconfont icon-shenjingwaike"></i>
+                                    <cite>神经系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRP')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RP/SS">
+                                    <i class="pc-icon iconfont icon-shiwangmobingbian"></i>
+                                    <cite>视网膜病</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DS">
+                                    <i class="pc-icon iconfont icon-chuyuanjilu"></i>
+                                    <cite>出院情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BD')">
+                                <a href="/perinatalPlatform/basicDatabase/review">
+                                    <i class="pc-icon iconfont icon-shenhe"></i>
+                                    <cite>病例审核</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+                    <!-- 医患交流库 导航 -->
+                    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+                    <!-- 母婴同室库 导航 -->
+                    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+                    <!-- 父母心理库 导航 -->
+                    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+                    <!-- 研究数据库 导航 -->
+                    <li th:replace="include/navMenu::researchDatabase"></li>
+
+                    <!-- 超声影像库 导航 -->
+                    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+                    <!-- 随访数据库 导航 -->
+                    <li th:replace="include/navMenu::followDatabase"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDRS layui-form" lay-filter="RS" th:data-birthday="${birthday} ? ${#calendars.format(birthday, 'yyyy-MM-dd HH:mm:ss')}" th:object="${recoverySituation}" sec:authorize="hasRole('ROLE_BDRS')">
+                <div id="PC-db-RM" class="pc-db-item">
+                    <label>复苏措施</label>
+                    <input type="hidden" name="recoveryMeasures" th:value="${recoverySituation} ? *{recoveryMeasures} : _">
+                    <ul class="pc-db-radioBtn-group pc-db-enter">
+                        <li th:class="${recoverySituation} ? (*{recoveryMeasures eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                            <button>无</button>
+                        </li>
+                        <li th:class="${recoverySituation} ? (*{recoveryMeasures eq '有'} ? 'pc-db-active' : _) : _" data-value="有">
+                            <button>有</button>
+                        </li>
+                        <li th:class="${recoverySituation} ? (*{recoveryMeasures eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                            <button>不详</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="layui-row pc-db-BDRS pc-db-BDRSC">
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">吸引、轻度刺激</label>
+                            <input type="checkbox" data-name="attractionMildStimulation" th:name="${hasRM} ? 'attractionMildStimulation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{attractionMildStimulation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">鼻导管吸氧</label>
+                            <input type="checkbox" data-name="nasalCannulaOxygen" th:name="${hasRM} ? 'nasalCannulaOxygen' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{nasalCannulaOxygen eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">面罩正压通气</label>
+                            <input type="checkbox" data-name="positiveMaskVentilation" th:name="${hasRM} ? 'positiveMaskVentilation' : _" lay-skin="switch" lay-text="有|无" value="1" lay-filter="PMV" th:checked="${hasRM} ? (*{positiveMaskVentilation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                            <div class="pc-db-attach">
+                                <input type="checkbox" data-name="pmvResuscitationBag" th:name="${hasRM} ? (*{positiveMaskVentilation eq 1} ? 'pmvResuscitationBag' : _) : _" value="1" title="复苏囊" th:checked="${hasRM} ? (*{pmvResuscitationBag eq 1} ? true: _) : _" th:disabled="${hasRM} ? (*{positiveMaskVentilation eq 1} ? _ : true) : true">
+                                <input type="checkbox" data-name="pmvTCombiner" th:name="${hasRM} ? (*{positiveMaskVentilation eq 1} ? 'pmvTCombiner' : _) : _" value="1" title="T组合器" th:checked="${hasRM} ? (*{pmvTCombiner eq 1} ? true: _) : _" th:disabled="${hasRM} ? (*{positiveMaskVentilation eq 1} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">持续气道正压</label>
+                            <input type="checkbox" data-name="continuousPositiveAirwayPressure" th:name="${hasRM} ? 'continuousPositiveAirwayPressure' : _" lay-skin="switch" lay-text="有|无" value="1" lay-filter="CPAP" th:checked="${hasRM} ? (*{continuousPositiveAirwayPressure eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                            <div id="PC-db-CPAPM" class="pc-db-attach">
+                                <input type="hidden" data-name="cpapMothed" th:name="${hasRM} ? (*{continuousPositiveAirwayPressure eq 1} ? 'cpapMothed' : _) : _" th:lay-verify="${hasRM} ? (*{continuousPositiveAirwayPressure eq 1} ? 'requiredRadioGroup' : _) : _" th:value="${hasRM} ? (*{continuousPositiveAirwayPressure eq 1} ? *{cpapMothed} : _) : _">
+                                <ul th:class="'pc-db-radioBtn-group' + (${hasRM} ? (*{continuousPositiveAirwayPressure eq 1} ? '' : ' rbgOff') : ' rbgOff')">
+                                    <li th:class="${hasRM} ? (*{cpapMothed eq '面罩T组合器'} ? 'pc-db-active' : _) : _" data-value="面罩T组合器">
+                                        <button>面罩T组合器</button>
+                                    </li>
+                                    <li th:class="${hasRM} ? (*{cpapMothed eq 'nCPAP'} ? 'pc-db-active' : _) : _" data-value="nCPAP">
+                                        <button>nCPAP</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">气管插管</label>
+                            <input type="checkbox" data-name="trachealIntubation" th:name="${hasRM} ? 'trachealIntubation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{trachealIntubation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">胸外按压>60s</label>
+                            <input type="checkbox" data-name="chestCompressionH60S" th:name="${hasRM} ? 'chestCompressionH60S' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{chestCompressionH60S eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">肾上腺素</label>
+                            <input type="checkbox" data-name="adrenaline" th:name="${hasRM} ? 'adrenaline' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{adrenaline eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">生理盐水</label>
+                            <input type="checkbox" data-name="normalSaline" th:name="${hasRM} ? 'normalSaline' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{normalSaline eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm12">
+                        <div id="PC-db-RIG" class="pc-db-item">
+                            <label>复苏初始气体</label>
+                            <input type="hidden" data-name="resuscitateInitialGas" th:name="${hasRM} ? 'resuscitateInitialGas' : _" th:lay-verify="${hasRM} ? 'requiredRadioGroup' : _" th:value="${hasRM} ? *{resuscitateInitialGas} : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${hasRM} ? '' : ' rbgOff')">
+                                <li th:class="${hasRM} ? (*{resuscitateInitialGas eq '空气'} ? 'pc-db-active' : _) : _" data-value="空气">
+                                    <button>空气</button>
+                                </li>
+                                <li th:class="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? 'pc-db-active' : _) : _" data-value="氧气">
+                                    <button>氧气</button>
+                                </li>
+                                <li th:class="${hasRM} ? (*{resuscitateInitialGas eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-IOC">初始氧浓度</label>
+                            <input id="PC-db-IOC" type="number" data-name="initialOxygenConcentration" th:name="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? 'initialOxygenConcentration' : _) : _" th:lay-verify="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? 'requiredDB' : _) : _" th:value="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? *{initialOxygenConcentration} : _) : _" th:disabled="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-RMOC">复苏最高氧浓度</label>
+                            <input id="PC-db-RMOC" type="number" data-name="resuscitationMaxO2Concentration" th:name="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? 'resuscitationMaxO2Concentration' : _) : _" th:lay-verify="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? 'requiredDB' : _) : _" th:value="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ? *{resuscitationMaxO2Concentration} : _) : _" th:disabled="${hasRM} ? (*{resuscitateInitialGas eq '氧气'} ?  _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>给药方式</label>
+                            <div class="pc-db-spanItem">
+                                <input type="checkbox" name="administrationModeUmbilicalVein" value="1" title="脐静脉" th:checked="${hasRM} ? (*{administrationModeUmbilicalVein eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                                <input type="checkbox" name="administrationModeUmbilicalArtery" value="1" title="脐动脉" th:checked="${hasRM} ? (*{administrationModeUmbilicalArtery eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                                <input type="checkbox" name="administrationModePeripheralVein" value="1" title="外周静脉" th:checked="${hasRM} ? (*{administrationModePeripheralVein eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                                <input type="checkbox" name="administrationModeTrachealTube" value="1" title="气管导管" th:checked="${hasRM} ? (*{administrationModeTrachealTube eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-db-head">
+                    <label>Apgar评分的辅助评分</label>
+                </div>
+                <div class="layui-row pc-db-BDRS pc-db-BDRSC">
+                    <div class="layui-col-lg3 layui-col-sm12">
+                        <div class="pc-db-item apgarat">
+                            <label>1min</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">给氧</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring1MinGiveOxygen" lay-filter="APGARAS1M" th:name="${hasRM} ? 'apgarAuxiliaryScoring1MinGiveOxygen' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring1MinGiveOxygen eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">正压通气</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring1MinPositivePressureVentilation" lay-filter="APGARAS1M" th:name="${hasRM} ? 'apgarAuxiliaryScoring1MinPositivePressureVentilation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring1MinPositivePressureVentilation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">持续正压通气</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring1MinContinuousPositivePressureVentilation" lay-filter="APGARAS1M" th:name="${hasRM} ? 'apgarAuxiliaryScoring1MinContinuousPositivePressureVentilation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring1MinContinuousPositivePressureVentilation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">气管插管</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring1MinTrachealIntubation" lay-filter="APGARAS1M" th:name="${hasRM} ? 'apgarAuxiliaryScoring1MinTrachealIntubation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring1MinTrachealIntubation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">胸外按压>60s</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring1MinChestCompressionsH60S" lay-filter="APGARAS1M" th:name="${hasRM} ? 'apgarAuxiliaryScoring1MinChestCompressionsH60S' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring1MinChestCompressionsH60S eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">肾上腺素</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring1MinAdrenaline" lay-filter="APGARAS1M" th:name="${hasRM} ? 'apgarAuxiliaryScoring1MinAdrenaline' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring1MinAdrenaline eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm8">
+                        <div class="pc-db-item">
+                            <label for="PC-db-APGARAS1M">评分</label>
+                            <input id="PC-db-APGARAS1M" type="number" data-name="apgarAuxiliaryScoring1Min" th:name="${hasRM} ? 'apgarAuxiliaryScoring1Min' : _" th:lay-verify="${hasRM} ? 'requiredDB'" th:value="${hasRM} ? *{apgarAuxiliaryScoring1Min} : _" th:disabled="${hasRM} ? _ : true" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRS pc-db-BDRSC">
+                    <div class="layui-col-lg3 layui-col-sm12">
+                        <div class="pc-db-item apgarat">
+                            <label>5min</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">给氧</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring5MinGiveOxygen" lay-filter="APGARAS5M" th:name="${hasRM} ? 'apgarAuxiliaryScoring5MinGiveOxygen' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring5MinGiveOxygen eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">正压通气</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring5MinPositivePressureVentilation" lay-filter="APGARAS5M" th:name="${hasRM} ? 'apgarAuxiliaryScoring5MinPositivePressureVentilation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring5MinPositivePressureVentilation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">持续正压通气</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring5MinContinuousPositivePressureVentilation" lay-filter="APGARAS5M" th:name="${hasRM} ? 'apgarAuxiliaryScoring5MinContinuousPositivePressureVentilation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring5MinContinuousPositivePressureVentilation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">气管插管</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring5MinTrachealIntubation" lay-filter="APGARAS5M" th:name="${hasRM} ? 'apgarAuxiliaryScoring5MinTrachealIntubation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring5MinTrachealIntubation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">胸外按压>60s</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring5MinChestCompressionsH60S" lay-filter="APGARAS5M" th:name="${hasRM} ? 'apgarAuxiliaryScoring5MinChestCompressionsH60S' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring5MinChestCompressionsH60S eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">肾上腺素</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring5MinAdrenaline" lay-filter="APGARAS5M" th:name="${hasRM} ? 'apgarAuxiliaryScoring5MinAdrenaline' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring5MinAdrenaline eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm8">
+                        <div class="pc-db-item">
+                            <label for="PC-db-APGARAS5M">评分</label>
+                            <input id="PC-db-APGARAS5M" type="number" data-name="apgarAuxiliaryScoring5Min" th:name="${hasRM} ? 'apgarAuxiliaryScoring5Min' : _" th:lay-verify="${hasRM} ? 'requiredDB'" th:value="${hasRM} ? *{apgarAuxiliaryScoring5Min} : _" th:disabled="${hasRM} ? _ : true" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRS pc-db-BDRSC">
+                    <div class="layui-col-lg3 layui-col-sm12">
+                        <div class="pc-db-item apgarat">
+                            <label>10min</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">给氧</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring10MinGiveOxygen" lay-filter="APGARAS10M" th:name="${hasRM} ? 'apgarAuxiliaryScoring10MinGiveOxygen' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring10MinGiveOxygen eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">正压通气</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring10MinPositivePressureVentilation" lay-filter="APGARAS10M" th:name="${hasRM} ? 'apgarAuxiliaryScoring10MinPositivePressureVentilation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring10MinPositivePressureVentilation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">持续正压通气</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring10MinContinuousPositivePressureVentilation" lay-filter="APGARAS10M" th:name="${hasRM} ? 'apgarAuxiliaryScoring10MinContinuousPositivePressureVentilation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring10MinContinuousPositivePressureVentilation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">气管插管</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring10MinTrachealIntubation" lay-filter="APGARAS10M" th:name="${hasRM} ? 'apgarAuxiliaryScoring10MinTrachealIntubation' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring10MinTrachealIntubation eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">胸外按压>60s</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring10MinChestCompressionsH60S" lay-filter="APGARAS10M" th:name="${hasRM} ? 'apgarAuxiliaryScoring10MinChestCompressionsH60S' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring10MinChestCompressionsH60S eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">肾上腺素</label>
+                            <input type="checkbox" data-name="apgarAuxiliaryScoring10MinAdrenaline" lay-filter="APGARAS10M" th:name="${hasRM} ? 'apgarAuxiliaryScoring10MinAdrenaline' : _" lay-skin="switch" lay-text="有|无" value="1" th:checked="${hasRM} ? (*{apgarAuxiliaryScoring10MinAdrenaline eq 1} ? true : _) : _" th:disabled="${hasRM} ? _ : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm8">
+                        <div class="pc-db-item">
+                            <label for="PC-db-APGARAS10M">评分</label>
+                            <input id="PC-db-APGARAS10M" type="number" data-name="apgarAuxiliaryScoring10Min" th:name="${hasRM} ? 'apgarAuxiliaryScoring10Min' : _" th:lay-verify="${hasRM} ? 'requiredDB'" th:value="${hasRM} ? *{apgarAuxiliaryScoring10Min} : _" th:disabled="${hasRM} ? _ : true" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit-lg lg">
+                            <label for="PC-db-SRT">停止复苏的时间（生后）</label>
+                            <input id="PC-db-SRT" type="number" data-name="stopRecoveryTime" th:name="${hasRM} ? 'stopRecoveryTime' : _" th:lay-verify="${hasRM} ? 'requiredDB' : _" th:value="${hasRM} ? (*{stopRecoveryTime ne null} ? *{stopRecoveryTime} : _) : _" th:disabled="${hasRM} ? _ : true">
+                            <span>分钟</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRS">
+                    <div class="layui-col-sm6">
+                        <div id="PC-db-recoveryEnd" class="pc-db-item">
+                            <label>复苏结局</label>
+                            <input type="hidden" name="recoveryEnd" th:value="${recoverySituation} ? *{recoveryEnd} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${recoverySituation} ? (*{recoveryEnd eq '复苏成功'} ? 'pc-db-active' : _) : _" data-value="复苏成功">
+                                    <button>复苏成功</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{recoveryEnd eq '复苏失败'} ? 'pc-db-active' : _) : _" data-value="复苏失败">
+                                    <button>复苏失败</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? 'pc-db-active' : _) : _" data-value="家属放弃复苏">
+                                    <button>家属放弃复苏</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div id="PC-db-ARR" class="pc-db-item">
+                            <label>放弃复苏原因</label>
+                            <div class="pc-db-item-checkbox">
+                                <input type="checkbox" name="abandonRecoveryReasonUltraImmature" value="1" title="超未成熟" th:checked="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? (*{abandonRecoveryReasonUltraImmature eq 1} ? true : _) : _) : _" th:disabled="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? _ : true) : true">
+                                <input type="checkbox" name="abandonRecoveryReasonCongenitalMalformations" value="1" title="先天畸形" th:checked="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? (*{abandonRecoveryReasonCongenitalMalformations eq 1} ? true : _) : _) : _" th:disabled="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? _ : true) : true">
+                                <input type="checkbox" name="abandonRecoveryReasonEconomicReasons" value="1" title="经济原因" th:checked="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? (*{abandonRecoveryReasonEconomicReasons eq 1} ? true : _) : _) : _" th:disabled="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? _ : true) : true">
+                                <input type="checkbox" name="abandonRecoveryReasonWorryPrognosis" value="1" title="担心预后" th:checked="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? (*{abandonRecoveryReasonWorryPrognosis eq 1} ? true : _) : _) : _" th:disabled="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? _ : true) : true">
+                                <input type="checkbox" name="abandonRecoveryReasonOther" value="1" title="其他" th:checked="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? (*{abandonRecoveryReasonOther eq 1} ? true : _) : _) : _" th:disabled="${recoverySituation} ? (*{recoveryEnd eq '家属放弃复苏'} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRS">
+                    <div class="layui-col-lg6 layui-col-sm6">
+                        <div id="PC-db-DUCL" class="pc-db-item">
+                            <label>脐带延迟结扎</label>
+                            <input type="hidden" name="delayedUmbilicalCordLigation" th:value="${recoverySituation} ? *{delayedUmbilicalCordLigation} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${recoverySituation} ? (*{delayedUmbilicalCordLigation eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{delayedUmbilicalCordLigation eq '有'} ? 'pc-db-active' : _) : _" data-value="有">
+                                    <button>有</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{delayedUmbilicalCordLigation eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                            <div class="pc-db-attach duclt">
+                                <input id="PC-db-DUCLT" type="number" data-name="delayedUmbilicalCordLigationTime" th:name="${recoverySituation} ? (*{delayedUmbilicalCordLigation eq '有'} ? 'delayedUmbilicalCordLigationTime' : _) : _" th:value="${recoverySituation} ? (*{delayedUmbilicalCordLigation eq '有'} ? *{delayedUmbilicalCordLigationTime} : _) : _" th:disabled="${recoverySituation} ? (*{delayedUmbilicalCordLigation eq '有'} ? _ : true) : true">
+                                <span>秒</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label>脐带挤压</label>
+                            <input type="hidden" name="umbilicalCordSqueeze" th:value="${recoverySituation} ? *{umbilicalCordSqueeze} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${recoverySituation} ? (*{umbilicalCordSqueeze eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{umbilicalCordSqueeze eq '有'} ? 'pc-db-active' : _) : _" data-value="有">
+                                    <button>有</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{umbilicalCordSqueeze eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12 layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脐动脉血血气</label>
+                            <input type="checkbox" name="umbilicalArterialBloodGas" lay-skin="switch" lay-text="有|无" lay-filter="UABG" value="1" th:checked="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-UABGPH">PH</label>
+                            <input id="PC-db-UABGPH" type="number" data-name="uabgPH" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgPH' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgPH} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-UABGBOS">血氧饱和度</label>
+                            <input id="PC-db-UABGBOS" type="number" data-name="uabgBloodOxygenSaturation" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgBloodOxygenSaturation' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgBloodOxygenSaturation} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-UABGLA">乳酸</label>
+                            <input id="PC-db-UABGLA" type="number" data-name="uabgLacticAcid" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgLacticAcid' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgLacticAcid} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-UABGPAO2">PaO<sub>2</sub></label>
+                            <input id="PC-db-UABGPAO2" type="number" data-name="uabgPaO2" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgPaO2' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgPaO2} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-UABGPACO2">PaCO<sub>2</sub></label>
+                            <input id="PC-db-UABGPACO2" type="number" data-name="uabgPaCO2" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgPaCO2' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgPaCO2} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                            <span>mmHg</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-UABGBE">BE</label>
+                            <input id="PC-db-UABGBE" type="number" data-name="uabgBE" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgBE' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgBE} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-UABGHCO3">HCO<sub>3</sub></label>
+                            <input id="PC-db-UABGHCO3" type="number" data-name="uabgHCO3" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgHCO3' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgHCO3} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                            <span>mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-UABGHGB">Hgb</label>
+                            <input id="PC-db-UABGHGB" type="number" data-name="uabgHgb" th:name="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'uabgHgb' : _) : _" th:lay-verify="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? *{uabgHgb} : _) : _" th:disabled="${recoverySituation} ? (*{umbilicalArterialBloodGas eq 1} ? _ : true) : true">
+                            <span>g/L</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item apgars">
+                            <label>Apgar评分</label>
+                            <div class="pc-db-spanItem">
+                                <label for="PC-db-APGARS1M">1分钟</label>
+                                <input id="PC-db-APGARS1M" type="number" name="apgarScore1Min" th:value="${recoverySituation} ? *{apgarScore1Min} : _">
+                                <label for="PC-db-APGARS5M">5分钟</label>
+                                <input id="PC-db-APGARS5M" type="number" name="apgarScore5Min" th:value="${recoverySituation} ? *{apgarScore5Min} : _">
+                                <label for="PC-db-APGARS10M">10分钟</label>
+                                <input id="PC-db-APGARS10M" type="number" name="apgarScore10Min" th:value="${recoverySituation} ? *{apgarScore10Min} : _">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>新生儿窒息</label>
+                            <input type="hidden" name="neonatalAsphyxia" th:value="${recoverySituation} ? *{neonatalAsphyxia} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${recoverySituation} ? (*{neonatalAsphyxia eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{neonatalAsphyxia eq '轻度'} ? 'pc-db-active' : _) : _" data-value="轻度">
+                                    <button>轻度</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{neonatalAsphyxia eq '重度'} ? 'pc-db-active' : _) : _" data-value="重度">
+                                    <button>重度</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div id="PC-db-FAB" class="pc-db-item">
+                            <label>出生后转归</label>
+                            <input type="hidden" name="fateAfterBirth" th:value="${recoverySituation} ? *{fateAfterBirth} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${recoverySituation} ? (*{fateAfterBirth eq '转新生儿病房（或转诊）'} ? 'pc-db-active' : _) : _" data-value="转新生儿病房（或转诊）">
+                                    <button>转新生儿病房（或转诊）</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{fateAfterBirth eq '转其它医院'} ? 'pc-db-active' : _) : _" data-value="转其它医院">
+                                    <button>转其它医院</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{fateAfterBirth eq '新生儿观察室'} ? 'pc-db-active' : _) : _" data-value="新生儿观察室">
+                                    <button>新生儿观察室</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{fateAfterBirth eq '母婴同室'} ? 'pc-db-active' : _) : _" data-value="母婴同室">
+                                    <button>母婴同室</button>
+                                </li>
+                                <li th:class="${recoverySituation} ? (*{fateAfterBirth eq '死亡'} ? 'pc-db-active' : _) : _" data-value="死亡">
+                                    <button>死亡</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-deathTime">死亡时间</label>
+                            <input id="PC-db-deathTime" type="text" data-name="deathTime" th:name="${recoverySituation} ? (*{fateAfterBirth eq '死亡'} ? 'deathTime' : _) : _" th:lay-verify="${recoverySituation} ? (*{fateAfterBirth eq '死亡'} ? 'requiredDB' : _) : _" th:value="${recoverySituation} ? (*{fateAfterBirth eq '死亡'} ? *{#calendars.format(deathTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:disabled="${recoverySituation} ? (*{fateAfterBirth eq '死亡'} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6">
+                        <div id="PC-db-DCT" class="pc-db-item-table">
+                            <table th:class="'pc-db-table' + (${recoverySituation} ? (*{fateAfterBirth eq '死亡'} ? '' : ' pc-db-table-off') : ' pc-db-table-off')">
+                                <thead>
+                                <tr>
+                                    <th>死因分类</th>
+                                    <th>死因诊断</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-length="${rsDeathCauseList} ? ${rsDeathCauseList.size()} : _">
+                                <tr th:each="rsDeathCause, status : ${rsDeathCauseList}" th:object="${rsDeathCause}">
+                                    <td class="pc-db-table-leftTitle pc-db-table-select">
+                                        <select th:name="'deathCauseClassification' + ${status.index + 1}" th:data-value="*{deathCauseClassification}" lay-filter="DCC" lay-search lay-reqText="请选择死因分类！" lay-verify="required">
+                                            <option value="">请选择死因分类</option>
+                                            <option value="1" th:selected="*{deathCauseClassification eq 1} ? true : _">先天疾病</option>
+                                            <option value="2" th:selected="*{deathCauseClassification eq 2} ? true : _">胎儿生长相关疾病</option>
+                                            <option value="3" th:selected="*{deathCauseClassification eq 3} ? true : _">分娩损伤</option>
+                                            <option value="4" th:selected="*{deathCauseClassification eq 4} ? true : _">围产窒息</option>
+                                            <option value="5" th:selected="*{deathCauseClassification eq 5} ? true : _">神经系统疾病</option>
+                                            <option value="6" th:selected="*{deathCauseClassification eq 6} ? true : _">重症感染</option>
+                                            <option value="7" th:selected="*{deathCauseClassification eq 7} ? true : _">呼吸和心血管疾病</option>
+                                            <option value="8" th:selected="*{deathCauseClassification eq 8} ? true : _">其他疾病</option>
+                                            <option value="9" th:selected="*{deathCauseClassification eq 9} ? true : _">ELBW/EPI</option>
+                                            <option value="10" th:selected="*{deathCauseClassification eq 10} ? true : _">罕见疾病</option>
+                                            <option value="11" th:selected="*{deathCauseClassification eq 11} ? true : _">未明确疾病</option>
+                                        </select>
+                                    </td>
+                                    <td class="pc-db-table-select">
+                                        <select th:id="'PC-db-DCD' + ${status.index + 1}" th:name="'deathCauseDiagnosis' + ${status.index + 1}" th:data-value="*{deathCauseDiagnosis}" lay-search lay-reqText="请选择死因诊断！" lay-verify="required">
+                                            <option value="">请选择死因诊断</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button onclick="deleteTr(this, '死因');" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pc-db-table-leftTitle">
+                                        <button id="PC-db-addDeathCause" class="pc-btn" th:disabled="${recoverySituation} ? (*{fateAfterBirth eq '死亡'} ? _ : true) : true"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRS">
+                    <div class="layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">先天畸形</label>
+                            <input id="PC-db-CMF" type="checkbox" name="congenitalMalformations" lay-skin="switch" lay-text="有|无" value="1" lay-filter="CMF" th:checked="${recoverySituation} ? (*{congenitalMalformations eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6">
+                        <div id="PC-db-deformityTable" class="pc-db-item-table">
+                            <table th:class="'pc-db-table' + (${recoverySituation} ? (*{congenitalMalformations eq 1} ? '' : ' pc-db-table-off') : ' pc-db-table-off')">
+                                <thead>
+                                <tr>
+                                    <th>畸形系统</th>
+                                    <th>畸形类型</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-length="${rsDeformityList} ? ${rsDeformityList.size()} : _">
+                                <tr th:each="rsDeformity, status : ${rsDeformityList}" th:object="${rsDeformity}">
+                                    <td class="pc-db-table-leftTitle pc-db-table-select">
+                                        <select th:name="'deformitySystem' + ${status.index + 1}" th:data-value="*{deformitySystem}" lay-filter="DS" lay-search lay-reqText="请选择畸形系统！" lay-verify="required">
+                                            <option value="">请选择畸形系统</option>
+                                            <option value="1" th:selected="*{deformitySystem eq 1} ? true : _">心腔及循环</option>
+                                            <option value="2" th:selected="*{deformitySystem eq 2} ? true : _">神经系统</option>
+                                            <option value="3" th:selected="*{deformitySystem eq 3} ? true : _">消化系统</option>
+                                            <option value="4" th:selected="*{deformitySystem eq 4} ? true : _">呼吸系统</option>
+                                            <option value="5" th:selected="*{deformitySystem eq 5} ? true : _">生殖系统</option>
+                                            <option value="6" th:selected="*{deformitySystem eq 6} ? true : _">泌尿系统</option>
+                                            <option value="7" th:selected="*{deformitySystem eq 7} ? true : _">肌肉骨骼系统</option>
+                                            <option value="8" th:selected="*{deformitySystem eq 8} ? true : _">染色体异常</option>
+                                            <option value="9" th:selected="*{deformitySystem eq 9} ? true : _">眼睛</option>
+                                            <option value="10" th:selected="*{deformitySystem eq 10} ? true : _">耳朵</option>
+                                            <option value="11" th:selected="*{deformitySystem eq 11} ? true : _">脸部及颈部</option>
+                                            <option value="12" th:selected="*{deformitySystem eq 12} ? true : _">其他先天畸形</option>
+                                        </select>
+                                    </td>
+                                    <td class="pc-db-table-select">
+                                        <select th:id="'PC-db-DT' + ${status.index + 1}" th:name="'deformityType' + ${status.index + 1}" th:data-value="*{deformityType}" lay-search lay-reqText="请选择畸形类型！" lay-verify="required">
+                                            <option value="">请选择畸形类型</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button onclick="deleteTr(this, '畸形');" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pc-db-table-leftTitle">
+                                        <button id="PC-db-addDeformity" class="pc-btn" th:disabled="${recoverySituation} ? (*{congenitalMalformations eq 1} ? _ : true) : true"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="RS" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDWrite.min.js}"></script>
+</html>

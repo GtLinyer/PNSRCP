@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>视网膜病 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,视网膜病"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库视网膜病"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/rdNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDRP layui-form" lay-filter="RPSA" sec:authorize="hasRole('ROLE_BDRP')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/RP/SS">筛查情况</a>
+                    <a href="#"><cite>筛查评估</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RP/ROP">ROP诊断</a>
+                </span>
+                <div class="layui-row pc-db-BDRPSA" th:object="${screeningAssessment}">
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">是否需要干预</label>
+                            <input type="checkbox" name="whetherNeedIntervene" lay-skin="switch" lay-text="是|否" lay-filter="WNI" value="1" th:checked="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-CIT">确诊干预时间</label>
+                            <input id="PC-db-CIT" type="text" data-name="confirmedInterventionTime" th:name="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'confirmedInterventionTime' : _) : _" th:value="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? *{#calendars.format(confirmedInterventionTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'requiredDB' : _) : _" th:disabled="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-AIT">实际干预时间</label>
+                            <input id="PC-db-AIT" type="text" data-name="actualInterventionTime" th:name="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'actualInterventionTime' : _) : _" th:value="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? *{#calendars.format(actualInterventionTime, 'yyyy-MM-dd HH:mm:ss')} : _) : _" th:lay-verify="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'requiredDB' : _) : _" th:disabled="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item pc-db-item-unit lg">
+                            <label for="PC-db-TFDTT">确诊到治疗的时间</label>
+                            <input id="PC-db-TFDTT" type="number" data-name="timeFromDiagnosisToTreatment" th:name="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'timeFromDiagnosisToTreatment' : _) : _" th:value="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? *{timeFromDiagnosisToTreatment} : _) : _" th:lay-verify="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'requiredDB' : _) : _" th:disabled="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? _ : true) : true" readonly>
+                            <span>h</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label for="PC-db-TH">治疗医院</label>
+                            <input id="PC-db-TH" type="text" data-name="treatmentHospital" th:name="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'treatmentHospital' : _) : _" th:value="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? *{treatmentHospital} : _) : _" th:lay-verify="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? 'requiredDB' : _) : _" th:disabled="${screeningAssessment} ? (*{whetherNeedIntervene eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-head">
+                            <label>筛查间隔期</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">是否按照间隔进行筛查</label>
+                            <input type="checkbox" name="whetherScreenAtIntervals" lay-skin="switch" lay-text="是|否" value="1" th:checked="${screeningAssessment} ? (*{whetherScreenAtIntervals eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item checkbox">
+                            <input type="checkbox" name="noRopInZone1" lay-skin="primary" value="1" title="Ⅰ区无ROP，1期或2期ROP每周检查1次" th:checked="${screeningAssessment} ? (*{noRopInZone1 eq 1} ? true : _) : _"><br/>
+                            <input type="checkbox" name="regressiveRopInZone1" lay-skin="primary" value="1" title="Ⅰ区退行ROP，可以1-2周检查1次" th:checked="${screeningAssessment} ? (*{regressiveRopInZone1 eq 1} ? true : _) : _"><br/>
+                            <input type="checkbox" name="stage2Or3DiseaseInZone2" lay-skin="primary" value="1" title="Ⅱ区2期或3期病变，可以每周检查1次" th:checked="${screeningAssessment} ? (*{stage2Or3DiseaseInZone2 eq 1} ? true : _) : _"><br/>
+                            <input type="checkbox" name="stage1DiseaseInZone2" lay-skin="primary" value="1" title="Ⅱ区1期病变，可以1-2周检查1次" th:checked="${screeningAssessment} ? (*{stage1DiseaseInZone2 eq 1} ? true : _) : _"><br/>
+                            <input type="checkbox" name="stage1DiseaseOrNoRopInZone2" lay-skin="primary" value="1" title="Ⅱ区1期或无ROP，或Ⅲ区1期、2期，可以2-3周随诊" th:checked="${screeningAssessment} ? (*{stage1DiseaseOrNoRopInZone2 eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-head">
+                            <label>终止检查的条件（满足以下条件之一即可终止随诊）</label>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-ITD">终止检查日期</label>
+                            <input id="PC-db-ITD" type="text" name="inspectionTerminationDate" th:value="${screeningAssessment} ? *{#calendars.format(inspectionTerminationDate, 'yyyy-MM-dd')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item checkbox">
+                            <input type="checkbox" name="retinalVascularization" lay-skin="primary" value="1" title="视网膜血管化（鼻侧已达锯齿缘，颞侧锯齿缘1个视乳头直径）" th:checked="${screeningAssessment} ? (*{retinalVascularization eq 1} ? true : _) : _"><br/>
+                            <input type="checkbox" name="cga45wNoPreOrThresholdLesionRetinalBloodVesselsDevelopZone3" lay-skin="primary" value="1" th:title="'矫正胎龄45周 <input type=&quot;text&quot; name=&quot;correctedGestationalAge45WeeksDate&quot; value=&quot;' + ${#calendars.format(cga45WeekDate, 'yyyy-MM-dd')} + '&quot; readonly>，无阈值前病变或阈值病变，视网膜血管已发育到Ⅲ区'" th:checked="${screeningAssessment} ? (*{cga45wNoPreOrThresholdLesionRetinalBloodVesselsDevelopZone3 eq 1} ? true : _) : _"><br/>
+                            <input type="checkbox" name="retinopathyRegression" lay-skin="primary" value="1" title="视网膜病变退行" th:checked="${screeningAssessment} ? (*{retinopathyRegression eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="RPSA" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BD2Write.min.js}"></script>
+</html>

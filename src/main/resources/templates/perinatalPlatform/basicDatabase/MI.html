@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>母亲信息 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,母亲信息"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库母亲信息"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#FAC2C2"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 基础数据库 导航 -->
+                    <li class="layui-nav-item layui-nav-itemed" sec:authorize="hasRole('ROLE_BD')">
+                        <a class="pc-item" href="javascript:void(0);">
+                            <i class="pc-icon iconfont icon-jichushujuku"></i>
+                            <cite>基础数据库</cite>
+                        </a>
+
+                        <dl class="layui-nav-child">
+                            <dd class="layui-this" sec:authorize="hasRole('ROLE_BDMI')">
+                                <a href="#">
+                                    <i class="pc-icon iconfont icon-mother-nurse"></i>
+                                    <cite>母亲信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDGI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/GI">
+                                    <i class="pc-icon iconfont icon-yunqi"></i>
+                                    <cite>孕期信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDPI')">
+                                <a href="/perinatalPlatform/basicDatabase/write/PI">
+                                    <i class="pc-icon iconfont icon-huaiyun"></i>
+                                    <cite>围产信息</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDBS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/BS">
+                                    <i class="pc-icon iconfont icon-baobao"></i>
+                                    <cite>宝宝情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RS">
+                                    <i class="pc-icon iconfont icon-fusu"></i>
+                                    <cite>复苏情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDCA')">
+                                <a href="/perinatalPlatform/basicDatabase/write/CA">
+                                    <i class="pc-icon iconfont icon-weizhong"></i>
+                                    <cite>危重评估</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRST')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">
+                                    <i class="pc-icon iconfont icon-huxixitong"></i>
+                                    <cite>呼吸系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDGS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DGS/GI">
+                                    <i class="pc-icon iconfont icon-xiaohuaxitong"></i>
+                                    <cite>消化系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDIS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/IS/EOS">
+                                    <i class="pc-icon iconfont icon-jiance"></i>
+                                    <cite>感染监测</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDCS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/CS">
+                                    <i class="pc-icon iconfont icon-xunhuanxitong"></i>
+                                    <cite>循环系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDNS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/NS/US">
+                                    <i class="pc-icon iconfont icon-shenjingwaike"></i>
+                                    <cite>神经系统</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDRP')">
+                                <a href="/perinatalPlatform/basicDatabase/write/RP/SS">
+                                    <i class="pc-icon iconfont icon-shiwangmobingbian"></i>
+                                    <cite>视网膜病</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BDDS')">
+                                <a href="/perinatalPlatform/basicDatabase/write/DS">
+                                    <i class="pc-icon iconfont icon-chuyuanjilu"></i>
+                                    <cite>出院情况</cite>
+                                </a>
+                            </dd>
+                            <dd sec:authorize="hasRole('ROLE_BD')">
+                                <a href="/perinatalPlatform/basicDatabase/review">
+                                    <i class="pc-icon iconfont icon-shenhe"></i>
+                                    <cite>病例审核</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+                    <!-- 医患交流库 导航 -->
+                    <li th:replace="include/navMenu::doctorPatientCommunication"></li>
+
+                    <!-- 母婴同室库 导航 -->
+                    <li th:replace="include/navMenu::motherBabySameRoom"></li>
+
+                    <!-- 父母心理库 导航 -->
+                    <li th:replace="include/navMenu::parentalPsychology"></li>
+
+                    <!-- 研究数据库 导航 -->
+                    <li th:replace="include/navMenu::researchDatabase"></li>
+
+                    <!-- 超声影像库 导航 -->
+                    <li th:replace="include/navMenu::ultrasoundImage"></li>
+
+                    <!-- 随访数据库 导航 -->
+                    <li th:replace="include/navMenu::followDatabase"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDMI layui-form" lay-filter="BDMI" th:object="${motherInformation}" sec:authorize="hasRole('ROLE_BDMI')">
+                <div class="layui-row pc-db-BDMIH">
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-motherFullName">母亲姓名</label>
+                            <input id="PC-db-motherFullName" type="text" name="motherFullName" lay-verify="requiredDB" th:value="${motherInformation} ? *{motherFullName} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-motherPhone">母亲手机号</label>
+                            <input id="PC-db-motherPhone" type="number" name="motherPhone" lay-verify="requiredDB|phone" th:value="${motherInformation} ? *{motherPhone} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-motherAge">母亲年龄</label>
+                            <input id="PC-db-motherAge" type="number" name="motherAge" th:value="${motherInformation} ? *{motherAge} : _">
+                            <span>岁</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-hospitalizationDate">住院日期</label>
+                            <input id="PC-db-hospitalizationDate" type="text" name="hospitalizationDate" lay-verify="requiredDB" th:value="${motherInformation} ? *{#calendars.format(hospitalizationDate, 'yyyy-MM-dd HH:mm:ss')} : _" th:data-hasPcNum="${motherInformation} ? (*{pcMotherNum ne ''} ? true : _): _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-motherHospitalNumber">母亲住院号</label>
+                            <input id="PC-db-motherHospitalNumber" type="text" name="motherHospitalNumber" th:value="${motherInformation} ? *{motherHospitalNumber} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-pcMotherNum">围产新生儿科研合作平台母亲编号</label>
+                            <input id="PC-db-pcMotherNum" type="text" name="pcMotherNum" lay-verify="requiredDB" th:value="${motherInformation} ? (*{pcMotherNum ne ''} ? *{pcMotherNum} : ('m' + ${hospitalAbbr})) : ('m' + ${hospitalAbbr})" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8 layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>母亲民族</label>
+                            <input type="hidden" th:name="${motherInformation} ? (*{(motherNation eq '汉族') or (motherNation eq '藏族') or (motherNation eq '撒拉族') or (motherNation eq '蒙古族') or (motherNation eq '维吾尔族') or (motherNation eq '柯尔克孜族')} ? 'motherNation' : _) : _" th:value="${motherInformation} ? *{motherNation} : _">
+                            <ul id="PC-db-motherNation" class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${motherInformation} ? (*{motherNation eq '汉族'} ? 'pc-db-active': _) : _" data-value="汉族">
+                                    <button>汉族</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherNation eq '藏族'} ? 'pc-db-active': _) : _" data-value="藏族">
+                                    <button>藏族</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherNation eq '撒拉族'} ? 'pc-db-active': _) : _" data-value="撒拉族">
+                                    <button>撒拉族</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherNation eq '蒙古族'} ? 'pc-db-active': _) : _" data-value="蒙古族">
+                                    <button>蒙古族</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherNation eq '维吾尔族'} ? 'pc-db-active': _) : _" data-value="维吾尔族">
+                                    <button>维吾尔族</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherNation eq '柯尔克孜族'} ? 'pc-db-active': _) : _" data-value="柯尔克孜族">
+                                    <button>柯尔克孜族</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{(motherNation ne '汉族') and (motherNation ne '藏族') and (motherNation ne '撒拉族') and (motherNation ne '蒙古族') and (motherNation ne '维吾尔族') and (motherNation ne '柯尔克孜族') and (motherNation ne null)} ? 'pc-db-active': _) : _" data-value="其他">
+                                    <button>其他</button>
+                                </li>
+                            </ul>
+                            <div class="pc-db-attach bdmn">
+                                <input id="PC-db-motherNationOther" type="text" th:name="${motherInformation} ? (*{(motherNation ne '汉族') and (motherNation ne '藏族') and (motherNation ne '撒拉族') and (motherNation ne '蒙古族') and (motherNation ne '维吾尔族') and (motherNation ne '柯尔克孜族') and (motherNation ne null)} ? 'motherNation' : _) : _" th:lay-verify="${motherInformation} ? (*{(motherNation ne '汉族') and (motherNation ne '藏族') and (motherNation ne '撒拉族') and (motherNation ne '蒙古族') and (motherNation ne '维吾尔族') and (motherNation ne '柯尔克孜族') and (motherNation ne null)} ? 'requiredDB' : _) : _" th:value="${motherInformation} ? (*{(motherNation ne '汉族') and (motherNation ne '藏族') and (motherNation ne '撒拉族') and (motherNation ne '蒙古族') and (motherNation ne '维吾尔族') and (motherNation ne '柯尔克孜族') and (motherNation ne null)} ? *{motherNation} : _) : _" th:disabled="${motherInformation} ? (*{(motherNation ne '汉族') and (motherNation ne '藏族') and (motherNation ne '撒拉族') and (motherNation ne '蒙古族') and (motherNation ne '维吾尔族') and (motherNation ne '柯尔克孜族') and (motherNation ne '柯尔克孜族') and (motherNation ne null)} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg8 layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>母亲居住地</label>
+                            <div class="pc-inline-flex pc-db-enter">
+                                <select id="PC-db-ML-province" name="motherLiveProvince" lay-filter="MLP" th:data-value="${motherInformation} ? *{motherLiveProvince} : _">
+                                    <option value="">省级行政区</option>
+                                    <option value="32" th:selected="${motherInformation} ? (*{motherLiveProvince eq '32'} ? true : _) : _">江苏省</option>
+                                    <option value="44" th:selected="${motherInformation} ? (*{motherLiveProvince eq '44'} ? true : _) : _">广东省</option>
+                                    <option value="63" th:selected="${motherInformation} ? (*{motherLiveProvince eq '63'} ? true : _) : _">青海省</option>
+                                    <option value="31" th:selected="${motherInformation} ? (*{motherLiveProvince eq '31'} ? true : _) : _">上海市</option>
+                                    <option value="34" th:selected="${motherInformation} ? (*{motherLiveProvince eq '34'} ? true : _) : _">安徽省</option>
+                                    <option value="37" th:selected="${motherInformation} ? (*{motherLiveProvince eq '37'} ? true : _) : _">山东省</option>
+                                    <option value="11" th:selected="${motherInformation} ? (*{motherLiveProvince eq '11'} ? true : _) : _">北京市</option>
+                                    <option value="12" th:selected="${motherInformation} ? (*{motherLiveProvince eq '12'} ? true : _) : _">天津市</option>
+                                    <option value="13" th:selected="${motherInformation} ? (*{motherLiveProvince eq '13'} ? true : _) : _">河北省</option>
+                                    <option value="14" th:selected="${motherInformation} ? (*{motherLiveProvince eq '14'} ? true : _) : _">山西省</option>
+                                    <option value="15" th:selected="${motherInformation} ? (*{motherLiveProvince eq '15'} ? true : _) : _">内蒙古自治区</option>
+                                    <option value="21" th:selected="${motherInformation} ? (*{motherLiveProvince eq '21'} ? true : _) : _">辽宁省</option>
+                                    <option value="22" th:selected="${motherInformation} ? (*{motherLiveProvince eq '22'} ? true : _) : _">吉林省</option>
+                                    <option value="23" th:selected="${motherInformation} ? (*{motherLiveProvince eq '23'} ? true : _) : _">黑龙江省</option>
+                                    <option value="33" th:selected="${motherInformation} ? (*{motherLiveProvince eq '33'} ? true : _) : _">浙江省</option>
+                                    <option value="35" th:selected="${motherInformation} ? (*{motherLiveProvince eq '35'} ? true : _) : _">福建省</option>
+                                    <option value="36" th:selected="${motherInformation} ? (*{motherLiveProvince eq '36'} ? true : _) : _">江西省</option>
+                                    <option value="41" th:selected="${motherInformation} ? (*{motherLiveProvince eq '41'} ? true : _) : _">河南省</option>
+                                    <option value="42" th:selected="${motherInformation} ? (*{motherLiveProvince eq '42'} ? true : _) : _">湖北省</option>
+                                    <option value="43" th:selected="${motherInformation} ? (*{motherLiveProvince eq '43'} ? true : _) : _">湖南省</option>
+                                    <option value="45" th:selected="${motherInformation} ? (*{motherLiveProvince eq '45'} ? true : _) : _">广西壮族自治区</option>
+                                    <option value="46" th:selected="${motherInformation} ? (*{motherLiveProvince eq '46'} ? true : _) : _">海南省</option>
+                                    <option value="50" th:selected="${motherInformation} ? (*{motherLiveProvince eq '50'} ? true : _) : _">重庆市</option>
+                                    <option value="51" th:selected="${motherInformation} ? (*{motherLiveProvince eq '51'} ? true : _) : _">四川省</option>
+                                    <option value="52" th:selected="${motherInformation} ? (*{motherLiveProvince eq '52'} ? true : _) : _">贵州省</option>
+                                    <option value="53" th:selected="${motherInformation} ? (*{motherLiveProvince eq '53'} ? true : _) : _">云南省</option>
+                                    <option value="54" th:selected="${motherInformation} ? (*{motherLiveProvince eq '54'} ? true : _) : _">西藏自治区</option>
+                                    <option value="61" th:selected="${motherInformation} ? (*{motherLiveProvince eq '61'} ? true : _) : _">陕西省</option>
+                                    <option value="62" th:selected="${motherInformation} ? (*{motherLiveProvince eq '62'} ? true : _) : _">甘肃省</option>
+                                    <option value="64" th:selected="${motherInformation} ? (*{motherLiveProvince eq '64'} ? true : _) : _">宁夏回族自治区</option>
+                                    <option value="65" th:selected="${motherInformation} ? (*{motherLiveProvince eq '65'} ? true : _) : _">新疆维吾尔自治区</option>
+                                </select>
+
+                                <select id="PC-db-ML-city" name="motherLiveCity" lay-filter="MLC" th:data-value="${motherInformation} ? *{motherLiveCity} : _">
+                                    <option value="">地级行政区</option>
+                                </select>
+
+                                <select id="PC-db-ML-county" name="motherLiveCounty" th:data-value="${motherInformation} ? *{motherLiveCounty} : _">
+                                    <option value="">县级行政区</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6 mla">
+                        <div class="pc-db-item">
+                            <input type="hidden" name="motherLiveArea" title="母亲居住区域" th:value="${motherInformation} ? *{motherLiveArea} : _">
+                            <ul class="pc-db-radioBtn-group">
+                                <li th:class="${motherInformation} ? (*{motherLiveArea eq '城市'} ? 'pc-db-active': _) : _" data-value="城市">
+                                    <button>城市</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherLiveArea eq '郊区'} ? 'pc-db-active': _) : _" data-value="郊区">
+                                    <button>郊区</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherLiveArea eq '乡村'} ? 'pc-db-active': _) : _" data-value="乡村">
+                                    <button>乡村</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{motherLiveArea eq '牧区'} ? 'pc-db-active': _) : _" data-value="牧区">
+                                    <button>牧区</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg1 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit bda">
+                            <label for="PC-db-motherLiveAltitude">海拔</label>
+                            <input id="PC-db-motherLiveAltitude" type="number" name="motherLiveAltitude" th:value="${motherInformation} ? *{motherLiveAltitude} : _">
+                            <span>米</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDMIH">
+                    <div class="layui-col-lg4 layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">迁入居住地史</label>
+                            <input id="PC-db-TRPH" type="checkbox" name="toResidencePlaceHistory" lay-skin="switch" lay-text="有|无" value="1" lay-filter="TRPH" th:checked="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-moveInYear">迁入年份</label>
+                            <input id="PC-db-moveInYear" type="text" data-name="moveInYear" th:name="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'moveInYear' : _) : _" th:value="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? *{moveInYear} : _) : _" th:lay-verify="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'requiredDB' : _) : _" th:disabled="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? _ : true) : true">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-moveInPeriod">迁入年限</label>
+                            <input id="PC-db-moveInPeriod" type="number" data-name="moveInPeriod" th:name="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'moveInPeriod' : _) : _" th:value="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? *{moveInPeriod} : _) : _" th:lay-verify="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'requiredDB' : _) : _" th:disabled="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? _ : true) : true">
+                            <span>年</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDMIH">
+                    <div class="layui-col-lg8 layui-col-sm12">
+                        <div id="PC-db-BMIL" class="pc-db-item">
+                            <label>迁入前居住地</label>
+                            <div class="pc-inline-flex pc-db-enter">
+                                <select id="PC-db-BMIL-province" th:name="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'beforeMovingInLiveProvince' : _) : _" lay-filter="BMILP" th:disabled="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? _ : true) : true" th:data-value="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? *{beforeMovingInLiveProvince} : _) : _">
+                                    <option value="">省级行政区</option>
+                                    <option value="32" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '32'} ? true : _) : _">江苏省</option>
+                                    <option value="44" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '44'} ? true : _) : _">广东省</option>
+                                    <option value="63" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '63'} ? true : _) : _">青海省</option>
+                                    <option value="31" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '31'} ? true : _) : _">上海市</option>
+                                    <option value="34" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '34'} ? true : _) : _">安徽省</option>
+                                    <option value="37" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '37'} ? true : _) : _">山东省</option>
+                                    <option value="11" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '11'} ? true : _) : _">北京市</option>
+                                    <option value="12" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '12'} ? true : _) : _">天津市</option>
+                                    <option value="13" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '13'} ? true : _) : _">河北省</option>
+                                    <option value="14" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '14'} ? true : _) : _">山西省</option>
+                                    <option value="15" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '15'} ? true : _) : _">内蒙古自治区</option>
+                                    <option value="21" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '21'} ? true : _) : _">辽宁省</option>
+                                    <option value="22" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '22'} ? true : _) : _">吉林省</option>
+                                    <option value="23" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '23'} ? true : _) : _">黑龙江省</option>
+                                    <option value="33" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '33'} ? true : _) : _">浙江省</option>
+                                    <option value="35" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '35'} ? true : _) : _">福建省</option>
+                                    <option value="36" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '36'} ? true : _) : _">江西省</option>
+                                    <option value="41" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '41'} ? true : _) : _">河南省</option>
+                                    <option value="42" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '42'} ? true : _) : _">湖北省</option>
+                                    <option value="43" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '43'} ? true : _) : _">湖南省</option>
+                                    <option value="45" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '45'} ? true : _) : _">广西壮族自治区</option>
+                                    <option value="46" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '46'} ? true : _) : _">海南省</option>
+                                    <option value="50" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '50'} ? true : _) : _">重庆市</option>
+                                    <option value="51" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '51'} ? true : _) : _">四川省</option>
+                                    <option value="52" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '52'} ? true : _) : _">贵州省</option>
+                                    <option value="53" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '53'} ? true : _) : _">云南省</option>
+                                    <option value="54" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '54'} ? true : _) : _">西藏自治区</option>
+                                    <option value="61" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '61'} ? true : _) : _">陕西省</option>
+                                    <option value="62" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '62'} ? true : _) : _">甘肃省</option>
+                                    <option value="64" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '64'} ? true : _) : _">宁夏回族自治区</option>
+                                    <option value="65" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '65'} ? true : _) : _">新疆维吾尔自治区</option>
+                                    <option value="71" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '71'} ? true : _) : _">台湾地区</option>
+                                    <option value="81" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '81'} ? true : _) : _">香港特别行政区</option>
+                                    <option value="82" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '82'} ? true : _) : _">澳门特别行政区</option>
+                                    <option value="99" th:selected="${motherInformation} ? (*{beforeMovingInLiveProvince eq '99'} ? true : _) : _">国外</option>
+                                </select>
+
+                                <select id="PC-db-BMIL-city" th:name="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'beforeMovingInLiveCity' : _) : _" lay-filter="BMILC" th:data-value="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? *{beforeMovingInLiveCity} : _) : _" th:disabled="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? _ : true) : true">
+                                    <option value="">地级行政区</option>
+                                </select>
+
+                                <select id="PC-db-BMIL-county" th:name="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'beforeMovingInLiveCounty' : _) : _" lay-filter="BMILCO" th:data-value="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? *{beforeMovingInLiveCounty} : _) : _" th:disabled="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? _ : true) : true">
+                                    <option value="">县级行政区</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6 mla">
+                        <div id="PC-db-BMLA" class="pc-db-item">
+                            <input type="hidden" data-name="beforeMovingInLiveArea" th:name="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'beforeMovingInLiveArea' : _) : _" th:value="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? *{beforeMovingInLiveArea} : _) : _" title="城乡区域">
+                            <ul th:class="'pc-db-radioBtn-group' + (${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? '' : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${motherInformation} ? (*{beforeMovingInLiveArea eq '城市'} ? 'pc-db-active' : _) : _" data-value="城市">
+                                    <button>城市</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{beforeMovingInLiveArea eq '郊区'} ? 'pc-db-active' : _) : _" data-value="郊区">
+                                    <button>郊区</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{beforeMovingInLiveArea eq '乡村'} ? 'pc-db-active' : _) : _" data-value="乡村">
+                                    <button>乡村</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{beforeMovingInLiveArea eq '牧区'} ? 'pc-db-active' : _) : _" data-value="牧区">
+                                    <button>牧区</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg1 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit bda">
+                            <label for="PC-db-BMILA">海拔</label>
+                            <input id="PC-db-BMILA" type="number" data-name="beforeMovingInLiveAltitude" th:name="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? 'beforeMovingInLiveAltitude' : _) : _" th:value="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? *{beforeMovingInLiveAltitude} : _) : _" th:disabled="${motherInformation} ? (*{toResidencePlaceHistory eq 1} ? _ : true) : true">
+                            <span>米</span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="layui-row pc-db-BDMIH">
+                    <div class="layui-col-lg5 layui-col-sm12">
+                        <div id="PC-db-diabetes" class="pc-db-item">
+                            <label>糖尿病</label>
+                            <input type="hidden" name="diabetes" th:value="${motherInformation} ? *{diabetes} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${motherInformation} ? (*{diabetes eq '否'} ? 'pc-db-active' : _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetes eq '妊娠期糖尿病'} ? 'pc-db-active' : _) : _" data-value="妊娠期糖尿病">
+                                    <button>妊娠期糖尿病</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetes eq 'Ⅰ型糖尿病'} ? 'pc-db-active' : _) : _" data-value="Ⅰ型糖尿病">
+                                    <button>Ⅰ型糖尿病</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetes eq 'Ⅱ型糖尿病'} ? 'pc-db-active' : _) : _" data-value="Ⅱ型糖尿病">
+                                    <button>Ⅱ型糖尿病</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetes eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm8">
+                        <div id="PC-db-diabetesGrade" class="pc-db-item">
+                            <input type="hidden" data-name="diabetesGrade" th:name="${motherInformation} ? (*{(diabetes eq '妊娠期糖尿病') or (diabetes eq 'Ⅰ型糖尿病') or (diabetes eq 'Ⅱ型糖尿病')} ? 'diabetesGrade' : _) : _"  th:value="${motherInformation} ? (*{(diabetes eq '妊娠期糖尿病') or (diabetes eq 'Ⅰ型糖尿病') or (diabetes eq 'Ⅱ型糖尿病')} ? *{diabetesGrade} : _) : _" title="糖尿病等级">
+                            <ul th:class="'pc-db-radioBtn-group' + (${motherInformation} ? (*{(diabetes eq '妊娠期糖尿病') or (diabetes eq 'Ⅰ型糖尿病') or (diabetes eq 'Ⅱ型糖尿病')} ? '' : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'A1级'} ? 'pc-db-active' : _) : _" data-value="A1级">
+                                    <button>A1级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'A2级'} ? 'pc-db-active' : _) : _" data-value="A2级">
+                                    <button>A2级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'B级'} ? 'pc-db-active' : _) : _" data-value="B级">
+                                    <button>B级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'C级'} ? 'pc-db-active' : _) : _" data-value="C级">
+                                    <button>C级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'D级'} ? 'pc-db-active' : _) : _" data-value="D级">
+                                    <button>D级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'F级'} ? 'pc-db-active' : _) : _" data-value="F级">
+                                    <button>F级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'R级'} ? 'pc-db-active' : _) : _" data-value="R级">
+                                    <button>R级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'H级'} ? 'pc-db-active' : _) : _" data-value="H级">
+                                    <button>H级</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{diabetesGrade eq 'T级'} ? 'pc-db-active' : _) : _" data-value="T级">
+                                    <button>T级</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div id="PC-db-insulinTherapy" class="pc-db-item">
+                            <label>胰岛素治疗</label>
+                            <input type="hidden" data-name="insulinTherapy" th:name="${motherInformation} ? (*{(diabetes eq '妊娠期糖尿病') or (diabetes eq 'Ⅰ型糖尿病') or (diabetes eq 'Ⅱ型糖尿病')} ? 'insulinTherapy' : _) : _"  th:value="${motherInformation} ? (*{(diabetes eq '妊娠期糖尿病') or (diabetes eq 'Ⅰ型糖尿病') or (diabetes eq 'Ⅱ型糖尿病')} ? *{insulinTherapy} : _) : _">
+                            <ul th:class="'pc-db-radioBtn-group pc-db-enter' + (${motherInformation} ? (*{(diabetes eq '妊娠期糖尿病') or (diabetes eq 'Ⅰ型糖尿病') or (diabetes eq 'Ⅱ型糖尿病')} ? '' : ' rbgOff') : ' rbgOff')">
+                                <li th:class="${motherInformation} ? (*{insulinTherapy eq '否'} ? 'pc-db-active' : _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{insulinTherapy eq '是'} ? 'pc-db-active' : _) : _" data-value="是">
+                                    <button>是</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{insulinTherapy eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>高血压</label>
+                            <input type="hidden" name="hypertension" th:value="${motherInformation} ? *{hypertension} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${motherInformation} ? (*{hypertension eq '否'} ? 'pc-db-active' : _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq '妊娠期高血压'} ? 'pc-db-active' : _) : _" data-value="妊娠期高血压">
+                                    <button>妊娠期高血压</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq '轻度子痫前期'} ? 'pc-db-active' : _) : _" data-value="轻度子痫前期">
+                                    <button>轻度子痫前期</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq '重度子痫前期'} ? 'pc-db-active' : _) : _" data-value="重度子痫前期">
+                                    <button>重度子痫前期</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq '子痫'} ? 'pc-db-active' : _) : _" data-value="子痫">
+                                    <button>子痫</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq '慢性高血压并发子痫前期'} ? 'pc-db-active' : _) : _" data-value="慢性高血压并发子痫前期">
+                                    <button>慢性高血压并发子痫前期</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq '妊娠合并慢性高血压'} ? 'pc-db-active' : _) : _" data-value="妊娠合并慢性高血压">
+                                    <button>妊娠合并慢性高血压</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq 'HELLP综合征'} ? 'pc-db-active' : _) : _" data-value="HELLP综合征">
+                                    <button>HELLP综合征</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{hypertension eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDMIL">
+                    <div class="layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label>妊娠期肝内胆汁淤积症</label>
+                            <input type="hidden" name="pregnancyCholestasisIntrahepatic" th:value="${motherInformation} ? *{pregnancyCholestasisIntrahepatic} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${motherInformation} ? (*{pregnancyCholestasisIntrahepatic eq '否'} ? 'pc-db-active' : _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{pregnancyCholestasisIntrahepatic eq '是'} ? 'pc-db-active' : _) : _" data-value="是">
+                                    <button>是</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{pregnancyCholestasisIntrahepatic eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label>母亲甲状腺功能异常</label>
+                            <input type="hidden" name="abnormalMotherSThyroidFunction" th:value="${motherInformation} ? *{abnormalMotherSThyroidFunction} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${motherInformation} ? (*{abnormalMotherSThyroidFunction eq '否'} ? 'pc-db-active' : _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{abnormalMotherSThyroidFunction eq '甲亢'} ? 'pc-db-active' : _) : _" data-value="甲亢">
+                                    <button>甲亢</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{abnormalMotherSThyroidFunction eq '甲减'} ? 'pc-db-active' : _) : _" data-value="甲减">
+                                    <button>甲减</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{abnormalMotherSThyroidFunction eq '亚临床甲减'} ? 'pc-db-active' : _) : _" data-value="亚临床甲减">
+                                    <button>亚临床甲减</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{abnormalMotherSThyroidFunction eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">妊娠期其它合并症</label>
+                            <input type="checkbox" name="otherComplicationsDuringPregnancy" lay-skin="switch" lay-text="有|无" lay-filter="OCDP" value="1" th:checked="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? true : _) : _">
+                            <div class="pc-db-attach">
+                                <input type="text" data-name="otherComplicationsDuringPregnancy1" th:name="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? 'otherComplicationsDuringPregnancy1' : _) : _" th:value="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? *{otherComplicationsDuringPregnancy1} : _) : _" th:disabled="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? _ : true) : true">
+                                <input type="text" data-name="otherComplicationsDuringPregnancy2" th:name="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? 'otherComplicationsDuringPregnancy2' : _) : _" th:value="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? *{otherComplicationsDuringPregnancy2} : _) : _" th:disabled="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? _ : true) : true">
+                                <input type="text" data-name="otherComplicationsDuringPregnancy3" th:name="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? 'otherComplicationsDuringPregnancy3' : _) : _" th:value="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? *{otherComplicationsDuringPregnancy3} : _) : _" th:disabled="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? _ : true) : true">
+                                <input type="text" data-name="otherComplicationsDuringPregnancy4" th:name="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? 'otherComplicationsDuringPregnancy4' : _) : _" th:value="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? *{otherComplicationsDuringPregnancy4} : _) : _" th:disabled="${motherInformation} ? (*{otherComplicationsDuringPregnancy eq 1} ? _ : true) : true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div id="PC-db-PRS" class="pc-db-item">
+                            <label class="pc-switch-label">妊娠风险筛查</label>
+                            <input type="hidden" name="pregnancyRiskScreening" th:value="${motherInformation} ? *{pregnancyRiskScreening} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${motherInformation} ? (*{pregnancyRiskScreening eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{pregnancyRiskScreening eq '有'} ? 'pc-db-active' : _) : _" data-value="有">
+                                    <button>有</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{pregnancyRiskScreening eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                            <div id="PC-db-PRSL" class="pc-db-attach">
+                                <input type="hidden" data-name="pregnancyRiskScreeningLevel" th:name="${motherInformation} ? (*{pregnancyRiskScreening eq '有'} ? 'pregnancyRiskScreeningLevel' : _) : _" th:value="${motherInformation} ? (*{pregnancyRiskScreening eq '有'} ? *{pregnancyRiskScreeningLevel} : _) : _" title="妊娠风险等级">
+                                <ul th:class="'pc-db-radioBtn-group' + (${motherInformation} ? (*{pregnancyRiskScreening eq '有'} ? '' : ' rbgOff') : ' rbgOff')">
+                                    <li th:class="${motherInformation} ? (*{pregnancyRiskScreeningLevel eq '绿（低风险）'} ? 'pc-db-active' : _) : _" data-value="绿（低风险）">
+                                        <button>绿（低风险）</button>
+                                    </li>
+                                    <li th:class="${motherInformation} ? (*{pregnancyRiskScreeningLevel eq '黄（一般风险）'} ? 'pc-db-active' : _) : _" data-value="黄（一般风险）">
+                                        <button>黄（一般风险）</button>
+                                    </li>
+                                    <li th:class="${motherInformation} ? (*{pregnancyRiskScreeningLevel eq '橙（较高风险）'} ? 'pc-db-active' : _) : _" data-value="橙（较高风险）">
+                                        <button>橙（较高风险）</button>
+                                    </li>
+                                    <li th:class="${motherInformation} ? (*{pregnancyRiskScreeningLevel eq '红（高风险）'} ? 'pc-db-active' : _) : _" data-value="红（高风险）">
+                                        <button>红（高风险）</button>
+                                    </li>
+                                    <li th:class="${motherInformation} ? (*{pregnancyRiskScreeningLevel eq '紫（传染病）'} ? 'pc-db-active' : _) : _" data-value="紫（传染病）">
+                                        <button>紫（传染病）</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm12">
+                        <div id="PC-db-prenatalCare" class="pc-db-item">
+                            <label>产前检查</label>
+                            <input type="hidden" name="prenatalCare" th:value="${motherInformation} ? *{prenatalCare} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${motherInformation} ? (*{prenatalCare eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{prenatalCare eq '有'} ? 'pc-db-active' : _) : _" data-value="有">
+                                    <button>有</button>
+                                </li>
+                                <li th:class="${motherInformation} ? (*{prenatalCare eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div th:class="'pc-db-item pc-db-item-unit' + (${motherInformation} ? (*{prenatalCare eq '有'} ? (*{firstPregnancyCheckUpCard} ? '' : ' pc-db-hasnt') : '') : '')">
+                            <label for="PC-db-FPCUC">第一次产检建卡妊娠</label>
+                            <input id="PC-db-FPCUC" type="number" data-name="firstPregnancyCheckUpCard" th:name="${motherInformation} ? (*{prenatalCare eq '有'} ? 'firstPregnancyCheckUpCard' : _) : _" th:value="${motherInformation} ? (*{prenatalCare eq '有'} ? *{firstPregnancyCheckUpCard} : _) : _" th:disabled="${motherInformation} ? (*{prenatalCare eq '有'} ? _ : true) : true">
+                            <span>周</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div th:class="'pc-db-item pc-db-item-unit' + (${motherInformation} ? (*{prenatalCare eq '有'} ? (*{prenatalCareNumber} ? '' : ' pc-db-hasnt') : '') : '')">
+                            <label for="PC-db-prenatalCareNumber">产前检查次数</label>
+                            <input id="PC-db-prenatalCareNumber" type="number" data-name="prenatalCareNumber" th:name="${motherInformation} ? (*{prenatalCare eq '有'} ? 'prenatalCareNumber' : _) : _" th:value="${motherInformation} ? (*{prenatalCare eq '有'} ? *{prenatalCareNumber} : _) : _" th:disabled="${motherInformation} ? (*{prenatalCare eq '有'} ? _ : true) : true">
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm4">
+                        <div th:class="'pc-db-item pc-db-item-unit' + (${motherInformation} ? (*{prenatalCare eq '有'} ? (*{fullInspectionsNumber} ? '' : ' pc-db-hasnt') : '') : '')">
+                            <label for="PC-db-fullInspectionsNumber">进行全面产检的次数</label>
+                            <input id="PC-db-fullInspectionsNumber" type="number" data-name="fullInspectionsNumber" th:name="${motherInformation} ? (*{prenatalCare eq '有'} ? 'fullInspectionsNumber' : _) : _" th:value="${motherInformation} ? (*{prenatalCare eq '有'} ? *{fullInspectionsNumber} : _) : _" th:disabled="${motherInformation} ? (*{prenatalCare eq '有'} ? _ : true) : true">
+                            <span>次</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="MI" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDWrite.min.js}"></script>
+</html>

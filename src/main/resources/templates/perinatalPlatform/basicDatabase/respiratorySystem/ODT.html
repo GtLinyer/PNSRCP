@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>呼吸系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,呼吸系统"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库呼吸系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/rsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDRTS layui-form" lay-filter="BDRTSODT" sec:authorize="hasRole('ROLE_BDRST')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">呼吸支持</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/HF">HFNC失败</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/NVF">无创通气失败</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/WS">撤机情况</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/BPD">BPD</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/RDS">RDS</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/AP">呼吸暂停</a>
+                    <a href="#"><cite>其他诊断与治疗</cite></a>
+                </span>
+                <div class="layui-row pc-db-BDRTSODT" th:object="${otherDiagnosisTreatment}">
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">新生儿胎粪吸入综合征</label>
+                            <input type="checkbox" name="newbornMeconiumAspirationSyndrome" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{newbornMeconiumAspirationSyndrome eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">羊水吸入综合征</label>
+                            <input type="checkbox" name="amnioticFluidAspirationSyndrome" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{amnioticFluidAspirationSyndrome eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">乳汁吸入综合征</label>
+                            <input type="checkbox" name="milkAspirationSyndrome" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{milkAspirationSyndrome eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">新生儿湿肺</label>
+                            <input type="checkbox" name="neonatalWetLung" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{neonatalWetLung eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">新生儿肺炎</label>
+                            <input type="checkbox" name="neonatalPneumonia" lay-skin="switch" lay-filter="NP" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{neonatalPneumonia eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-NPDT">诊断时间</label>
+                            <input id="PC-db-NPDT" type="text" data-name="neonatalPneumoniaDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{neonatalPneumonia eq 1} ? 'neonatalPneumoniaDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{neonatalPneumonia eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{neonatalPneumonia eq 1} ? *{#calendars.format(neonatalPneumoniaDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{neonatalPneumonia eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">气胸</label>
+                            <input type="checkbox" name="pneumothorax" lay-skin="switch" lay-filter="PN" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{pneumothorax eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-PDT">诊断时间</label>
+                            <input id="PC-db-PDT" type="text" data-name="pneumothoraxDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{pneumothorax eq 1} ? 'pneumothoraxDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{pneumothorax eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{pneumothorax eq 1} ? *{#calendars.format(pneumothoraxDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{pneumothorax eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div id="PC-db-PT" class="pc-db-item">
+                            <label class="pc-switch-label">胸腔穿刺术</label>
+                            <input type="checkbox" name="pneumothoraxThoracentesis" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{pneumothoraxThoracentesis eq 1} ? (*{pneumothoraxThoracentesis eq 1} ? true : _) : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{pneumothorax eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div id="PC-db-PCTD" class="pc-db-item">
+                            <label class="pc-switch-label">胸腔闭式引流</label>
+                            <input type="checkbox" name="pneumothoraxClosedThoracicDrainage" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{pneumothoraxThoracentesis eq 1} ? (*{pneumothoraxClosedThoracicDrainage eq 1} ? true : _) : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{pneumothorax eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">胸腔积液</label>
+                            <input type="checkbox" name="pleuralEffusion" lay-skin="switch" lay-filter="PE" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{pleuralEffusion eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-PEDT">诊断时间</label>
+                            <input id="PC-db-PEDT" type="text" data-name="pleuralEffusionDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{pleuralEffusion eq 1} ? 'pleuralEffusionDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{pleuralEffusion eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{pleuralEffusion eq 1} ? *{#calendars.format(pleuralEffusionDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{pleuralEffusion eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div id="PC-db-PET" class="pc-db-item">
+                            <label class="pc-switch-label">胸腔穿刺术</label>
+                            <input type="checkbox" name="pleuralEffusionThoracentesis" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{pleuralEffusionThoracentesis eq 1} ? (*{pleuralEffusionThoracentesis eq 1} ? true : _) : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{pleuralEffusion eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div id="PC-db-PECTD" class="pc-db-item">
+                            <label class="pc-switch-label">胸腔闭式引流</label>
+                            <input type="checkbox" name="pleuralEffusionClosedThoracicDrainage" lay-skin="switch" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{pleuralEffusionThoracentesis eq 1} ? (*{pleuralEffusionClosedThoracicDrainage eq 1} ? true : _) : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{pleuralEffusion eq 1} ? _ : true) : true">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">呼吸机相关性肺炎</label>
+                            <input type="checkbox" name="ventilatorAssociatedPneumonia" lay-skin="switch" lay-filter="VAP" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{ventilatorAssociatedPneumonia eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-VAPDT">诊断时间</label>
+                            <input id="PC-db-VAPDT" type="text" data-name="vapDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{ventilatorAssociatedPneumonia eq 1} ? 'vapDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{ventilatorAssociatedPneumonia eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{ventilatorAssociatedPneumonia eq 1} ? *{#calendars.format(vapDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{ventilatorAssociatedPneumonia eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item lg">
+                            <label class="pc-switch-label">呼吸机相关血流感染</label>
+                            <input type="checkbox" name="ventilatorRelatedBloodstreamInfection" lay-skin="switch" lay-filter="VRBI" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{ventilatorRelatedBloodstreamInfection eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-VRBIDT">诊断时间</label>
+                            <input id="PC-db-VRBIDT" type="text" data-name="vrbiDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{ventilatorRelatedBloodstreamInfection eq 1} ? 'vrbiDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{ventilatorRelatedBloodstreamInfection eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{ventilatorRelatedBloodstreamInfection eq 1} ? *{#calendars.format(vrbiDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{ventilatorRelatedBloodstreamInfection eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">肺出血</label>
+                            <input type="checkbox" name="pulmonaryHemorrhage" lay-skin="switch" lay-filter="PH" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{pulmonaryHemorrhage eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-PHDT">诊断时间</label>
+                            <input id="PC-db-PHDT" type="text" data-name="pulmonaryHemorrhageDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{pulmonaryHemorrhage eq 1} ? 'pulmonaryHemorrhageDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{pulmonaryHemorrhage eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{pulmonaryHemorrhage eq 1} ? *{#calendars.format(pulmonaryHemorrhageDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{pulmonaryHemorrhage eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">ARDS</label>
+                            <input type="checkbox" name="ards" lay-skin="switch" lay-filter="ARDS" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{ards eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-ARDSDT">诊断时间</label>
+                            <input id="PC-db-ARDSDT" type="text" data-name="ardsDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{ards eq 1} ? 'ardsDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{ards eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{ards eq 1} ? *{#calendars.format(ardsDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{ards eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">呼吸衰竭</label>
+                            <input type="checkbox" name="respiratoryFailure" lay-skin="switch" lay-filter="RF" lay-text="有|无" value="1" th:checked="${otherDiagnosisTreatment} ? (*{respiratoryFailure eq 1} ? true : _) : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg9">
+                        <div class="pc-db-item pc-db-item-date">
+                            <label for="PC-db-RFDT">诊断时间</label>
+                            <input id="PC-db-RFDT" type="text" data-name="respiratoryFailureDiagnosisTime" th:name="${otherDiagnosisTreatment} ? (*{respiratoryFailure eq 1} ? 'respiratoryFailureDiagnosisTime' : _) : _" th:lay-verify="${otherDiagnosisTreatment} ? (*{respiratoryFailure eq 1} ? 'requiredDB' : _) : _" th:value="${otherDiagnosisTreatment} ? (*{respiratoryFailure eq 1} ? *{#calendars.format(respiratoryFailureDiagnosisTime, 'yyyy-MM-dd')} : _) : _" th:disabled="${otherDiagnosisTreatment} ? (*{respiratoryFailure eq 1} ? _ : true) : true" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="RTSODT" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDRTSWrite.min.js}"></script>
+</html>

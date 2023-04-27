@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>高胆治疗 - 高胆数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,高胆数据库,高胆治疗"/>
+    <meta name="description" content="围产新生儿科研合作平台高胆数据库高胆治疗"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/highBilirubin.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 围产信息 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBPI')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/PI">
+                            <i class="pc-icon iconfont icon-huaiyun"></i>
+                            <cite>围产信息</cite>
+                        </a>
+                    </li>
+
+                    <!-- 高胆治疗 导航 -->
+                    <li class="layui-nav-item layui-this" sec:authorize="hasRole('ROLE_HBT')">
+                        <a class="pc-item" href="#">
+                            <i class="pc-icon iconfont icon-zhuyuan"></i>
+                            <cite>高胆治疗</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访检查 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUE')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUE/MRIE">
+                            <i class="pc-icon iconfont icon-microscope-full"></i>
+                            <cite>随访检查</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访结论 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUC')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUC">
+                            <i class="pc-icon iconfont icon-pingjiazongjie"></i>
+                            <cite>随访结论</cite>
+                        </a>
+                    </li>
+
+                    <!-- 病例审核 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HB')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/review">
+                            <i class="pc-icon iconfont icon-shenhe"></i>
+                            <cite>病例审核</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-HBT layui-form" sec:authorize="hasRole('ROLE_HBT')">
+                <span class="layui-breadcrumb">
+                    <a href="#"><cite>基本信息</cite></a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBC">高胆病因</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/CM">检查指标</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/TS">治疗情况</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/ES">脑病评分</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBR">高胆原因</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/AE">辅助检查</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/DS">出院情况</a>
+                </span>
+                <div class="layui-row pc-db-HBTBI" th:object="${basicInformation}">
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-MS" class="pc-db-item">
+                            <label>多胞情况</label>
+                            <input type="hidden" data-name="multicellularNumber" th:name="${basicInformation} ? (*{(multicellularNumber ge 1) and (multicellularNumber le 3)} ? 'multicellularNumber' : _) : _" lay-verify="requiredRadioGroup" th:value="${basicInformation} ? (*{multicellularNumber gt 0} ? (*{multicellularNumber le 3} ? *{multicellularNumber} : _) : _): _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${basicInformation} ? (*{multicellularNumber eq 1} ? 'pc-db-active' : _) : _" data-value="1">
+                                    <button>单胎</button>
+                                </li>
+                                <li th:class="${basicInformation} ? (*{multicellularNumber eq 2} ? 'pc-db-active' : _) : _" data-value="2">
+                                    <button>双胎</button>
+                                </li>
+                                <li th:class="${basicInformation} ? (*{multicellularNumber eq 3} ? 'pc-db-active' : _) : _" data-value="3">
+                                    <button>三胎</button>
+                                </li>
+                                <li th:class="${basicInformation} ? (*{multicellularNumber gt 3} ? 'pc-db-active' : _) : _" data-value="多胎">
+                                    <button>多胎</button>
+                                </li>
+                            </ul>
+                            <div id="PC-db-MSA" class="pc-db-attach">
+                                <input id="PC-db-MN" type="number" data-name="multicellularNumber" th:name="${basicInformation} ? (*{multicellularNumber gt 3} ? 'multicellularNumber' : _) : _" th:value="${basicInformation} ? (*{multicellularNumber gt 3} ? *{multicellularNumber} : _) : _" th:disabled="${basicInformation} ? (*{multicellularNumber gt 3} ? _ : true) : true">
+                                <span>胎</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-childFullName">患儿姓名</label>
+                            <input id="PC-db-childFullName" type="text" name="childFullName" lay-verify="requiredDB" th:value="${basicInformation} ? *{childFullName} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-CHN">患儿住院号</label>
+                            <input id="PC-db-CHN" type="text" name="childHospitalNumber" lay-verify="requiredDB" th:value="${basicInformation} ? *{childHospitalNumber} : _">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-pcHbChildNum">高胆患儿编号</label>
+                            <input id="PC-db-pcHbChildNum" type="text" name="pcHbChildNum" lay-verify="requiredDB" th:value="${basicInformation} ? (*{pcHbChildNum ne null and pcHbChildNum ne ''} ? *{pcHbChildNum} : ${pcHbChildNum}) : (${pcHbChildNum} ? ${pcHbChildNum} : _)" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label>性别</label>
+                            <input type="hidden" name="gender" lay-verify="requiredRadioGroup" th:value="${basicInformation} ? *{gender} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${basicInformation} ? (*{gender eq '男'} ? 'pc-db-active' : _) : _" data-value="男">
+                                    <button>男</button>
+                                </li>
+                                <li th:class="${basicInformation} ? (*{gender eq '女'} ? 'pc-db-active' : _) : _" data-value="女">
+                                    <button>女</button>
+                                </li>
+                                <li th:class="${basicInformation} ? (*{gender eq '两性畸形'} ? 'pc-db-active' : _) : _" data-value="两性畸形">
+                                    <button>两性畸形</button>
+                                </li>
+                                <li th:class="${basicInformation} ? (*{gender eq '不详'} ? 'pc-db-active' : _) : _" data-value="不详">
+                                    <button>不详</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item">
+                            <label for="PC-db-GAW">胎龄</label>
+                            <div class="pc-db-spanItem">
+                                <input id="PC-db-GAW" type="number" name="gestationalAgeWeek" lay-verify="requiredDB" th:value="${basicInformation} ? *{gestationalAgeWeek} : _">
+                                <span>周</span>
+                                <input id="PC-db-GAD" type="number" name="gestationalAgeDay" lay-verify="requiredDB" th:value="${basicInformation} ? *{gestationalAgeDay} : _">
+                                <span>天</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-birthday">出生时间</label>
+                            <input id="PC-db-birthday" type="text" name="birthday" lay-verify="requiredDB" th:value="${basicInformation} ? *{#calendars.format(birthday, 'yyyy-MM-dd HH:mm:ss')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-birthWeight">出生体重</label>
+                            <input id="PC-db-birthWeight" type="number" name="birthWeight" lay-verify="requiredDB" th:value="${basicInformation} ? *{birthWeight} : _">
+                            <span>g</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-BHC">出生头围</label>
+                            <input id="PC-db-BHC" type="number" name="birthHeadCircumference" lay-verify="requiredDB" th:value="${basicInformation} ? *{birthHeadCircumference} : _">
+                            <span>cm</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-birthLength">出生身长</label>
+                            <input id="PC-db-birthLength" type="number" name="birthLength" lay-verify="requiredDB" th:value="${basicInformation} ? *{birthLength} : _">
+                            <span>cm</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12 layui-col-sm12">
+                        <div class="pc-db-item">
+                            <label>出生Apgar评分</label>
+                            <div class="pc-db-spanItem">
+                                <label for="PC-db-BAPGARS1M">1分钟</label>
+                                <input id="PC-db-BAPGARS1M" type="number" name="birthApgarScore1Min" lay-verify="requiredDB" th:value="${basicInformation} ? *{birthApgarScore1Min} : _">
+                                <label for="PC-db-BAPGARS5M">5分钟</label>
+                                <input id="PC-db-BAPGARS5M" type="number" name="birthApgarScore5Min" lay-verify="requiredDB" th:value="${basicInformation} ? *{birthApgarScore5Min} : _">
+                                <label for="PC-db-BAPGARS10M">10分钟</label>
+                                <input id="PC-db-BAPGARS10M" type="number" name="birthApgarScore10Min" lay-verify="requiredDB" th:value="${basicInformation} ? *{birthApgarScore10Min} : _">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-AD">入院日期</label>
+                            <input id="PC-db-AD" type="text" name="admissionDate" lay-verify="requiredDB" th:value="${basicInformation} ? *{#calendars.format(admissionDate, 'yyyy-MM-dd HH:mm:ss')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-ADA">入院时日龄</label>
+                            <input id="PC-db-ADA" type="number" name="admissionDayAge" lay-verify="requiredDB" th:value="${basicInformation} ? *{admissionDayAge} : _" readonly>
+                            <span>天</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-AW">入院体重</label>
+                            <input id="PC-db-AW" type="number" name="admissionWeight" lay-verify="requiredDB" th:value="${basicInformation} ? *{admissionWeight} : _">
+                            <span>g</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-ABT">入院体温</label>
+                            <input id="PC-db-ABT" type="number" name="admissionBodyTemperature" lay-verify="requiredDB" th:value="${basicInformation} ? *{admissionBodyTemperature} : _">
+                            <span>℃</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="HBTBI" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/HBWrite.min.js}"></script>
+</html>

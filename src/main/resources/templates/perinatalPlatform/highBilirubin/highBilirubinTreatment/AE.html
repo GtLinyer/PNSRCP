@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>高胆治疗 - 高胆数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,高胆数据库,高胆治疗"/>
+    <meta name="description" content="围产新生儿科研合作平台高胆数据库高胆治疗"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/highBilirubin.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 围产信息 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBPI')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/PI">
+                            <i class="pc-icon iconfont icon-huaiyun"></i>
+                            <cite>围产信息</cite>
+                        </a>
+                    </li>
+
+                    <!-- 高胆治疗 导航 -->
+                    <li class="layui-nav-item layui-this" sec:authorize="hasRole('ROLE_HBT')">
+                        <a class="pc-item" href="#">
+                            <i class="pc-icon iconfont icon-zhuyuan"></i>
+                            <cite>高胆治疗</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访检查 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUE')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUE/MRIE">
+                            <i class="pc-icon iconfont icon-microscope-full"></i>
+                            <cite>随访检查</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访结论 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUC')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUC">
+                            <i class="pc-icon iconfont icon-pingjiazongjie"></i>
+                            <cite>随访结论</cite>
+                        </a>
+                    </li>
+
+                    <!-- 病例审核 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HB')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/review">
+                            <i class="pc-icon iconfont icon-shenhe"></i>
+                            <cite>病例审核</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-HBT layui-form" th:object="${auxiliaryExamination}" sec:authorize="hasRole('ROLE_HBT')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/BI">基本信息</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBC">高胆病因</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/CM">检查指标</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/TS">治疗情况</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/ES">脑病评分</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBR">高胆原因</a>
+                    <a href="#"><cite>辅助检查</cite></a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/DS">出院情况</a>
+                </span>
+                <div class="pc-db-head">
+                    <div class="pc-db-h1-wrap">
+                        <h1>脑干听觉诱发电位</h1>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-HBTAE">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>右耳</label>
+                            <input type="hidden" name="baepRightEar" lay-verify="requiredRadioGroup" th:value="${auxiliaryExamination} ? *{baepRightEar} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{baepRightEar eq '未查'} ? 'pc-db-active' : _) : _" data-value="未查">
+                                    <button>未查</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepRightEar eq '通过'} ? 'pc-db-active' : _) : _" data-value="通过">
+                                    <button>通过</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepRightEar eq '未通过'} ? 'pc-db-active' : _) : _" data-value="未通过">
+                                    <button>未通过</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>左耳</label>
+                            <input type="hidden" name="baepLeftEar" lay-verify="requiredRadioGroup" th:value="${auxiliaryExamination} ? *{baepLeftEar} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{baepLeftEar eq '未查'} ? 'pc-db-active' : _) : _" data-value="未查">
+                                    <button>未查</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepLeftEar eq '通过'} ? 'pc-db-active' : _) : _" data-value="通过">
+                                    <button>通过</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepLeftEar eq '未通过'} ? 'pc-db-active' : _) : _" data-value="未通过">
+                                    <button>未通过</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-BAEPR">结果</label>
+                            <input id="PC-db-BAEPR" type="text" name="baepResult" th:value="${auxiliaryExamination} ? *{baepResult} : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>随访建议</label>
+                            <input type="hidden" name="baepFollowUpAdvice" th:value="${auxiliaryExamination} ? *{baepFollowUpAdvice} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{baepFollowUpAdvice eq '正常，无需随访'} ? 'pc-db-active' : _) : _" data-value="正常，无需随访">
+                                    <button>正常，无需随访</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepFollowUpAdvice eq '1月'} ? 'pc-db-active' : _) : _" data-value="1月">
+                                    <button>1月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepFollowUpAdvice eq '2月'} ? 'pc-db-active' : _) : _" data-value="2月">
+                                    <button>2月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepFollowUpAdvice eq '3月'} ? 'pc-db-active' : _) : _" data-value="3月">
+                                    <button>3月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepFollowUpAdvice eq '6月'} ? 'pc-db-active' : _) : _" data-value="6月">
+                                    <button>6月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{baepFollowUpAdvice eq '1年'} ? 'pc-db-active' : _) : _" data-value="1年">
+                                    <button>1年</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-db-head">
+                    <div class="pc-db-h1-wrap">
+                        <h1>MRI</h1>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-HBTAE">
+                    <div class="layui-col-lg12">
+                        <div id="PC-db-MRIR" class="pc-db-item">
+                            <label>结果</label>
+                            <input type="hidden" name="mriResult" lay-verify="requiredRadioGroup" th:value="${auxiliaryExamination} ? *{mriResult} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{mriResult eq '未查'} ? 'pc-db-active' : _) : _" data-value="未查">
+                                    <button>未查</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriResult eq '正常'} ? 'pc-db-active' : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriResult eq '苍白球对称性高信号（生后早期头颅核磁T1W1）'} ? 'pc-db-active' : _) : _" data-value="苍白球对称性高信号（生后早期头颅核磁T1W1）">
+                                    <button>苍白球对称性高信号（生后早期头颅核磁T1W1）</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriResult eq '苍白球对称性高信号（生后早期T1W1）+苍白球对称性高信号（生后2-3月T2W1）'} ? 'pc-db-active' : _) : _" data-value="苍白球对称性高信号（生后早期T1W1）+苍白球对称性高信号（生后2-3月T2W1）">
+                                    <button>苍白球对称性高信号（生后早期T1W1）+苍白球对称性高信号（生后2-3月T2W1）</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriResult eq '其他'} ? 'pc-db-active' : _) : _" data-value="其他">
+                                    <button>其他</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit-lg">
+                            <label for="PC-db-MRIRO">其他结果</label>
+                            <input id="PC-db-MRIRO" type="text" data-name="mriResultOther" th:name="${auxiliaryExamination} ? (*{mriResult eq '其他'} ? 'mriResultOther' : _) : _" th:value="${auxiliaryExamination} ? (*{mriResult eq '其他'} ? *{mriResultOther} : _) : _" th:disabled="${auxiliaryExamination} ? (*{mriResult eq '其他'} ? _ : true) : true"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>随访建议</label>
+                            <input type="hidden" name="mriFollowUpAdvice" th:value="${auxiliaryExamination} ? *{mriFollowUpAdvice} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{mriFollowUpAdvice eq '正常，无需随访'} ? 'pc-db-active' : _) : _" data-value="正常，无需随访">
+                                    <button>正常，无需随访</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriFollowUpAdvice eq '1月'} ? 'pc-db-active' : _) : _" data-value="1月">
+                                    <button>1月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriFollowUpAdvice eq '2月'} ? 'pc-db-active' : _) : _" data-value="2月">
+                                    <button>2月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriFollowUpAdvice eq '3月'} ? 'pc-db-active' : _) : _" data-value="3月">
+                                    <button>3月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriFollowUpAdvice eq '6月'} ? 'pc-db-active' : _) : _" data-value="6月">
+                                    <button>6月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{mriFollowUpAdvice eq '1年'} ? 'pc-db-active' : _) : _" data-value="1年">
+                                    <button>1年</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-db-head">
+                    <div class="pc-db-h1-wrap">
+                        <h1>振幅整合脑电图</h1>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-HBTAE">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>结果</label>
+                            <input type="hidden" name="aiEegResult" lay-verify="requiredRadioGroup" th:value="${auxiliaryExamination} ? *{aiEegResult} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegResult eq '未查'} ? 'pc-db-active' : _) : _" data-value="未查">
+                                    <button>未查</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegResult eq '正常'} ? 'pc-db-active' : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegResult eq '轻度异常'} ? 'pc-db-active' : _) : _" data-value="轻度异常">
+                                    <button>轻度异常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegResult eq '中度或重度异常'} ? 'pc-db-active' : _) : _" data-value="中度或重度异常">
+                                    <button>中度或重度异常</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>随访建议</label>
+                            <input type="hidden" name="aiEegFollowUpAdvice" th:value="${auxiliaryExamination} ? *{aiEegFollowUpAdvice} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegFollowUpAdvice eq '正常，无需随访'} ? 'pc-db-active' : _) : _" data-value="正常，无需随访">
+                                    <button>正常，无需随访</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegFollowUpAdvice eq '1月'} ? 'pc-db-active' : _) : _" data-value="1月">
+                                    <button>1月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegFollowUpAdvice eq '2月'} ? 'pc-db-active' : _) : _" data-value="2月">
+                                    <button>2月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegFollowUpAdvice eq '3月'} ? 'pc-db-active' : _) : _" data-value="3月">
+                                    <button>3月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegFollowUpAdvice eq '6月'} ? 'pc-db-active' : _) : _" data-value="6月">
+                                    <button>6月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{aiEegFollowUpAdvice eq '1年'} ? 'pc-db-active' : _) : _" data-value="1年">
+                                    <button>1年</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-db-head">
+                    <div class="pc-db-h1-wrap">
+                        <h1>GMs</h1>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-HBTAE">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>扭动运动阶段</label>
+                            <input type="hidden" name="gmsWrithingMotionStage" lay-verify="requiredRadioGroup" th:value="${auxiliaryExamination} ? *{gmsWrithingMotionStage} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{gmsWrithingMotionStage eq '未查'} ? 'pc-db-active' : _) : _" data-value="未查">
+                                    <button>未查</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsWrithingMotionStage eq '正常'} ? 'pc-db-active' : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsWrithingMotionStage eq '单调性全身运动（PR）'} ? 'pc-db-active' : _) : _" data-value="单调性全身运动（PR）">
+                                    <button>单调性全身运动（PR）</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsWrithingMotionStage eq '痉挛-同步性全身运动（CS）'} ? 'pc-db-active' : _) : _" data-value="痉挛-同步性全身运动（CS）">
+                                    <button>痉挛-同步性全身运动（CS）</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsWrithingMotionStage eq '混乱性全身运动（Ch）'} ? 'pc-db-active' : _) : _" data-value="混乱性全身运动（Ch）">
+                                    <button>混乱性全身运动（Ch）</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>不安运动阶段</label>
+                            <input type="hidden" name="gmsRestlessMovementStage" lay-verify="requiredRadioGroup" th:value="${auxiliaryExamination} ? *{gmsRestlessMovementStage} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{gmsRestlessMovementStage eq '未查'} ? 'pc-db-active' : _) : _" data-value="未查">
+                                    <button>未查</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsRestlessMovementStage eq '正常'} ? 'pc-db-active' : _) : _" data-value="正常">
+                                    <button>正常</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsRestlessMovementStage eq '不安运动缺乏（F-）'} ? 'pc-db-active' : _) : _" data-value="不安运动缺乏（F-）">
+                                    <button>不安运动缺乏（F-）</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsRestlessMovementStage eq '异常性不安运动（AF）'} ? 'pc-db-active' : _) : _" data-value="异常性不安运动（AF）">
+                                    <button>异常性不安运动（AF）</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>随访建议</label>
+                            <input type="hidden" name="gmsFollowUpAdvice" th:value="${auxiliaryExamination} ? *{gmsFollowUpAdvice} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${auxiliaryExamination} ? (*{gmsFollowUpAdvice eq '正常，无需随访'} ? 'pc-db-active' : _) : _" data-value="正常，无需随访">
+                                    <button>正常，无需随访</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsFollowUpAdvice eq '1月'} ? 'pc-db-active' : _) : _" data-value="1月">
+                                    <button>1月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsFollowUpAdvice eq '2月'} ? 'pc-db-active' : _) : _" data-value="2月">
+                                    <button>2月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsFollowUpAdvice eq '3月'} ? 'pc-db-active' : _) : _" data-value="3月">
+                                    <button>3月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsFollowUpAdvice eq '6月'} ? 'pc-db-active' : _) : _" data-value="6月">
+                                    <button>6月</button>
+                                </li>
+                                <li th:class="${auxiliaryExamination} ? (*{gmsFollowUpAdvice eq '1年'} ? 'pc-db-active' : _) : _" data-value="1年">
+                                    <button>1年</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="HBTAE" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/HBWrite.min.js}"></script>
+</html>

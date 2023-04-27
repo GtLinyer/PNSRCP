@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>呼吸系统 - 基础数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,呼吸系统"/>
+    <meta name="description" content="围产新生儿科研合作平台云基础数据库呼吸系统"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="email" content="linyer@linyer.cn"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicDatabase.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul th:replace="include/rsNav::navigation"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-BDRTS layui-form" sec:authorize="hasRole('ROLE_BDRST')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/RS">呼吸支持</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/HF">HFNC失败</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/NVF">无创通气失败</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/WS">撤机情况</a>
+                    <a href="#"><cite>BPD</cite></a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/RDS">RDS</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/AP">呼吸暂停</a>
+                    <a href="/perinatalPlatform/basicDatabase/write/RTS/ODT">其他诊断与治疗</a>
+                </span>
+                <div class="layui-row pc-db-BDRTSBPD" th:object="${bpd}">
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>2001诊断标准</label>
+                            <input type="hidden" name="diagnosticCriteria2001" lay-verify="requiredRadioGroup" th:value="${bpd} ? *{diagnosticCriteria2001} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2001 eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2001 eq '轻度'} ? 'pc-db-active' : _) : _" data-value="轻度">
+                                    <button>轻度</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2001 eq '中度'} ? 'pc-db-active' : _) : _" data-value="中度">
+                                    <button>中度</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2001 eq '重度'} ? 'pc-db-active' : _) : _" data-value="重度">
+                                    <button>重度</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>2018诊断标准</label>
+                            <input type="hidden" name="diagnosticCriteria2018" lay-verify="requiredRadioGroup" th:value="${bpd} ? *{diagnosticCriteria2018} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2018 eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2018 eq 'Ⅰ'} ? 'pc-db-active' : _) : _" data-value="Ⅰ">
+                                    <button>Ⅰ</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2018 eq 'Ⅱ'} ? 'pc-db-active' : _) : _" data-value="Ⅱ">
+                                    <button>Ⅱ</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2018 eq 'Ⅲ'} ? 'pc-db-active' : _) : _" data-value="Ⅲ">
+                                    <button>Ⅲ</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2018 eq 'Ⅲ（A）'} ? 'pc-db-active' : _) : _" data-value="Ⅲ（A）">
+                                    <button>Ⅲ（A）</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg4">
+                        <div class="pc-db-item">
+                            <label>2019诊断标准</label>
+                            <input type="hidden" name="diagnosticCriteria2019" lay-verify="requiredRadioGroup" th:value="${bpd} ? *{diagnosticCriteria2019} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2019 eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2019 eq 'Ⅰ'} ? 'pc-db-active' : _) : _" data-value="Ⅰ">
+                                    <button>Ⅰ</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2019 eq 'Ⅱ'} ? 'pc-db-active' : _) : _" data-value="Ⅱ">
+                                    <button>Ⅱ</button>
+                                </li>
+                                <li th:class="${bpd} ? (*{diagnosticCriteria2019 eq 'Ⅲ'} ? 'pc-db-active' : _) : _" data-value="Ⅲ">
+                                    <button>Ⅲ</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-TR">治疗次数</label>
+                            <input id="PC-db-TR" type="number" name="treatmentsNumber" lay-verify="requiredDB" th:value="${bpd} ? *{treatmentsNumber} : '0'" readonly>
+                            <span>次</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-oralDays">口服</label>
+                            <input id="PC-db-oralDays" type="number" name="oralDays" lay-verify="requiredDB" th:value="${bpd} ? *{oralDays} : '0'" readonly>
+                            <span>天</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-IAD">静脉给药</label>
+                            <input id="PC-db-IAD" type="number" name="intravenousAdministrationDays" lay-verify="requiredDB" th:value="${bpd} ? *{intravenousAdministrationDays} : '0'" readonly>
+                            <span>天</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm6">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-AID">雾化吸入</label>
+                            <input id="PC-db-AID" type="number" name="aerosolInhalationDays" lay-verify="requiredDB" th:value="${bpd} ? *{aerosolInhalationDays} : '0'" readonly>
+                            <span>天</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row pc-db-BDRTSBPD">
+                    <div class="layui-col-lg10 layui-col-sm12">
+                        <div class="pc-db-item-table addList">
+                            <table class="pc-db-table">
+                                <thead>
+                                <tr>
+                                    <th>糖皮质激素类型</th>
+                                    <th>给药方式</th>
+                                    <th>给药指征</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>天数</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody th:data-num="${bpdGcList} ? ${bpdGcList.size()} : _">
+                                <tr th:each="bpdGc, status : ${bpdGcList}" th:object="${bpdGc}" th:class="*{administrationMode eq '口服'} ? 'oral' : (*{administrationMode eq '静脉给药'} ? 'IA' : (*{administrationMode eq '雾化吸入'} ? 'AI' : _))">
+                                    <td>
+                                        <select th:name="'gcType' + (${status.index} + 1)" lay-filter="GCT" lay-reqText="请选择激素类型！" lay-verify="required">
+                                            <option value="">请选择激素类型</option>
+                                            <option value="地塞米松" th:selected="*{gcType eq '地塞米松'} ? true : _">地塞米松</option>
+                                            <option value="布地奈德" th:selected="*{gcType eq '布地奈德'} ? true : _">布地奈德</option>
+                                            <option value="氢化可的松" th:selected="*{gcType eq '氢化可的松'} ? true : _">氢化可的松</option>
+                                            <option value="甲强龙" th:selected="*{gcType eq '甲强龙'} ? true : _">甲强龙</option>
+                                            <option value="倍他米松" th:selected="*{gcType eq '倍他米松'} ? true : _">倍他米松</option>
+                                            <option value="其他" th:selected="*{gcType eq '其他'} ? true : _">其他</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:name="'administrationMode' + (${status.index} + 1)" lay-filter="AM" lay-reqText="请选择给药方式！" lay-verify="required">
+                                            <option value="">请选择给药方式</option>
+                                            <option value="口服" th:selected="*{administrationMode eq '口服'} ? true : _">口服</option>
+                                            <option value="静脉给药" th:selected="*{administrationMode eq '静脉给药'} ? true : _">静脉给药</option>
+                                            <option value="雾化吸入" th:selected="*{administrationMode eq '雾化吸入'} ? true : _">雾化吸入</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select th:name="'dosingIndication' + (${status.index} + 1)" lay-filter="DI" lay-reqText="请选择给药指征！" lay-verify="required">
+                                            <option value="">请选择给药指征</option>
+                                            <option value="低血压" th:selected="*{dosingIndication eq '低血压'} ? true : _">低血压</option>
+                                            <option value="替代疗法（用于肾上腺功能不全）" th:selected="*{dosingIndication eq '替代疗法（用于肾上腺功能不全）'} ? true : _">替代疗法（用于肾上腺功能不全）</option>
+                                            <option value="治疗BPD" th:selected="*{dosingIndication eq '治疗BPD'} ? true : _">治疗BPD</option>
+                                            <option value="其他" th:selected="*{dosingIndication eq '其他'} ? true : _">其他</option>
+                                            <option value="不详" th:selected="*{dosingIndication eq '不详'} ? true : _">不详</option>
+                                        </select>
+                                    </td>
+                                    <td class="startDate">
+                                        <input th:id="'PC-db-startGcDate' + (${status.index} + 1)" type="text" th:name="'startGcDate' + (${status.index} + 1)" th:value="*{#calendars.format(startGcDate, 'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" placeholder="请选择开始日期" lay-reqText="请选择开始日期！" readonly>
+                                    </td>
+                                    <td class="endDate">
+                                        <input th:id="'PC-db-endGcDate' + (${status.index} + 1)" type="text" th:name="'endGcDate' + (${status.index} + 1)" th:value="*{#calendars.format(endGcDate, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择结束日期" readonly>
+                                    </td>
+                                    <td>
+                                        <input th:id="'PC-db-totalDays' + (${status.index} + 1)" type="number" th:name="'totalDays' + (${status.index} + 1)" th:value="*{totalDays}" class="totalDays" readonly>
+                                    </td>
+                                    <td>
+                                        <button onclick="deleteGc(this);" class="pc-btn pc-btn-danger"><i class="iconfont icon-delete"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="PC-db-addBPD" class="pc-btn"><i class="iconfont icon-zengjia"></i> 新增</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="RTSBPD" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/BDRTSWrite.min.js}"></script>
+</html>

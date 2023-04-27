@@ -1,0 +1,45 @@
+/** 颅脑超声 **/
+.pc-db-UIBU .pc-db-item>.pc-db-item-checkbox,
+.pc-db-UIBU .pc-db-item>.pc-db-enter,
+.pc-db-UIBU .pc-db-item>input {
+    left: 88px;
+}
+.pc-db-UIBU .pc-db-item>.layui-form-switch {
+    left: 102px;
+}
+.pc-db-UIBU .pc-db-item.lg>.layui-form-switch {
+    left: 168px;
+}
+.pc-db-UIBU .pc-db-item.lg>.pc-db-enter,
+.pc-db-UIBU .pc-db-item.lg>input {
+    left: 138px;
+}
+.pc-db-UIBU .pc-db-item-unit.lg>span {
+    left: 190px;
+}
+.pc-db-UIBU .pc-db-item-date i {
+    left: 190px;
+}
+.pc-db-UIBU .pc-db-item-datetime i {
+    left: 252px;
+}
+.pc-db-UIBU .pc-db-table .pc-db-upload {
+    width: 240px;
+    min-height: 210px;
+}
+.pc-db-UIBU .pc-db-table .pc-db-upload>button {
+    width: 240px;
+}
+.pc-db-UIBU .pc-db-table .pc-db-upload>img {
+    cursor: pointer;
+    max-width: 240px;
+    max-height: 240px;
+}
+.pc-db-UIBU .pc-db-table textarea {
+    padding: 2px;
+    border: 0;
+    background-color: transparent;
+}
+.pc-db-UIBU .pc-db-table textarea:focus {
+    box-shadow: unset;
+}

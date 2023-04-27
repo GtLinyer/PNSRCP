@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>高胆治疗 - 高胆数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,高胆数据库,高胆治疗"/>
+    <meta name="description" content="围产新生儿科研合作平台高胆数据库高胆治疗"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/highBilirubin.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 围产信息 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBPI')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/PI">
+                            <i class="pc-icon iconfont icon-huaiyun"></i>
+                            <cite>围产信息</cite>
+                        </a>
+                    </li>
+
+                    <!-- 高胆治疗 导航 -->
+                    <li class="layui-nav-item layui-this" sec:authorize="hasRole('ROLE_HBT')">
+                        <a class="pc-item" href="#">
+                            <i class="pc-icon iconfont icon-zhuyuan"></i>
+                            <cite>高胆治疗</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访检查 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUE')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUE/MRIE">
+                            <i class="pc-icon iconfont icon-microscope-full"></i>
+                            <cite>随访检查</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访结论 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUC')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUC">
+                            <i class="pc-icon iconfont icon-pingjiazongjie"></i>
+                            <cite>随访结论</cite>
+                        </a>
+                    </li>
+
+                    <!-- 病例审核 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HB')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/review">
+                            <i class="pc-icon iconfont icon-shenhe"></i>
+                            <cite>病例审核</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-HBT layui-form" sec:authorize="hasRole('ROLE_HBT')">
+                <span class="layui-breadcrumb">
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/BI">基本信息</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBC">高胆病因</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/CM">检查指标</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/TS">治疗情况</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/ES">脑病评分</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/HBR">高胆原因</a>
+                    <a href="/perinatalPlatform/highBilirubin/write/HBT/AE">辅助检查</a>
+                    <a href="#"><cite>出院情况</cite></a>
+                </span>
+                <div class="layui-row pc-db-HBTDS" th:object="${dischargeSituation}">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>胆红素水平诊断</label>
+                            <input type="hidden" name="bilirubinLevelsDiagnosis" lay-verify="requiredRadioGroup" th:value="${dischargeSituation} ? *{bilirubinLevelsDiagnosis} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${dischargeSituation} ? (*{bilirubinLevelsDiagnosis eq '高胆红素血症'} ? 'pc-db-active' : _) : _" data-value="高胆红素血症">
+                                    <button>高胆红素血症</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{bilirubinLevelsDiagnosis eq '重度'} ? 'pc-db-active' : _) : _" data-value="重度">
+                                    <button>重度</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{bilirubinLevelsDiagnosis eq '极重度'} ? 'pc-db-active' : _) : _" data-value="极重度">
+                                    <button>极重度</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{bilirubinLevelsDiagnosis eq '危险性高胆红素血症'} ? 'pc-db-active' : _) : _" data-value="危险性高胆红素血症">
+                                    <button>危险性高胆红素血症</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{bilirubinLevelsDiagnosis eq '其他'} ? 'pc-db-active' : _) : _" data-value="其他">
+                                    <button>其他</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>胆红素神经毒性</label>
+                            <input type="hidden" name="bilirubinNeurotoxicity" lay-verify="requiredRadioGroup" th:value="${dischargeSituation} ? *{bilirubinNeurotoxicity} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${dischargeSituation} ? (*{bilirubinNeurotoxicity eq '否'} ? 'pc-db-active' : _) : _" data-value="否">
+                                    <button>否</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{bilirubinNeurotoxicity eq '急性轻度胆红素脑病'} ? 'pc-db-active' : _) : _" data-value="急性轻度胆红素脑病">
+                                    <button>急性轻度胆红素脑病</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{bilirubinNeurotoxicity eq '急性中度胆红素脑病'} ? 'pc-db-active' : _) : _" data-value="急性中度胆红素脑病">
+                                    <button>急性中度胆红素脑病</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{bilirubinNeurotoxicity eq '急性重度胆红素脑病'} ? 'pc-db-active' : _) : _" data-value="急性重度胆红素脑病">
+                                    <button>急性重度胆红素脑病</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">入院时有无脑病症状</label>
+                            <input type="checkbox" name="whetherEncephalopathySymptomsWhenAdmission" lay-skin="switch" lay-text="有|无" value="1" th:checked="${dischargeSituation} ? (*{whetherEncephalopathySymptomsWhenAdmission eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-ET">脑病发病时间</label>
+                            <input id="PC-db-ET" type="text" name="encephalopathyTime" th:value="${dischargeSituation} ? *{#calendars.format(encephalopathyTime, 'yyyy-MM-dd HH:mm:ss')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-DT">出院时间</label>
+                            <input id="PC-db-DT" type="text" name="dischargeTime" lay-verify="requiredDB" th:value="${dischargeSituation} ? *{#calendars.format(dischargeTime, 'yyyy-MM-dd HH:mm:ss')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-DW">出院体重</label>
+                            <input id="PC-db-DW" type="number" name="dischargeWeight" lay-verify="requiredDB" th:value="${dischargeSituation} ? *{dischargeWeight} : _">
+                            <span>g</span>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>出院预后</label>
+                            <input type="hidden" name="dischargePrognosis" lay-verify="requiredRadioGroup" th:value="${dischargeSituation} ? *{dischargePrognosis} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${dischargeSituation} ? (*{dischargePrognosis eq '好转或治愈'} ? 'pc-db-active' : _) : _" data-value="好转或治愈">
+                                    <button>好转或治愈</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{dischargePrognosis eq '要求出院'} ? 'pc-db-active' : _) : _" data-value="要求出院">
+                                    <button>要求出院</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{dischargePrognosis eq '高胆死亡'} ? 'pc-db-active' : _) : _" data-value="高胆死亡">
+                                    <button>高胆死亡</button>
+                                </li>
+                                <li th:class="${dischargeSituation} ? (*{dischargePrognosis eq '非高胆死亡'} ? 'pc-db-active' : _) : _" data-value="非高胆死亡">
+                                    <button>非高胆死亡</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-unit">
+                            <label for="PC-db-HC">住院费用</label>
+                            <input id="PC-db-HC" type="number" name="hospitalCosts" lay-verify="requiredDB" th:value="${dischargeSituation} ? *{hospitalCosts} : _">
+                            <span>元</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="HBTDS" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/HBWrite.min.js}"></script>
+</html>

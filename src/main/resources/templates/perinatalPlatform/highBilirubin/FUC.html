@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>围产信息 - 高胆数据库</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,高胆数据库,围产信息"/>
+    <meta name="description" content="围产新生儿科研合作平台高胆数据库围产信息"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/database.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/highBilirubin.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div th:replace="include/PPHead::header"></div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all">
+                    <!-- 围产信息 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBPI')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/PI">
+                            <i class="pc-icon iconfont icon-huaiyun"></i>
+                            <cite>围产信息</cite>
+                        </a>
+                    </li>
+
+                    <!-- 高胆治疗 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBT')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/HBT/BI">
+                            <i class="pc-icon iconfont icon-zhuyuan"></i>
+                            <cite>高胆治疗</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访检查 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HBFUE')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/write/FUE/MRIE">
+                            <i class="pc-icon iconfont icon-microscope-full"></i>
+                            <cite>随访检查</cite>
+                        </a>
+                    </li>
+
+                    <!-- 随访结论 导航 -->
+                    <li class="layui-nav-item layui-this" sec:authorize="hasRole('ROLE_HBFUC')">
+                        <a class="pc-item" href="#">
+                            <i class="pc-icon iconfont icon-pingjiazongjie"></i>
+                            <cite>随访结论</cite>
+                        </a>
+                    </li>
+
+                    <!-- 病例审核 导航 -->
+                    <li class="layui-nav-item" sec:authorize="hasRole('ROLE_HB')">
+                        <a class="pc-item" href="/perinatalPlatform/highBilirubin/review">
+                            <i class="pc-icon iconfont icon-shenhe"></i>
+                            <cite>病例审核</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework pc-db-HBFUC layui-form" th:object="${followUpConclusion}" sec:authorize="hasRole('ROLE_HBFUC')">
+                <div class="layui-row">
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item pc-db-item-datetime">
+                            <label for="PC-db-ED">评价日期</label>
+                            <input id="PC-db-ED" type="text" name="evaluationDate" lay-verify="requiredDB" th:value="${followUpConclusion} ? *{#calendars.format(evaluationDate, 'yyyy-MM-dd HH:mm:ss')} : _" readonly>
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>核黄疸类别</label>
+                            <input type="hidden" name="kernicterusCategory" lay-verify="requiredRadioGroup" th:value="${followUpConclusion} ? *{kernicterusCategory} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${followUpConclusion} ? (*{kernicterusCategory eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${followUpConclusion} ? (*{kernicterusCategory eq '经典'} ? 'pc-db-active' : _) : _" data-value="经典">
+                                    <button>经典</button>
+                                </li>
+                                <li th:class="${followUpConclusion} ? (*{kernicterusCategory eq '运动障碍为主'} ? 'pc-db-active' : _) : _" data-value="运动障碍为主">
+                                    <button>运动障碍为主</button>
+                                </li>
+                                <li th:class="${followUpConclusion} ? (*{kernicterusCategory eq '听觉损伤为主'} ? 'pc-db-active' : _) : _" data-value="听觉损伤为主">
+                                    <button>听觉损伤为主</button>
+                                </li>
+                                <li th:class="${followUpConclusion} ? (*{kernicterusCategory eq '微小的核黄疸'} ? 'pc-db-active' : _) : _" data-value="微小的核黄疸">
+                                    <button>微小的核黄疸</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg12">
+                        <div class="pc-db-item">
+                            <label>核黄疸严重度</label>
+                            <input type="hidden" name="kernicterusSeverity" lay-verify="requiredRadioGroup" th:value="${followUpConclusion} ? *{kernicterusSeverity} : _">
+                            <ul class="pc-db-radioBtn-group pc-db-enter">
+                                <li th:class="${followUpConclusion} ? (*{kernicterusSeverity eq '无'} ? 'pc-db-active' : _) : _" data-value="无">
+                                    <button>无</button>
+                                </li>
+                                <li th:class="${followUpConclusion} ? (*{kernicterusSeverity eq '轻度'} ? 'pc-db-active' : _) : _" data-value="轻度">
+                                    <button>轻度</button>
+                                </li>
+                                <li th:class="${followUpConclusion} ? (*{kernicterusSeverity eq '中度'} ? 'pc-db-active' : _) : _" data-value="中度">
+                                    <button>中度</button>
+                                </li>
+                                <li th:class="${followUpConclusion} ? (*{kernicterusSeverity eq '重度'} ? 'pc-db-active' : _) : _" data-value="重度">
+                                    <button>重度</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脑性瘫痪</label>
+                            <input type="checkbox" name="cerebralPalsy" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{cerebralPalsy eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">脑性瘫痪偏向</label>
+                            <input type="checkbox" name="cerebralPalsyPredisposition" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{cerebralPalsyPredisposition eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">癫痫</label>
+                            <input type="checkbox" name="epilepsy" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{epilepsy eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">认知障碍</label>
+                            <input type="checkbox" name="cognitiveImpairment" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{cognitiveImpairment eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">听觉障碍</label>
+                            <input type="checkbox" name="hearingImpairment" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{hearingImpairment eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">眼运动障碍</label>
+                            <input type="checkbox" name="eyeMovementDisorder" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{eyeMovementDisorder eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">锥体外系运动障碍</label>
+                            <input type="checkbox" name="extrapyramidalMovementDisorder" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{extrapyramidalMovementDisorder eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">牙釉质发育不良</label>
+                            <input type="checkbox" name="toothEnamelDysplasia" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{toothEnamelDysplasia eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">运动抚育迟缓</label>
+                            <input type="checkbox" name="motorRetardation" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{motorRetardation eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg3 layui-col-sm4">
+                        <div class="pc-db-item">
+                            <label class="pc-switch-label">神经发育迟缓</label>
+                            <input type="checkbox" name="neurodevelopmentalDelay" lay-skin="switch" lay-text="是|否" value="1" th:checked="${followUpConclusion} ? (*{neurodevelopmentalDelay eq 1} ? true : _) : _"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6 layui-col-sm8">
+                        <div class="pc-db-item">
+                            <label for="PC-db-others">其它</label>
+                            <input id="PC-db-others" type="text" name="others" th:value="${followUpConclusion} ? *{others} : _"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pc-db-save">
+                    <button class="pc-btn pc-btn-save" lay-filter="FUC" lay-submit>保存信息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/HB2Write.min.js}"></script>
+</html>

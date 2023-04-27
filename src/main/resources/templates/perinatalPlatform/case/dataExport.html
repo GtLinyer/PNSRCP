@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>数据导出 - 围产新生儿科研合作平台</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="围产新生儿科研合作平台,基础数据库,数据导出"/>
+    <meta name="description" content="围产新生儿科研合作平台基础数据库数据导出"/>
+    <meta name="author" content="Linyer"/>
+    <meta name="theme-color" content="#11B2B9"/>
+
+    <link rel="shortcut icon" th:href="@{/favicon.svg}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/layui/extend/eleTree.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/utils/iconfont/iconfont.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/manage.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/utils/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/utils/layui/layui.js}"></script>
+</head>
+
+<body class="layui-layout-body pc-ci">
+<div id="PC-main">
+    <div class="layui-layout pc-layout">
+        <!-- 水平菜单 -->
+        <div class="layui-header" th:fragment="header">
+            <!-- 水平菜单 左侧 -->
+            <ul class="layui-nav layui-layout-left fa-im">
+                <!-- 侧边伸缩 按钮 -->
+                <li class="layui-nav-item pc-flexible" lay-unselect>
+                    <a id="PC-side-flexible" href="javascript:void(0);" title="侧边伸缩">
+                        <i class="layui-icon layui-icon-shrink-right"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <button class="layui-btn layui-btn-normal layui-btn-xs layui-btn-radius pc-admin-btn-back" onclick="window.history.back();">
+                        <i class="iconfont icon-return"></i>
+                        返回
+                    </button>
+                </li>
+            </ul>
+
+            <!-- 水平菜单 右侧 -->
+            <ul class="layui-nav layui-layout-right">
+                <!-- 搜索 -->
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <form class="pc-menu-search layui-form" action="javascript:void(0);">
+                        <input id="PC-db-SK" type="text" name="searchKey" placeholder="患儿姓名/住院号/编号"/>
+                        <button lay-filter="search" type="submit" lay-submit>
+                            <i class="layui-icon layui-icon-search"></i>
+                        </button>
+                    </form>
+                </li>
+
+                <!-- 个人操作 下拉菜单 -->
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:void(0);">
+                        <cite>
+                            <span sec:authentication="principal.username"></span>
+                            <span sec:authentication="principal.user.fullName"></span>
+                        </cite>
+                    </a>
+
+                    <dl class="layui-nav-child">
+                        <dd><a href="/logout">退出登录</a></dd>
+                    </dl>
+                </li>
+
+                <!-- 全屏 按钮 -->
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a id="PC-fullscreen" href="javascript:void(0);" title="全屏">
+                        <i class="layui-icon layui-icon-screen-full"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 左侧导航栏（可伸缩式） -->
+        <div class="layui-side pc-side-menu">
+            <div class="layui-side-scroll">
+
+                <!-- 网站logo信息 -->
+                <div class="layui-logo">
+                    <a href="/">
+                        <img src="/favicon.svg" height="30px" alt="logo">
+                        <h1>
+                            <a href="/">
+                                <i class="iconfont icon-home"></i>
+                                <cite>首页</cite>
+                            </a>
+                        </h1>
+                    </a>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree">
+                    <div class="pc-nav-data-head">
+                        <i class="iconfont icon-jichushujuku"></i>
+                        <span>基础数据库</span>
+                    </div>
+
+                    <!-- 基础数据库 导航 -->
+                    <li class="layui-nav-item">
+                        <a href="/perinatalPlatform/case">
+                            <i class="pc-icon iconfont icon-bingli"></i>
+                            <cite>病例查询</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item layui-this">
+                        <a href="#">
+                            <i class="pc-icon iconfont icon-shujudaochu"></i>
+                            <cite>数据导出</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="/perinatalPlatform/topicExport">
+                            <i class="pc-icon iconfont icon-zhuanti"></i>
+                            <cite>专题导出</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_AC')">
+                        <a href="/perinatalPlatform/reportExport">
+                            <i class="pc-icon iconfont icon-baobiaodaochu"></i>
+                            <cite>报表导出</cite>
+                        </a>
+                    </li>
+                </ul>
+                <div class="pc-nav-block-2">
+                    <div class="pc-nav-data-head">
+                        <i class="iconfont icon-pie-chart"></i>
+                        <span>数据量</span>
+                    </div>
+                    <p th:each="dataAmount : ${dataAmountList}" th:object="${dataAmount}" th:text="(*{month}) + '（' + (*{sum}) + '）'"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div class="pc-body-framework">
+                <div class="pc-admin-title-frame">
+                    <span class="pc-admin-title"><i class="iconfont icon-shujudaochu"></i> 数据导出</span>
+                </div>
+                <form class="layui-form" action="javascript:void(0);">
+                    <div class="pc-case-export data layui-row">
+                        <div class="layui-col-lg12">
+                            <label>协作医院</label>
+                            <span sec:authorize="hasRole('ROLE_ADMIN')">超级管理员 （<th:block sec:authentication="principal.username"></th:block>）</span>
+                            <span sec:authorize="hasRole('ROLE_HC')">[[${hospitalLocation}]] [[${hospitalName}]] （[[${hospitalAbbreviation}]]）</span>
+                            <span sec:authorize="hasRole('ROLE_AC')">区域管理员 [[${areaName}]] （[[${areaAbbreviation}]]）</span>
+                            <span sec:authorize="hasRole('ROLE_NU')">[[${hospitalLocation}]] [[${hospitalName}]] （[[${hospitalAbbreviation}]]）</span>
+                        </div>
+                        <div class="layui-col-lg12">
+                            <select name="selectType">
+                                <option value="motherHospitalizationDate">母亲住院日期</option>
+                                <option value="childHospitalizationDate">新生儿住院日期</option>
+                                <option value="dischargeDate">新生儿出院日期</option>
+                            </select>
+                            <div id="PC-db-date">从
+                                <span class="pc-admin-dateInput">
+                                    <input id="PC-db-dateInput-start" class="pc-date" type="text" name="startDate" readonly>
+                                    <i class="iconfont icon-rili"></i>
+                                </span>
+                                至
+                                <span class="pc-admin-dateInput">
+                                    <input id="PC-db-dateInput-end" class="pc-date" type="text" name="endDate" readonly>
+                                    <i class="iconfont icon-rili"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="layui-col-lg4">
+                            <label>病人分类</label>
+                            <select name="patientClassification">
+                                <option value="">全部</option>
+                                <option value="0">超早产儿</option>
+                                <option value="1">极早产儿</option>
+                                <option value="2">超低出生体重儿</option>
+                                <option value="3">极低出生体重儿</option>
+                            </select>
+                        </div>
+                        <div class="layui-col-lg4">
+                            <label>诊断治疗</label>
+                            <select name="diagnosisTreatment">
+                                <option value="">全部</option>
+                                <option value="0">重度窒息</option>
+                                <option value="1">PPHN</option>
+                            </select>
+                        </div>
+                        <div class="layui-col-lg4">
+                            <label>结局指标</label>
+                            <select name="outcomeIndicator">
+                                <option value="">全部</option>
+                                <option value="0">院内死亡</option>
+                                <option value="1">放弃治疗</option>
+                                <option value="2">转院治疗</option>
+                            </select>
+                        </div>
+                        <div class="layui-col-lg12" th:if="${areaHospitalList}">
+                            <div class="pc-select-board board1">
+                                <div class="pc-select-board-title">
+                                    <div>选择医院 <i class="layui-icon layui-icon-triangle-d"></i></div>
+                                </div>
+                                <div class="pc-select-board-context">
+                                    <div class="layui-row" th:each="areaHospital : ${areaHospitalList}">
+                                        <div class="layui-col-xs4 layui-col-sm3">
+                                            <input type="checkbox" th:title="${areaHospital.province}" lay-filter="hospitalCheckboxAll" checked>
+                                        </div>
+                                        <div class="layui-col-xs8 layui-col-sm9">
+                                            <div class="pc-admin-hospitalCheckbox" th:each="hospital, iterStat : ${areaHospital.hospitalList}">
+                                                <input type="checkbox" name="hospitalId[]" th:title="${hospital.hospitalName}" lay-filter="allHospital" th:value="${hospital.hid}" checked>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-lg12">
+                            <div class="pc-select-board board2">
+                                <div class="pc-select-board-title">
+                                    <div>
+                                        <label>模板</label>
+                                        <select lay-filter="model">
+                                            <option value=""></option>
+                                            <option value="basicDatabase">基础数据库</option>
+                                            <option value="motherBabySameRoom">母婴同室库</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <button lay-filter="filter" lay-submit><i class="iconfont icon-shaixuan"></i> 筛选</button>
+                                        </div>
+                                        <div>
+                                            <span>数据量：</span>
+                                            <span id="PC-case-number">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pc-select-board-context-model">
+                                    <div class="pc-model-box">
+                                        <div id="PC-select-list"></div>
+                                    </div><div class="pc-model-box">
+                                        <div id="PC-selected-list"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-lg12">
+                            <button class="pc-btn pc-btn-save" lay-filter="dataExport" data-type="csv" lay-submit><i class="iconfont icon-excel"></i> 导出 EXCEL（.csv）</button>
+                            <button class="pc-btn pc-btn-save" lay-filter="dataExport" data-type="xls" lay-submit><i class="iconfont icon-excel"></i> 导出 EXCEL（.xls）</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 用于移动设备遮罩 -->
+        <div id="PC-shade"></div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" th:src="@{/js/utils/myTools.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/case.min.js}"></script>
+</html>
